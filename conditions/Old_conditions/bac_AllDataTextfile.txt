@@ -1,0 +1,1354 @@
+1	120424	08:00			irp	bac	1	pdfAppendix	"Blutbild page 1-2"
+
+1	120510	08:00			irp	bac	1	pdfAppendix	"Blutbild page 3-4"
+
+1	120523	08:00			irp	bac	1	animalID	Bacchus	bac	16130	G-X 	" "
+
+1	120523	08:00			irp	bac	1	note	"Zugang in 253, Raum C/ Nr. 16130/ Geb.05.09.2005 /Herkunft:Basel (alte Nr.N0514), integriert mit Magnus, separiert zu Linus und Prunus"
+1	120523	08:00			irp	bac	1	medicalProc	veterinaryProc  "Ketamin i.m. 1ml"
+1	120523	08:00			irp	bac	1	pdfAppendix	"Behandlungsplan Ketamin page 5"
+1	120523	08:00			irp	bac	1	weight	9.0
+1	120523	08:00			irp	bac	1	dailyWater	""	-1
+
+1	120524	14:00			irp	bac	1	PRT	naive	target	150	1	"Konditionierung auf Clicker, Targetr. in Voliere"
+1	120524	14:00			irp	bac	1	dailyWater	""	-1
+
+1	120524	14:00			irp	bac	1	PRT	naive	target	130	1	"Targettr. in Fangkaefig"
+1	120524	14:00			irp	bac	1	dailyWater	""	-1
+
+1	120525	14:00			irp	bac	1	PRT	naive	target	100	1	"Targettr. in Voliere"
+1	120525	14:00			irp	bac	1	dailyWater	""	-1
+
+1	120529	14:00			irp	bac	1	PRT	naive	target	100	1	"Wasserboxtraining"
+1	120529	14:00			irp	bac	1	mBehavior	"interessiert, Wasserboxhebel beruehrt, mit Magnus zusammen dran gesessen, da nur eine Wasserbox zur Verfuegung stand"
+1	120529	14:00			irp	bac	1	dailyWater	""	-1
+
+1	120530	14:00			irp	bac	1	PRT	naive	target	50	1	"Wasserboxtraining"
+1	120530	14:00			irp	bac	1	mBehavior	"Wasserboxtraining mit Magnuns zusammen von 13:15-15:15"
+1	120530	14:00			irp	bac	1	dailyWater	""	-1
+
+
+1	120604	14:00			irp	bac	1	PRT	naive	target	120	1	"Klickertraining Hand mit Leo"
+1	120604	14:00			irp	bac	1	dailyWater	""	-1
+1	120604	14:00			irp	bac	1	note	"Wasserboxtraining wurde unterbrochen, da diese repariert werden musste"
+
+1	120605	08:00			irp	bac	1	PRT	naive	target	100	1	"Klickertraining Hand mit Leo"
+1	120605	08:00			irp	bac	1	dailyWater	""	-1
+
+1	120606	14:00			irp	bac	1	PRT	naive	target	130	1	"Klickertraining Hand mit Leo"
+1	120606	14:00			irp	bac	1	dailyWater	""	-1
+
+1	120607	14:00			irp	bac	1	PRT	naive	target	80	1	"Wasserboxtraining von 9:30-12:20, danach -1, da Wasserbox wieder kaputt ist"
+1	120607	14:00			irp	bac	1	dailyWater	""	-1
+
+1	120608	14:00			irp	bac	1	PRT	naive	target	100	1	"Wasserboxtraining bis zum 29.06.12"
+1	120608	14:00			irp	bac	1	dailyWater	""	-1
+
+
+1	120630	15:00			irp	bac	1	waterbox	1	1	wasserboxA	6:50	12:50	0.14	102	"responsible person Daniel"
+1	120630	15:00			irp	bac	1	dailyWater	"waterbox"	-1
+
+1	120701	15:00			irp	bac	1	waterbox	1	2	wasserboxA	7:30	13:30	0.14	294	"responsible person Daniel"
+1	120701	15:00			irp	bac	1	dailyWater	"waterbox"	-1
+
+1	120702	15:00			irp	bac	1	waterbox	1	3	wasserboxA	8:14	14:15	0.14	374	"responsible person Daniel"
+1	120702	15:00			irp	bac	1	dailyWater	"waterbox"	-1
+
+1	120703	15:00			irp	bac	1	waterbox	1	4	wasserboxA	7:30	13:30	0.14	423	"responsible person Daniel"
+1	120703	15:00			irp	bac	1	dailyWater	"waterbox"	-1
+
+1	120704	15:00			irp	bac	1	waterbox	1	5	wasserboxA	7:00	10:00	0.14	429	"responsible person Kathrin"
+1	120704	15:00			irp	bac	1	dailyWater	"waterbox"	-1
+
+1	120705	15:00			irp	bac	1	waterbox	1	6	wasserboxA	8:00	14:00	0.14	310	"responsible person Kathrin"
+1	120705	15:00			irp	bac	1	dailyWater	"waterbox"	-1
+
+1	120706	15:00			irp	bac	1	waterbox	1	7	wasserboxA	7:30	13:30	0.14	402	"responsible person Kathrin"
+1	120706	15:00			irp	bac	1	dailyWater	"waterbox"	-1
+
+1	120707	15:00			irp	bac	1	waterbox	1	8	wasserboxA	8:00	14:00	0.14	350	"Ende der 1. Serie, nach Wasserboxmessung, -1, responsible person Kathrin"
+1	120707	15:00			irp	bac	1	dailyWater	"waterbox"	-1
+
+
+
+
+
+1	120709	15:00			irp	bac	1	waterbox	1	1	wasserboxA	8:00	14:00	0.14	325	"responsible person Kathrin/Ira"
+1	120709	15:00			irp	bac	1	dailyWater	"waterbox"	-1
+
+1	120710	15:00			irp	bac	1	waterbox	1	2	wasserboxA	7:40	13:40	0.14	405	"responsible person Ira"
+1	120710	15:00			irp	bac	1	dailyWater	"waterbox"	-1
+
+1	120711	15:00			irp	bac	1	waterbox	1	3	wasserboxA	7:25	13:25	0.14	520	"responsible person Ira"
+1	120711	15:00			irp	bac	1	dailyWater	"waterbox"	-1
+
+1	120712	15:00			irp	bac	1	waterbox	1	4	wasserbox1	8:00	14:00	0.14	525	"responsible person Ira"
+1	120712	15:00			irp	bac	1	dailyWater	"waterbox"	-1
+
+1	120713	15:00			irp	bac	1	waterbox	1	5	wasserbox1	7:45	13:45	0.14	503	"responsible person Daniel"
+1	120713	15:00			irp	bac	1	dailyWater	"waterbox"	-1
+
+1	120714	15:00			irp	bac	1	waterbox	1	6	wasserbox1	7:15	13:15	0.14	414	"responsible person Daniel"
+1	120714	15:00			irp	bac	1	dailyWater	"waterbox"	-1
+
+1	120715	15:00			irp	bac	1	waterbox	1	7	wasserbox1	7:30	13:30	0.14	492	"responsible person Daniel"
+1	120715	15:00			irp	bac	1	dailyWater	"waterbox"	-1
+
+1	120716	15:00			irp	bac	1	waterbox	1	8	wasserbox1	8:00	14:00	0.14	510	"Ende der 2. Serie, nach Messung, -1, responsible person Daniel/ Ira"
+1	120716	15:00			irp	bac	1	weight	10.10
+1	120716	15:00			irp	bac	1	PRT	naive	target	180	1	"Klickertraining Waage im Fangkaefig"
+1	120716	15:00			irp	bac	1	dailyWater	"waterbox"	-1
+
+
+
+1	120718	15:00			irp	bac	1	waterbox	1	1	wasserbox1	9:00	15:00	0.14	285	"responsible person Kathrin"
+1	120718	15:00			irp	bac	1	dailyWater	"waterbox"	-1
+
+1	120719	15:00			irp	bac	1	waterbox	1	2	wasserbox1	8:30	14:30	0.14	540	"responsible person Daniel"
+1	120719	15:00			irp	bac	1	dailyWater	"waterbox"	-1
+
+1	120720	15:00			irp	bac	1	waterbox	1	3	wasserbox1	8:30	14:30	0.14	680	"responsible person Daniel"
+1	120720	15:00			irp	bac	1	dailyWater	"waterbox"	-1
+
+1	120721	15:00			irp	bac	1	waterbox	1	4	wasserbox1	7:30	13:30	0.14	630	"responsible person Kathrin"
+1	120721	15:00			irp	bac	1	dailyWater	"waterbox"	-1
+
+1	120722	15:00			irp	bac	1	waterbox	1	5	wasserbox1	7:30	13:30	0.14	520	"responsible person Kathrin"
+1	120722	15:00			irp	bac	1	dailyWater	"waterbox"	-1
+
+1	120723	15:00			irp	bac	1	waterbox	1	6	wasserbox1	8:00	14:00	0.14	410	"responsible person Daniel"
+1	120723	15:00			irp	bac	1	dailyWater	"waterbox"	-1
+
+1	120724	15:00			irp	bac	1	waterbox	1	7	wasserbox1	8:00	14:00	0.14	575	"responsible person Daniel"
+1	120724	15:00			irp	bac	1	dailyWater	"waterbox"	-1
+
+1	120725	15:00			irp	bac	1	waterbox	1	8	wasserbox1	8:00	14:00	0.14	620	"Ende der 3. Serie, nach Messung, -1, responsible person Daniel"
+1	120725	15:00			irp	bac	1	dailyWater	"waterbox"	-1
+
+1	120726	14:00			irp	bac	1	weight	10.95
+1	120726	14:00			irp	bac	1	PRT	naive	target	100	1	"Klickertraining Waage im Fangkaefig"
+1	120726	14:00			irp	bac	1	dailyWater	""	-1
+
+1	120730	14:00			irp	bac	1	prevDayFluid	-1
+1	120730	14:00			irp	bac	1	dailyWater	"120ml fruit/230ml juice for clickertr. afterwards -1"	-1
+1	120730	14:00			irp	bac	1	training	naive	chair	freeViewing	"chairtraining"
+1	120730	14:00			irp	bac	1	mBehavior	"fed him in chair, came after 3 times in chair and we were open the neckplate, training with Leo"
+
+1	120731	14:00			irp	bac	1	prevDayFluid	-1
+1	120731	14:00			irp	bac	1	dailyWater	"150ml fruit/320ml juice for clickertr., afterwards -1"	-1
+1	120731	14:00			irp	bac	1	training	naive	chair	freeViewing	"chairtraining"
+1	120731	14:00			irp	bac	1	mBehavior	"good into chair, opened new neckplate and head was out, trained head + go, training with Leo"
+
+1	120801	14:00			irp	bac	1	prevDayFluid	-1
+1	120801	14:00			irp	bac	1	dailyWater	"225ml fruit/ 190ml juice for clickertr., afterwards -1"	-1
+1	120801	14:00			irp	bac	1	training	naive	chair	freeViewing	"chairtraining"
+1	120801	14:00			irp	bac	1	mBehavior	"good into chair, opened new neckplate and head was out, trained head + go, closed door of front cage and back door of chair, all in all very good, training with Leo"
+
+1	120802	14:00			irp	bac	1	prevDayFluid	-1
+1	120802	14:00			irp	bac	1	dailyWater	"190ml fruit/ 250juice for clickertr., afterwards -1"	-1
+1	120802	14:00			irp	bac	1	training	naive	chair	freeViewing	"chairtraining"
+1	120802	14:00			irp	bac	1	mBehavior	"good into chair, opened neckplate and head was out, trained head + go, closed neckplate and went out of animal room, for a short in corridor of animal facilty, was good, training with Leo"
+
+1	120803	14:00			irp	bac	1	prevDayFluid	-1
+1	120803	14:00			irp	bac	1	dailyWater	"180ml fruit/ 320mljuice for clickertr., afterwards -1"	-1
+1	120803	14:00			irp	bac	1	training	naive	chair	freeViewing	"chairtraining"
+1	120803	14:00			irp	bac	1	mBehavior	"was ok, trained more Go, training with Leo"
+
+1	120806	14:00			irp	bac	1	prevDayFluid	-1
+1	120806	14:00			irp	bac	1	dailyWater	"350ml fruit/ 130mljuice for clickertr., afterwards -1"	-1
+1	120806	14:00			irp	bac	1	training	naive	chair	freeViewing	"chairtraining"
+1	120806	14:00			irp	bac	1	mBehavior	"came good into chair, trained head and go in animal room"
+
+1	120807	14:00			irp	bac	1	prevDayFluid	-1
+1	120807	14:00			irp	bac	1	dailyWater	"220ml fruit/ 250mljuice for clickertr., afterwards -1"	-1
+1	120807	14:00			irp	bac	1	weight	10.4
+1	120807	14:00			irp	bac	1	training	chair	headOut	freeViewing	"chairtraining"
+1	120807	14:00			irp	bac	1	mBehavior	"came good into chair, trained head and go in animal room, went to the scale, was looking around and interested in the environment (was eating meanwhile), trained by Leo"
+
+1	120808	14:00			irp	bac	1	prevDayFluid	-1
+1	120808	14:00			irp	bac	1	dailyWater	"175ml fruit/ 380mljuice for clickertr., afterwards -1"	-1
+1	120808	14:00			irp	bac	1	weight	10.35
+1	120808	14:00			irp	bac	1	training	chair	headOut	freeViewing	"chairtraining"
+1	120808	14:00			irp	bac	1	mBehavior	"trained head and go in animal room, went to the scale and to the kitchen of animal facility (was eating, good), trained by Leo"
+
+1	120809	14:00			irp	bac	1	prevDayFluid	-1
+1	120809	14:00			irp	bac	1	dailyWater	"205ml fruit/ 420mljuice for clickertr., afterwards -1"	-1
+1	120809	14:00			irp	bac	1	weight	10.20
+1	120809	14:00			irp	bac	1	training	chair	headOut	freeViewing	"chairtraining"
+1	120809	14:00			irp	bac	1	mBehavior	"trained head and go in animal room, went to kitchen of animal facility (was eating, good) and monkey gate, training with Leo"
+
+1	120810	14:00			irp	bac	1	prevDayFluid	-1
+1	120810	14:00			irp	bac	1	dailyWater	"280ml fruit/ 300mljuice for clickertr., afterwards -1"	-1
+1	120810	14:00			irp	bac	1	weight	10.35
+1	120810	14:00			irp	bac	1	training	chair	headOut	freeViewing	"chairtraining"
+1	120810	14:00			irp	bac	1	mBehavior	"trained head and go in animal room, went to monkey gate (was putting him on the table there, ok), training with Leo"
+
+1	120813	14:00			irp	bac	1	prevDayFluid	-1
+1	120813	14:00			irp	bac	1	dailyWater	"200ml fruit/ 280mljuice for clickertr.,afterwards -1 "	-1
+1	120813	14:00			irp	bac	1	weight	10.60
+1	120813	14:00			irp	bac	1	training	chair	headOut	freeViewing	"chairtraining"
+1	120813	14:00			irp	bac	1	mBehavior	"went to monkey gate (was putting him on the table there, ok),trained head and go in animal room"
+
+1	120814	14:00			irp	bac	1	prevDayFluid	-1
+1	120814	14:00			irp	bac	1	dailyWater	"190ml fruit/ 240mljuice for clickertr.,afterwards -1"	-1
+1	120814	14:00			irp	bac	1	weight	10.60
+1	120814	14:00			irp	bac	1	training	chair	headOut	freeViewing	"chairtraining"
+1	120814	14:00			irp	bac	1	mBehavior	"same behavior like the day before"
+
+1	120815	14:00			irp	bac	1	prevDayFluid	-1
+1	120815	14:00			irp	bac	1	dailyWater	"120ml fruit/ 180mljuice for clickertr., afterwards -1 "	-1
+1	120815	14:00			irp	bac	1	weight	10.70
+1	120815	14:00			irp	bac	1	training	chair	headOut	freeViewing	"chairtraining"
+1	120815	14:00			irp	bac	1	mBehavior	"went outside of animal facility, ok, were in the prep room of Scherbergers, putting green drape on chair, ok, trained with Leo"
+
+1	120816	14:00			irp	bac	1	prevDayFluid	-1
+1	120816	14:00			irp	bac	1	dailyWater	"185ml fruit/ 100mljuice for clickertr., afterwards -1 "	-1
+1	120816	14:00			irp	bac	1	weight	10.75
+1	120816	14:00			irp	bac	1	training	chair	headOut	freeViewing	"chairtraining"
+1	120816	14:00			irp	bac	1	mBehavior	"were in the prep room of Scherbergers, ok, trained with Leo"
+
+1	120817	14:00			irp	bac	1	prevDayFluid	-1
+1	120817	14:00			irp	bac	1	dailyWater	"185ml fruit/ 100mljuice for clickertr., afterwards -1 "	-1
+1	120817	14:00			irp	bac	1	weight	10.75
+1	120817	14:00			irp	bac	1	training	chair	headOut	freeViewing	"chairtraining"
+1	120817	14:00			irp	bac	1	mBehavior	"ok"
+
+1	120820	14:00			leb	bac	1	prevDayFluid	-1
+1	120820	14:00			leb	bac	1	dailyWater	"150ml fruit/ 150mljuice for clickertr., afterwards -1 "	-1
+1	120820	14:00			leb	bac	1	training	chair	headOut	freeViewing	"chairtraining"
+1	120820	14:00			leb	bac	1	mBehavior	"he has super motivation"
+
+1	120821	14:00			leb	bac	1	prevDayFluid	-1
+1	120821	14:00			leb	bac	1	dailyWater	"200ml fruit/ 150mljuice for clickertr., afterwards -1 "	-1
+1	120821	14:00			leb	bac	1	weight	10.70
+1	120821	14:00			leb	bac	1	training	chair	headOut	freeViewing	"chairtraining"
+1	120821	14:00			leb	bac	1	mBehavior	"to check the weight and train to tolerate the transport collar"
+
+1	120822	14:00			leb	bac	1	prevDayFluid	-1
+1	120822	14:00			leb	bac	1	dailyWater	"100ml fruit/ 100mljuice for clickertr., afterwards -1 "	-1
+1	120822	14:00			leb	bac	1	weight	10.65
+1	120822	14:00			leb	bac	1	training	chair	headOut	freeViewing	"chairtraining"
+1	120822	14:00			leb	bac	1	mBehavior	"ok"
+
+1	120823	14:00			leb	bac	1	prevDayFluid	-1
+1	120823	14:00			leb	bac	1	dailyWater	"200ml fruit/ 150mljuice for clickertr., afterwards -1 "	-1
+1	120823	14:00			leb	bac	1	weight	10.70
+1	120823	14:00			leb	bac	1	training	chair	headOut	freeViewing	"chairtraining"
+1	120823	14:00			leb	bac	1	mBehavior	"generalization from the bavavior with Adan,he comes not so fast,but ok"
+
+1	120827	14:00			irp	bac	1	prevDayFluid	-1
+1	120827	14:00			irp	bac	1	dailyWater	"135ml fruit/ 90mljuice for clickertr., afterwards -1 "	-1
+1	120827	14:00			irp	bac	1	weight	10.50
+1	120827	14:00			irp	bac	1	training	chair	headOut	freeViewing	"chairtraining"
+1	120827	14:00			irp	bac	1	mBehavior	"came good into chair, trained going in and out in animal room, puting chain around neck, everythink ok"
+
+1	120828	14:00			irp	bac	1	prevDayFluid	-1
+1	120828	14:00			irp	bac	1	dailyWater	"225ml fruit/ 260mljuice for clickertr., afterwards -1 "	-1
+1	120828	14:00			irp	bac	1	weight	10.15
+1	120828	14:00			irp	bac	1	training	chair	headOut	freeViewing	"chairtraining"
+1	120828	14:00			irp	bac	1	aim	"simple reach-fixation task, variation of target"
+1	120828	14:00			irp	bac	1	mBehavior	"good into chair, in setup ok, got reward by looking at target on touchscreen from us, we had to help him to touch the target, was not really interested in it, trained with Leo"
+1	120828	14:00			irp	bac	1	mState	"1.day in the lab/Setup, was sitting in front of touchscreen"
+1	120828	14:00			irp	bac	1	note	"parameter: allowed_release 500, time_to_acquire 1500, fix_time_to_acquire 2000, fix_time_hold 200, fix_rad 100, fix_range 350, tar_time_to_acquire 2000, tar_time_hold 2000, tar_rad 40, tar_range 300, time_wait_for_reward 10, time_reward 500, time_iti_success 1000, time_iti_failure 2000"
+
+1	120829	14:00			irp	bac	1	prevDayFluid	-1
+1	120829	14:00			irp	bac	1	dailyWater	"228ml fruit/ 50mljuice in Setup., afterwards -1 "	-1
+1	120829	14:00			irp	bac	1	weight	10.35
+1	120829	14:00			irp	bac	1	training	chair	headOut	freeViewing	"chairtraining"
+1	120829	14:00			irp	bac	1	aim	"simple reach-fixation task, big target in middle of the screen (no variation)"
+1	120829	14:00			irp	bac	1	dataFile	Bac2012-08-29_1.mat
+1	120829	14:00			irp	bac	1	dataFile	Bac2012-08-29_2.mat
+1	120829	14:00			irp	bac	1	dayNumTrials	 162 62 50
+1	120829	14:00			irp	bac	1	mBehavior	"good into chair, got the idea of touching the target on screen,trained with Leo"
+1	120829	14:00			irp	bac	1	note	"1 run: parameter: allowed_release 500, time_to_acquire 1500, fix_time_to_acquire 2000, fix_time_hold 200, fix_rad 400, fix_range 0, tar_time_to_acquire 2000, tar_time_hold 2000, tar_rad 400, tar_range 0, time_wait_for_reward 10, time_reward 500, time_iti_success 1000, time_iti_failure 2000, 2 run: parameter changes of tar/fix_rad to 200"
+
+
+1	120830	14:00			irp	bac	1	prevDayFluid	-1
+1	120830	14:00			irp	bac	1	dailyWater	"200ml fruit/ 250mljuice for clickertr., afterwards -1 "	-1
+1	120830	14:00			irp	bac	1	weight	10.35
+1	120830	14:00			irp	bac	1	training	chair	headOut	freeViewing	"chairtraining"
+1	120830	14:00			irp	bac	1	PRT	naive	target	450	1	"giving hand in chair"
+1	120830	14:00			irp	bac	1	mBehavior	"came good into chair, trained going in and out in animal room, giving hand in animal facility kitchen, ok, trained with Leo"
+
+
+1	120831	14:00			irp	bac	1	prevDayFluid	-1
+1	120831	14:00			irp	bac	1	dailyWater	"120ml fruit/ 25mljuice  in Setup., afterwards -1 "	-1
+1	120831	14:00			irp	bac	1	weight	10.65
+1	120831	14:00			irp	bac	1	training	chair	headOut	freeViewing	"chairtraining"
+1	120831	14:00			irp	bac	1	aim	"simple reach-fixation task, big target in middle of the screen with variation"
+1	120831	14:00			irp	bac	1	dataFile	Bac2012-08-31_1.mat
+1	120831	14:00			irp	bac	1	dayNumTrials	 86 17 25
+1	120831	14:00			irp	bac	1	mBehavior	"came good into chair, was touching the target a few times but was more interested in observing the Setup (cleaning of animal room before), trained with Adan"
+
+1	120903	14:00			irp	bac	1	prevDayFluid	-1
+1	120903	14:00			irp	bac	1	dailyWater	"240ml fruit/ 20mljuice  in Setup., afterwards -1 "	-1
+1	120903	14:00			irp	bac	1	weight	09.90
+1	120903	14:00			irp	bac	1	aim	"simple reach-fixation task, big target in middle of the screen with variation"
+1	120903	14:00			irp	bac	1	dataFile	Bac2012-09-03_1.mat
+1	120903	14:00			irp	bac	1	dataFile	Bac2012-09-03_2.mat
+1	120903	14:00			irp	bac	1	dataFile	Bac2012-09-03_3.mat
+1	120903	14:00			irp	bac	1	dayNumTrials	150 35 30
+1	120903	14:00			irp	bac	1	mBehavior	"came good into chair, was touching the target a few times but decreased the time of holding, trained with Adan"
+
+1	120904	14:00			irp	bac	1	animalExpStatus	enteredExp	"33.14.42502-04-064/07" ""
+
+1	120904	14:00			irp	bac	1	prevDayFluid	-1
+1	120904	14:00			irp	bac	1	dailyWater	"248ml fruit/ 155mljuice in Setup"	403
+1	120904	14:00			irp	bac	1	weight	09.90
+1	120904	14:00			irp	bac	1	aim	"simple reach-fixation task, big target in middle of the screen with variation"
+1	120904	14:00			irp	bac	1	dataFile	Bac2012-09-04_1.mat
+1	120904	14:00			irp	bac	1	dataFile	Bac2012-09-04_2.mat
+1	120904	14:00			irp	bac	1	dataFile	Bac2012-09-04_3.mat
+1	120904	14:00			irp	bac	1	dataFile	Bac2012-09-04_4.mat
+1	120904	14:00			irp	bac	1	dataFile	Bac2012-09-04_5.mat
+1	120904	14:00			irp	bac	1	dayNumTrials	290 63 155
+1	120904	14:00			irp	bac	1	mBehavior	"came good into chair, fully motivated, wiping movements (not precisely), ok "
+1	120904	14:00			irp	bac	1	note	"parameter: fix_time_hold 100, fix_rad 180, fix_range 200, time_reward 700 "
+
+1	120905	14:00			irp	bac	1	prevDayFluid	403
+1	120905	14:00			irp	bac	1	dailyWater	"200ml fruit/ 255mljuice in Setup"	455
+1	120905	14:00			irp	bac	1	weight	10.00
+1	120905	14:00			irp	bac	1	aim	"simple reach-fixation task"
+1	120905	14:00			irp	bac	1	dataFile	Bac2012-09-05_1.mat
+1	120905	14:00			irp	bac	1	dataFile	Bac2012-09-05_2.mat
+1	120905	14:00			irp	bac	1	dayNumTrials	427 77 255
+1	120905	14:00			irp	bac	1	mBehavior	"came good into chair, fully motivated, wiping movements (not precisely) but getting better, ok "
+1	120905	14:00			irp	bac	1	note	"parameter: fix_time_hold 100, fix_rad 180, fix_range 200, time_reward 700 "
+
+1	120906	14:00			irp	bac	1	prevDayFluid	455
+1	120906	14:00			irp	bac	1	dailyWater	"130ml fruit/ 280mljuice in Setup"	410
+1	120906	14:00			irp	bac	1	weight	09.85
+1	120906	14:00			irp	bac	1	aim	"simple reach-fixation task"
+1	120906	14:00			irp	bac	1	dataFile	Bac2012-09-06_1.mat
+1	120906	14:00			irp	bac	1	dataFile	Bac2012-09-06_2.mat
+1	120906	14:00			irp	bac	1	dataFile	Bac2012-09-06_3.mat
+1	120906	14:00			irp	bac	1	dayNumTrials	564 72 280
+1	120906	14:00			irp	bac	1	mBehavior	"is touching the target more precicely, ok"
+1	120906	14:00			irp	bac	1	note	"parameter: fix_time_hold 150, fix_rad 180, fix_range 200, time_reward 650 "
+
+1	120907	14:00			irp	bac	1	prevDayFluid	410
+1	120907	14:00			irp	bac	1	dailyWater	"85ml fruit/ afterwards -1"	-1
+1	120907	14:00			irp	bac	1	weight	09.80
+1	120907	14:00			irp	bac	1	aim	"simple reach-fixation task"
+1	120907	14:00			irp	bac	1	dataFile	Bac2012-09-07_1.mat
+1	120907	14:00			irp	bac	1	dataFile	Bac2012-09-07_2.mat
+1	120907	14:00			irp	bac	1	dayNumTrials	206 65 85
+1	120907	14:00			irp	bac	1	mBehavior	"is touching the target more precicely, ok"
+1	120907	14:00			irp	bac	1	note	"parameter: fix_time_hold 150, fix_rad 90, fix_range 200, time_reward 600 "
+
+1	120910	14:00			irp	bac	1	prevDayFluid	-1
+1	120910	14:00			irp	bac	1	dailyWater	"45ml setup/ 200ml fruits"	245
+1	120910	14:00			irp	bac	1	weight	10.20
+1	120910	14:00			irp	bac	1	aim	"simple reach-fixation task"
+1	120910	14:00			irp	bac	1	dataFile	Bac2012-09-10_1.mat
+1	120910	14:00			irp	bac	1	dataFile	Bac2012-09-10_2.mat
+1	120910	14:00			irp	bac	1	dayNumTrials	172 47 45
+1	120910	14:00			irp	bac	1	mBehavior	"is touching the target more precicely, ok"
+1	120910	14:00			irp	bac	1	note	"parameter: fix_time_hold 150, fix_rad 90, fix_range 200, time_reward 400 "
+
+1	120911	14:00			irp	bac	1	prevDayFluid	245
+1	120911	14:00			irp	bac	1	dailyWater	"110ml in setup/ 170ml fruits"	280
+1	120911	14:00			irp	bac	1	weight	10.05
+1	120911	14:00			irp	bac	1	aim	"simple reach-fixation task"
+1	120911	14:00			irp	bac	1	dataFile	Bac2012-09-10_1.mat
+1	120911	14:00			irp	bac	1	dataFile	Bac2012-09-10_2.mat
+1	120911	14:00			irp	bac	1	dataFile	Bac2012-09-10_3.mat
+1	120911	14:00			irp	bac	1	dataFile	Bac2012-09-10_4.mat
+1	120911	14:00			irp	bac	1	dayNumTrials	431 67 110
+1	120911	14:00			irp	bac	1	mBehavior	"fully motivated, ok"
+1	120911	14:00			irp	bac	1	note	"parameter: fix_time_hold 150, fix_rad 70, fix_range 200, time_reward 400 changed turing the task to 480 to motivate him "
+
+1	120912	14:00			irp	bac	1	prevDayFluid	280
+1	120912	14:00			irp	bac	1	dailyWater	"120ml fruit/ 210ml in setup"	330
+1	120912	14:00			irp	bac	1	weight	9.75
+1	120912	14:00			irp	bac	1	aim	"simple reach-fixation task"
+1	120912	14:00			irp	bac	1	dataFile	Bac2012-09-12_1.mat
+1	120912	14:00			irp	bac	1	dataFile	Bac2012-09-12_2.mat
+1	120912	14:00			irp	bac	1	dataFile	Bac2012-09-12_3.mat
+1	120912	14:00			irp	bac	1	dataFile	Bac2012-09-12_4.mat
+1	120912	14:00			irp	bac	1	dataFile	Bac2012-09-12_5.mat
+1	120912	14:00			irp	bac	1	dataFile	Bac2012-09-12_6.mat
+1	120912	14:00			irp	bac	1	dataFile	Bac2012-09-12_7.mat
+1	120912	14:00			irp	bac	1	dayNumTrials	932 61 210
+1	120912	14:00			irp	bac	1	mBehavior	"400ms of holding was difficult for him today"
+1	120912	14:00			irp	bac	1	note	"parameter: fix_time_hold 150 up to 400ms, fix_rad 70, fix_range 200, time_reward 400 changed turing the task to 550 to motivate him "
+
+1	120913	14:00			irp	bac	1	prevDayFluid	330
+1	120913	14:00			irp	bac	1	dailyWater	"230ml fruit/ 80ml in setup, afterwards -1"	-1
+1	120913	14:00			irp	bac	1	weight	9.90
+1	120913	14:00			irp	bac	1	aim	"simple reach-fixation task"
+1	120913	14:00			irp	bac	1	dataFile	Bac2012-09-13_1.mat
+1	120913	14:00			irp	bac	1	dataFile	Bac2012-09-13_2.mat
+1	120913	14:00			irp	bac	1	dataFile	Bac2012-09-13_3.mat
+1	120913	14:00			irp	bac	1	dataFile	Bac2012-09-13_4.mat
+1	120913	14:00			irp	bac	1	dayNumTrials	428 48 80
+1	120913	14:00			irp	bac	1	mBehavior	"500ms for 1 day ok"
+1	120913	14:00			irp	bac	1	note	"parameter: fix_time_hold 400 up to 250ms, fix_rad 70, fix_range 200, time_reward 400 "
+
+1	120914	14:00			irp	bac	1	prevDayFluid	-1
+1	120914	14:00			irp	bac	1	dailyWater	"45ml in setup/ 230ml fruits, afterwards -1"	-1
+1	120914	14:00			irp	bac	1	weight	10.5
+1	120914	14:00			irp	bac	1	aim	"simple reach-fixation task"
+1	120914	14:00			irp	bac	1	dataFile	Bac2012-09-14_1.mat
+1	120914	14:00			irp	bac	1	dataFile	Bac2012-09-14_2.mat
+1	120914	14:00			irp	bac	1	dataFile	Bac2012-09-14_3.mat
+1	120914	14:00			irp	bac	1	dataFile	Bac2012-09-14_4.mat
+1	120914	14:00			irp	bac	1	dayNumTrials	310 39 45
+1	120914	14:00			irp	bac	1	mBehavior	"same like the day before"
+1	120914	14:00			irp	bac	1	note	"parameter: fix_time_hold 500 up to 300ms, fix_rad 70, fix_range 200, time_reward 500 changed "
+
+1	120917	12:00			irp	bac	1	prevDayFluid	-1
+1	120917	12:00			irp	bac	1	dailyWater	"125ml in setup/ 112ml fruits"	237
+1	120917	12:00			irp	bac	1	weight	10.7
+1	120917	12:00			irp	bac	1	aim	"simple reach-fixation task"
+1	120917	12:00			irp	bac	1	dataFile	Bac2012-09-17_1.mat
+1	120917	12:00			irp	bac	1	dataFile	Bac2012-09-17_2.mat
+1	120917	12:00			irp	bac	1	dayNumTrials	452 44 125
+1	120917	12:00			irp	bac	1	mBehavior	""
+1	120917	12:00			irp	bac	1	note	"parameter: fix_time_hold 500 up to 250ms, fix_rad 70, fix_range 200, time_reward 400 changed to 550"
+
+1	120918	12:00			irp	bac	1	prevDayFluid	237
+1	120918	12:00			irp	bac	1	dailyWater	"190ml in setup/ 220ml fruits+100ml extra water"	510
+1	120918	12:00			irp	bac	1	weight	10.0
+1	120918	12:00			irp	bac	1	aim	"simple reach-fixation task"
+1	120918	12:00			irp	bac	1	dataFile	Bac2012-09-18_1.mat
+1	120918	12:00			irp	bac	1	dataFile	Bac2012-09-18_2.mat
+1	120918	12:00			irp	bac	1	dataFile	Bac2012-09-18_3.mat
+1	120918	12:00			irp	bac	1	dayNumTrials	626 77 190
+1	120918	12:00			irp	bac	1	mBehavior	"better with randomization of holding times"
+1	120918	12:00			irp	bac	1	note	"parameter: fix_time_hold 250 up to 500ms in randomization, fix_rad 70, fix_range 200, time_reward 400 changed to 550"
+
+1	120919	12:00			irp	bac	1	prevDayFluid	510
+1	120919	12:00			irp	bac	1	dailyWater	"220ml in setup/ 257ml fruits"	477
+1	120919	12:00			irp	bac	1	weight	9.90
+1	120919	12:00			irp	bac	1	aim	"simple reach-fixation task"
+1	120919	12:00			irp	bac	1	dataFile	Bac2012-09-19_1.mat
+1	120919	12:00			irp	bac	1	dayNumTrials	750 75 220
+1	120919	12:00			irp	bac	1	mBehavior	"much better in touching the target, putting his arm back in chair after a trial"
+1	120919	12:00			irp	bac	1	note	"parameter: fix_time_hold 250 up to 700ms in randomization, fix_rad 70, fix_range 200, time_reward 400"
+
+1	120920	12:00			irp	bac	1	prevDayFluid	477
+1	120920	12:00			irp	bac	1	dailyWater	"300ml in setup/ 225ml fruits"	525
+1	120920	12:00			irp	bac	1	weight	9.70
+1	120920	12:00			irp	bac	1	aim	"simple reach-fixation task"
+1	120920	12:00			irp	bac	1	dataFile	Bac2012-09-20_1.mat
+1	120920	12:00			irp	bac	1	dayNumTrials	684 83 300
+1	120920	12:00			irp	bac	1	mBehavior	"ok"
+1	120920	12:00			irp	bac	1	note	"parameter: fix_time_hold 300 up to 900ms in randomization, fix_rad 70, fix_range 350, time_reward 400 changed to 550"
+
+1	120921	12:00			irp	bac	1	prevDayFluid	525
+1	120921	12:00			irp	bac	1	dailyWater	"90ml in setup/ 280ml fruits, afterwards -1"	-1
+1	120921	12:00			irp	bac	1	weight	10.35
+1	120921	12:00			irp	bac	1	aim	"simple reach-fixation task"
+1	120921	12:00			irp	bac	1	dataFile	Bac2012-09-21_1.mat
+1	120921	12:00			irp	bac	1	dayNumTrials	425 78 90
+1	120921	12:00			irp	bac	1	mBehavior	"ok"
+1	120921	12:00			irp	bac	1	note	"parameter: fix_time_hold 300 up to 1000ms in randomization, fix_rad 70, fix_range 350, time_reward 400"
+
+1	120924	12:00			irp	bac	1	prevDayFluid	-1
+1	120924	12:00			irp	bac	1	dailyWater	"225ml in setup/ 218ml fruits"	443
+1	120924	12:00			irp	bac	1	weight	10.15
+1	120924	12:00			irp	bac	1	aim	"simple reach-fixation task"
+1	120924	12:00			irp	bac	1	dataFile	Bac2012-09-24_1.mat
+1	120924	12:00			irp	bac	1	dataFile	Bac2012-09-24_2.mat
+1	120924	12:00			irp	bac	1	dayNumTrials	542 82 225
+1	120924	12:00			irp	bac	1	mBehavior	"ok"
+1	120924	12:00			irp	bac	1	note	"parameter: fix_time_hold 300 up to 800ms in randomization, fix_rad 70, fix_range 350, time_reward 450 changed to 500"
+
+1	120925	12:00			irp	bac	1	prevDayFluid	443
+1	120925	12:00			irp	bac	1	dailyWater	"200ml in setup/ 104ml fruits+100ml extra"	404
+1	120925	12:00			irp	bac	1	weight	9.95
+1	120925	12:00			irp	bac	1	aim	"simple reach-fixation task"
+1	120925	12:00			irp	bac	1	dataFile	Bac2012-09-25_1.mat
+1	120925	12:00			irp	bac	1	dataFile	Bac2012-09-25_2.mat
+1	120925	12:00			irp	bac	1	dayNumTrials	922 75 200
+1	120925	12:00			irp	bac	1	mBehavior	"ok"
+1	120925	12:00			irp	bac	1	note	"parameter: fix_time_hold 300 up to 1000ms in randomization, fix_rad 60, fix_range 350, time_reward 350 changed to 420"
+
+1	120926	12:00			irp	bac	1	prevDayFluid	404
+1	120926	12:00			irp	bac	1	dailyWater	"300ml in setup/ 128ml fruits"	428
+1	120926	12:00			irp	bac	1	weight	9.85
+1	120926	12:00			irp	bac	1	aim	"simple reach-fixation task"
+1	120926	12:00			irp	bac	1	dataFile	Bac2012-09-26_1.mat
+1	120926	12:00			irp	bac	1	dataFile	Bac2012-09-26_2.mat
+1	120926	12:00			irp	bac	1	dataFile	Bac2012-09-26_3.mat
+1	120926	12:00			irp	bac	1	dataFile	Bac2012-09-26_4.mat
+1	120926	12:00			irp	bac	1	dayNumTrials	1135 79	300
+1	120926	12:00			irp	bac	1	mBehavior	"ok"
+1	120926	12:00			irp	bac	1	note	"parameter: fix_time_hold 300 up to 1000ms in randomization, fix_rad 60, fix_range 350, time_reward 350"
+
+1	120927	12:00			irp	bac	1	prevDayFluid	428
+1	120927	12:00			irp	bac	1	dailyWater	"305ml in setup/ 83ml fruits"	388
+1	120927	12:00			irp	bac	1	weight	9.95
+1	120927	12:00			irp	bac	1	aim	"simple reach-fixation task"
+1	120927	12:00			irp	bac	1	dataFile	Bac2012-09-27_1.mat
+1	120927	12:00			irp	bac	1	dayNumTrials	1105 88 305
+1	120927	12:00			irp	bac	1	mBehavior	"ok"
+1	120927	12:00			irp	bac	1	note	"parameter: fix_time_hold 300 up to 1000ms in randomization, fix_rad 60, fix_range 350, time_reward 350"
+
+1	120928	12:00			irp	bac	1	prevDayFluid	388
+1	120928	12:00			irp	bac	1	dailyWater	"170ml in setup/ 128ml fruits, afterwards -1"	-1
+1	120928	12:00			irp	bac	1	weight	10.05
+1	120928	12:00			irp	bac	1	aim	"simple reach-fixation task"
+1	120928	12:00			irp	bac	1	dataFile	Bac2012-09-28_1.mat
+1	120928	12:00			irp	bac	1	dataFile	Bac2012-09-28_2.mat
+1	120928	12:00			irp	bac	1	dataFile	Bac2012-09-28_3.mat
+1	120928	12:00			irp	bac	1	dayNumTrials	774 67 170
+1	120928	12:00			irp	bac	1	mBehavior	"ok"
+1	120928	12:00			irp	bac	1	note	"parameter: fix_time_hold 300 up to 1000ms in randomization, fix_rad 60, fix_range 420, time_reward 350"
+
+1	121001	12:00			irp	bac	1	prevDayFluid	-1
+1	121001	12:00			irp	bac	1	dailyWater	"170ml in setup/ 116ml fruits"	286
+1	121001	12:00			irp	bac	1	weight	9.75
+1	121001	12:00			irp	bac	1	aim	"simple reach-fixation task"
+1	121001	12:00			irp	bac	1	dataFile	Bac2012-10-01_1.mat
+1	121001	12:00			irp	bac	1	dataFile	Bac2012-10-01_2.mat
+1	121001	12:00			irp	bac	1	dataFile	Bac2012-10-01_3.mat
+1	121001	12:00			irp	bac	1	dataFile	Bac2012-10-01_4.mat
+1	121001	12:00			irp	bac	1	dataFile	Bac2012-10-01_5.mat
+1	121001	12:00			irp	bac	1	dayNumTrials	790 61 170
+1	121001	12:00			irp	bac	1	mBehavior	"ok"
+1	121001	12:00			irp	bac	1	note	"parameter: fix_time_hold 300 up to 800ms in randomization, fix_rad 60, fix_range 350, time_reward 350"
+
+1	121002	12:00			irp	bac	1	prevDayFluid	286
+1	121002	12:00			irp	bac	1	dailyWater	"320ml in setup/ 64ml fruits, afterwards 4h waterbox and -1"	-1
+1	121002	12:00			irp	bac	1	waterbox	5	2	wasserbox1	12:05	16:05	0.14	430	"responsible person Daniel/Ira;B9:1,5s, B12:0,22s"
+1	121002	12:00			irp	bac	1	weight	9.70
+1	121002	12:00			irp	bac	1	aim	"simple reach-fixation task"
+1	121002	12:00			irp	bac	1	dataFile	Bac2012-10-02_1.mat
+1	121002	12:00			irp	bac	1	dayNumTrials	1278 80 320
+1	121002	12:00			irp	bac	1	mBehavior	"ok"
+1	121002	12:00			irp	bac	1	note	"parameter: fix_time_hold 300 up to 1000ms in randomization, fix_rad 60, fix_range 350, time_reward 350"
+
+1	121008	12:00			irp	bac	1	prevDayFluid	-1
+1	121008	12:00			irp	bac	1	dailyWater	"265ml in setup/ 100ml fruits"	365
+1	121008	12:00			irp	bac	1	weight	9.95
+1	121008	12:00			irp	bac	1	aim	"simple reach-fixation task"
+1	121008	12:00			irp	bac	1	dataFile	Bac2012-10-08_1.mat
+1	121008	12:00			irp	bac	1	dataFile	Bac2012-10-08_2.mat
+1	121008	12:00			irp	bac	1	dayNumTrials	884 67 265
+1	121008	12:00			irp	bac	1	mBehavior	"ok"
+1	121008	12:00			irp	bac	1	note	"parameter: fix_time_hold 300 up to 800ms in randomization, fix_rad 60, fix_range 350, time_reward 350"
+
+1	121009	08:00			irp	bac	1	animalExpStatus	entered_fMRI	""   "start the training for the fMRI measurements"	
+
+1	121009	12:30			irp	bac	1	prevDayFluid	365
+1	121009	12:30			irp	bac	1	dailyWater	" 500 ml water + 220 ml fruit "	720
+1	121009	12:30			irp	bac	1	training	naive	chair	freeViewing	"fMRI-chairtraining"
+1	121009	12:30			irp	bac	1	mBehavior	" Bacchus went into the MRI chair and went out of it. He put his head out of the neck plat at the end of the trainning. It was good for the first day"
+1	121009	12:30			irp	bac	1	aim	" Further familiarize Bacchus with the MRI chair. Training him to go in and go back of the fmri chair, training with Leo and Caio "
+
+1	121010	12:30			irp	bac	1	prevDayFluid	720
+1	121010	12:30			irp	bac	1	dailyWater	" 250 ml juice + 160 ml fruit "	410
+1	121010	12:30			irp	bac	1	training	naive	chair	freeViewing	"fMRI-chairtraining"
+1	121010	12:30			irp	bac	1	mBehavior	"training of going in and going out of fMRI chair, good, training with Leo and Caio "
+
+1	121011	12:30			irp	bac	1	prevDayFluid	410
+1	121011	12:30			irp	bac	1	dailyWater	" 300 ml juice + 170 ml fruit, afterwards -1"	-1
+1	121011	12:30			irp	bac	1	training	naive	chair	freeViewing	"fMRI-chairtraining"
+1	121011	12:30			irp	bac	1	mBehavior	"training of going in and going out of fMRI chair, good, training with Leo and Caio "
+
+1	121015	12:30			cam	bac	1	prevDayFluid	-1
+1	121015	12:30			cam	bac	1	dailyWater	" 330 ml juice + 185 ml fruit"	515
+1	121015	12:30			cam	bac	1	training	naive	chair	freeViewing	"fMRI-chairtraining"
+1	121015	12:30			cam	bac	1	mBehavior	"training of going in and going out fMRI chair, closing the neckplate and moving the chair around 30cm forward and backward, good, training with Leo and Ira "
+
+1	121016	12:30			cam	bac	1	prevDayFluid	515
+1	121016	12:30			cam	bac	1	dailyWater	" 250 ml juice + 200 ml fruit"	420
+1	121016	12:30			cam	bac	1	training	naive	chair	freeViewing	"fMRI-chairtraining"
+1	121016	12:30			cam	bac	1	mBehavior	"training of going in and going out fMRI chair, closing the neckplate and moving the chair inside animal facility, good, training with Leo and Ira "
+
+1	121017	12:30			cam	bac	1	prevDayFluid	420
+1	121017	12:30			cam	bac	1	dailyWater	" 250 ml juice + 200 ml fruit, afterwards -1"	-1
+1	121017	12:30			cam	bac	1	training	naive	chair	freeViewing	"fMRI-chairtraining"
+1	121017	12:30			cam	bac	1	mBehavior	"training of going in and going out fMRI chair, closing the neckplate and moving the chair inside animal facility, good, training with Leo and Ira "
+
+1	121018	10:00			irp	bac	1	prevDayFluid	-1
+1	121018	10:00			irp	bac	1	medicalProc	veterinaryProc  "TB-Test, Herpes B, Blutentnahme, Wurmkur:Ivomec+Prazinex"
+1	121018	10:00			irp	bac	1	dailyWater	""	-1
+
+1	121019	10:00			irp	bac	1	prevDayFluid	-1
+1	121019	10:00			irp	bac	1	pdfAppendix	" page 6-7"
+1	121019	10:00			irp	bac	1	dailyWater	""	-1
+
+1	121022	12:30			cam	bac	1	prevDayFluid	-1
+1	121022	12:30			cam	bac	1	dailyWater	" 250 ml juice + 250 ml water + 175 ml fruit"	675
+1	121022	12:00			cam	bac	1	weight	8.85
+1	121022	12:30			cam	bac	1	training	naive	chair	freeViewing	"fMRI-chairtraining"
+1	121022	12:30			cam	bac	1	mBehavior	"training of going in and going out fMRI chair, closing the neckplate and moving the chair inside animal facility, good, training with Leo and Ira "
+
+1	121023	12:30			cam	bac	1	prevDayFluid	675
+1	121023	12:30			cam	bac	1	dailyWater	" 250 ml juice + 250 ml water + 180 ml fruit"	680
+1	121023	12:00			cam	bac	1	weight	9.30
+1	121023	12:30			cam	bac	1	training	naive	chair	freeViewing	"fMRI-chairtraining"
+1	121023	12:30			cam	bac	1	mBehavior	"training of going in and going out fMRI chair, closing the neckplate, moving the chair inside animal facility and giving the hand through the chair plate's hole, good, training with Ira "
+
+1	121024	12:30			cam	bac	1	prevDayFluid	680
+1	121024	12:30			cam	bac	1	dailyWater	" 250 ml juice + 200 ml water + 180 ml fruit"	630
+1	121024	12:00			cam	bac	1	weight	9.20
+1	121024	12:30			cam	bac	1	training	naive	chair	freeViewing	"fMRI-chairtraining"
+1	121024	12:30			cam	bac	1	mBehavior	"training of going in and going out fMRI chair, closing the neckplate, moving the chair inside animal facility and giving the hand through the chair plate's hole, good, training with Ira "
+
+1	121025	12:30			cam	bac	1	prevDayFluid	630
+1	121025	12:30			cam	bac	1	dailyWater	" 250 ml juice + 130 ml water + 160 ml fruit"	540
+1	121025	12:00			cam	bac	1	weight	9.30
+1	121025	12:30			cam	bac	1	training	naive	chair	freeViewing	"fMRI-chairtraining"
+1	121025	12:30			cam	bac	1	mBehavior	"training of going in and going out fMRI chair, closing the neckplate, moving the chair inside animal facility,good, training with Ira "
+
+1	121026	12:30			cam	bac	1	prevDayFluid	540
+1	121026	12:30			cam	bac	1	dailyWater	" 250 ml juice + 130 ml water + 135 ml fruit, afterwards -1"	-1
+1	121026	12:00			cam	bac	1	weight	9.55
+1	121026	12:30			cam	bac	1	training	naive	chair	freeViewing	"fMRI-chairtraining"
+1	121026	12:30			cam	bac	1	mBehavior	"training of going in and going out fMRI chair, closing the neckplate, moving the chair inside animal facility,good, training with Ira "
+
+1	121029	12:30			cam	bac	1	prevDayFluid	-1
+1	121029	12:30			cam	bac	1	dailyWater	" 110 ml juice + 240 ml water + 175 ml fruit"	525
+1	121029	12:00			cam	bac	1	weight	9.30
+1	121029	12:30			cam	bac	1	training	naive	chair	freeViewing	"fMRI-chairtraining"
+1	121029	12:30			cam	bac	1	mBehavior	"training of going in and going out fMRI chair, closing the neckplate, moving the chair inside animal facility,good, training with Ira "
+
+1	121030	12:30			cam	bac	1	prevDayFluid	525
+1	121030	12:30			cam	bac	1	dailyWater	" 200 ml fruit, afterwards -1"	-1
+1	121030	12:00			cam	bac	1	weight	9.20
+1	121030	12:30			cam	bac	1	training	naive	chair	freeViewing	"fMRI-chairtraining"
+1	121030	12:30			cam	bac	1	mBehavior	"training of going in and going out fMRI chair, closing the neckplate, moving the chair inside animal facility,good, training with Ira "
+
+1	121031	12:30			cam	bac	1	prevDayFluid	-1
+1	121031	12:30			cam	bac	1	dailyWater	" 400 ml water + 144 ml fruit" 544
+1	121031	12:00			cam	bac	1	weight	9.15
+1	121031	12:30			cam	bac	1	training	naive	chair	freeViewing	"fMRI-chairtraining"
+1	121031	12:30			cam	bac	1	mBehavior	"training of going in and going out fMRI chair, closing the neckplate, moving the chair inside animal facility,good, training with Ira "
+
+1	121101	12:30			cam	bac	1	prevDayFluid	544
+1	121101	12:30			cam	bac	1	dailyWater	" 400 ml water + 200 ml fruit, afterwards -1"	-1
+1	121101	12:00			cam	bac	1	weight	9.00
+1	121101	12:30			cam	bac	1	training	naive	chair	freeViewing	"fMRI-chairtraining"
+1	121101	12:30			cam	bac	1	mBehavior	"training of going in and going out fMRI chair, closing the neckplate, moving the chair inside animal facility,good, training with Ira "
+
+1	121106	12:30			cam	bac	1	prevDayFluid	-1
+1	121106	12:30			cam	bac	1	medication	antibiotics	"Duphamox, 1.1 ml, i.m."
+1	121106	12:30			cam	bac	1	dailyWater	""	-1
+1	121106	12:30			cam	bac	1	weight	10.00
+1	121106	12:30			cam	bac	1	pdfAppendix	"Headpost surgery notes"
+
+1	121107	11:00			cam	bac	1	prevDayFluid	-1
+1	121107	11:00			cam	bac	1	medicalProc	headpost	"Headpost surgery without any complications. See pdf appendix"
+1	121107	12:30			cam	bac	1	dailyWater	""	-1
+1	121107	11:00			cam	bac	1	weight	10.05
+1	121107	11:00			cam	bac	1	pdfAppendix	"blood page 8-9"
+1	121107	11:00			cam	bac	1	pdfAppendix	"Headpost surgery notes page 10-15"
+1	121107	11:00			cam	bac	1	medication	other	"Ketavet, 1.5 ml, i.m."
+1	121107	11:00			cam	bac	1	medication	other	"Propofol, 18.6 ml, i.m."
+1	121107	11:00			cam	bac	1	medication	analgesics	"Fentanyl, 1.5 ml, i.m."
+1	121107	11:00			cam	bac	1	medication	analgesics	"Ketamin,  ml, i.m."
+1	121107	11:00			cam	bac	1	medication	analgesics	"L-Methadon, 0.6 ml, i.m."
+1	121107	11:00			cam	bac	1	medication	analgesics	"Metacam, 0.4 ml, s.c."
+
+1	121108	11:00			cam	bac	1	prevDayFluid	-1
+1	121108	11:00			cam	bac	1	medication	analgesics	"Metacam, 0.5 ml, s.c."
+1	121108	11:00			cam	bac	1	medication	antibiotics	"Duphamox, 1.1 ml, i.m."
+1	121108	11:00			cam	bac	1	pdfAppendix	"Headpost surgery notes"
+1	121108	12:30			cam	bac	1	dailyWater	""	-1
+
+1	121109	11:00			cam	bac	1	prevDayFluid	-1
+1	121109	11:00			cam	bac	1	medication	antibiotics	"Duphamox,  ml, i.m."
+1	121109	11:00			cam	bac	1	pdfAppendix	"Headpost surgery notes"
+1	121109	12:30			cam	bac	1	dailyWater	" "	-1
+
+1	121110	11:00			cam	bac	1	prevDayFluid	-1
+1	121110	11:00			cam	bac	1	medication	antibiotics	"Duphamox, 1.1 ml, i.m."
+1	121110	11:00			cam	bac	1	pdfAppendix	"Headpost surgery notes"
+1	121110	12:30			cam	bac	1	dailyWater	" "	-1
+
+1	121113	08:00			cam	bac	1	prevDayFluid	-1
+1	121113	08:00			cam	bac	1	medicalProc	veterinaryProc	"big injury on arm, after a fight with Magnus"
+1	121113	08:00			cam	bac	1	medication	antibiotics	"im Duphamox im  ml"
+1	121113	08:00			cam	bac	1	pdfAppendix	"page:    Behandlungsplan"
+1	121113	08:00			cam	bac	1	note	"Bacchus fought with Magnus after reintegration and had his arm injuried"
+1	121113	12:30			cam	bac	1	dailyWater	""	-1
+
+1	121121	12:30			cam	bac	1	prevDayFluid	-1
+1	121121	12:30			cam	bac	1	training	naive	chair	freeViewing	"Training Bacchus to enter the vertical chair with the head post"
+1	121121	12:30			cam	bac	1	weight	10.30
+1	121121	12:30			cam	bac	1	dailyWater	""	-1
+
+1	121122	12:30			cam	bac	1	prevDayFluid	-1
+1	121122	12:30			cam	bac	1	training	naive	chair	freeViewing	"Training Bacchus to enter the vertical chair with the head post"
+1	121122	12:30			cam	bac	1	weight	10.35
+1	121122	12:30			cam	bac	1	dailyWater	""	-1
+
+1	121123	12:30			cam	bac	1	prevDayFluid	-1
+1	121123	12:30			cam	bac	1	training	naive	chair	freeViewing	"Training Bacchus to enter the vertical chair with the head post"
+1	121123	12:30			cam	bac	1	weight	10.20
+1	121123	12:30			cam	bac	1	dailyWater	""	-1
+
+1	121126	12:30			cam	bac	1	prevDayFluid	-1
+1	121126	12:30			cam	bac	1	dailyWater	"150ml water+160ml fruits"	310
+1	121126	12:30			cam	bac	1	aim	"make Bacchus used to the sensors and test this approach with the monkey"
+1	121126	12:30			cam	bac	1	note "touching time 200ms, reward time 150ms"
+1	121126	12:30			cam	bac	1	mBehavior	"Bacchus was trying to hold the sensor and not to touch it, but he associated sensor with reward quickly"
+1	121126	12:30			cam	bac	1	weight	9.40
+
+1	121127	12:30			cam	bac	1	prevDayFluid	310
+1	121127	12:30			cam	bac	1	dailyWater	"50mlwater+150mlfruits+100mlwater"	300
+1	121127	12:30			cam	bac	1	aim	"make Bacchus used to the sensors and test this approach with the monkey"
+1	121127	12:30			cam	bac	1	note	"touching time 200ms, reward time 200ms"
+1	121127	12:30			cam	bac	1	weight	9.20
+
+1	121128	12:30			cam	bac	1	prevDayFluid	300
+1	121128	12:30			cam	bac	1	dailyWater	"25mlwater+200mlfruits+150mlwater"	375
+1	121128	12:30			cam	bac	1	aim	"make Bacchus use two sensors, one for the rest position of the hand and another as a target, and associate the use of the sensors with visual cues on the screen"
+1	121128	12:30			cam	bac	1	note	"Bacchus was confused because of some problems with sensors activation. We cancelled the training after around 20 minutes and gave him 150ml of water because he is losing weight"	
+1	121128	12:30			cam	bac	1	weight	8.70
+
+1	121129	12:30			cam	bac	1	prevDayFluid	375
+1	121129	12:30			cam	bac	1	dailyWater	"75mlwater+100mlfruits"	175
+1	121129	12:30			cam	bac	1	aim	"make Bacchus use two sensors, one for the rest position of the hand and another as a target, and associate the use of the sensors with visual cues on the screen"
+1	121129	12:30			cam	bac	1	weight	8.90
+
+1	121130	12:30			cam	bac	1	prevDayFluid	175
+1	121130	12:30			cam	bac	1	dailyWater	"110mlwater+30mlfruits+afterwards -1"	-1
+1	121130	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Two sensors training"
+1	121130	12:30			cam	bac	1	dayNumTrials	491 52 110
+1	121130	12:30			cam	bac	1	weight	8.70
+
+1	121204	12:30			cam	bac	1	prevDayFluid	-1
+1	121204	12:30			cam	bac	1	dailyWater	"175mlwater+65mlfruits"	240
+1	121204	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Two sensors training"
+1	121204	12:30			cam	bac	1	dayNumTrials	537 60 175
+1	121204	12:30			cam	bac	1	note	"hold_time_rest_sensor 500 up to 600ms, time_reward 350ms, reaction_time_until 5 down to 3s, hold_time_target_sensor 200ms"
+1	121204	12:30			cam	bac	1	weight	9.20
+
+1	121205	12:30			cam	bac	1	prevDayFluid	240
+1	121205	12:30			cam	bac	1	dailyWater	"220mlwater+90mlfruits"	310
+1	121205	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Two sensors training"
+1	121205	12:30			cam	bac	1	dayNumTrials	646 62 220
+1	121205	12:30			cam	bac	1	note	"hold_time_rest_sensor 600 up to 800ms, time_reward 450ms, reaction_time_until 3 down to 2.5s, hold_time_target_sensor 200ms"
+1	121205	12:30			cam	bac	1	weight	8.95
+
+1	121206	12:30			cam	bac	1	prevDayFluid	310
+1	121206	12:30			cam	bac	1	dailyWater	"300mlwater+20mlfruits"	320
+1	121206	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Two sensors training"
+1	121206	12:30			cam	bac	1	dayNumTrials	872 65 300
+1	121206	12:30			cam	bac	1	note	"hold_time_rest_sensor 600ms, time_reward 450ms, reaction_time_until 2.5s, hold_time_target_sensor 200ms"
+1	121206	12:30			cam	bac	1	weight	8.80
+
+1	121207	12:30			cam	bac	1	prevDayFluid	320
+1	121207	12:30			cam	bac	1	dailyWater	"110mlwater+20mlfruits+afterwards -1"	-1
+1	121207	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Two sensors training"
+1	121207	12:30			cam	bac	1	dayNumTrials	366 50 110
+1	121207	12:30			cam	bac	1	note	"hold_time_rest_sensor 600ms, time_reward 450ms, reaction_time_until 2.5 down to 1.5s, hold_time_target_sensor 200ms"
+1	121207	12:30			cam	bac	1	weight	8.70
+
+1	121210	12:30			cam	bac	1	prevDayFluid	-1
+1	121210	12:30			cam	bac	1	dailyWater	"120mlwater+45mlfruits"	165
+1	121210	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Two sensors training"
+1	121210	12:30			cam	bac	1	dayNumTrials	437 64 120
+1	121210	12:30			cam	bac	1	note	"hold_time_rest_sensor 600ms, time_reward 350ms, reaction_time_until 2.5s, hold_time_target_sensor 200ms"
+1	121210	12:30			cam	bac	1	weight	9.70
+
+1	121211	12:30			cam	bac	1	prevDayFluid	165
+1	121211	12:30			cam	bac	1	dailyWater	"220mlwater+40mlfruits"	260
+1	121211	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Two sensors training"
+1	121211	12:30			cam	bac	1	dayNumTrials	621 80 220
+1	121211	12:30			cam	bac	1	note	"hold_time_rest_sensor 700ms, time_reward 350ms up to 450ms, reaction_time_until 1s, hold_time_target_sensor 200ms"
+1	121211	12:30			cam	bac	1	weight	8.90
+
+1	121212	12:30			cam	bac	1	prevDayFluid	260
+1	121212	12:30			cam	bac	1	dailyWater	"270mlwater+25mlfruits"	295
+1	121212	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Two sensors training"
+1	121212	12:30			cam	bac	1	dayNumTrials	779 72 270
+1	121212	12:30			cam	bac	1	note	"hold_time_rest_sensor 800ms, time_reward 350ms up to 450ms, reaction_time_until 1s, hold_time_target_sensor 200ms"
+1	121212	12:30			cam	bac	1	weight	8.85
+
+1	121213	12:30			cam	bac	1	prevDayFluid	295
+1	121213	12:30			cam	bac	1	dailyWater	"260mlwater+15mlfruits"	275
+1	121213	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Two sensors training"
+1	121213	12:30			cam	bac	1	dayNumTrials	768 82 260
+1	121213	12:30			cam	bac	1	note	"hold_time_rest_sensor 700ms up to 900ms, time_reward 350ms up to 450ms, reaction_time_until 1s, hold_time_target_sensor 200ms"
+1	121213	12:30			cam	bac	1	weight	8.75
+
+1	121214	12:30			cam	bac	1	prevDayFluid	275
+1	121214	12:30			cam	bac	1	dailyWater	"300mlwater+40mlfruits+afterwards -1"	-1
+1	121214	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Two sensors training"
+1	121214	12:30			cam	bac	1	dayNumTrials	808 65 300
+1	121214	12:30			cam	bac	1	note	"hold_time_rest_sensor 800ms, time_reward 350ms up to 450ms, reaction_time_until 1s, hold_time_target_sensor 200ms"
+1	121214	12:30			cam	bac	1	weight	8.35
+
+1	121227	12:00			irp	bac	1	prevDayFluid	-1
+1	121227	12:00			irp	bac	1	dailyWater	""	-1
+1	121227	12:00			irp	bac	1	weight	9.90
+1	121227	12:00			irp	bac	1	note	"looking at margin, looks good"
+
+1	130103	12:00			irp	bac	1	prevDayFluid	-1
+1	130103	12:00			irp	bac	1	dailyWater	""	-1
+1	130103	12:00			irp	bac	1	weight	10.15
+1	130103	12:00			irp	bac	1	note	"looking at margin, looks good"
+
+1	130108	12:30			cam	bac	1	prevDayFluid	-1
+1	130108	12:30			cam	bac	1	dailyWater	"210mlwater+15mlfruits"	225
+1	130108	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Two sensors training"
+1	130108	12:30			cam	bac	1	dayNumTrials	748 70 210
+1	130108	12:30			cam	bac	1	note	"hold_time_rest_sensor 600ms up to 700ms, time_reward 350ms up to 450ms, reaction_time_until 1s, hold_time_target_sensor 200ms"
+1	130108	12:30			cam	bac	1	weight	10.15
+
+1	130109	12:30			cam	bac	1	prevDayFluid	225
+1	130109	12:30			cam	bac	1	dailyWater	"350mlwater+12mlfruits"	362
+1	130109	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Two sensors training"
+1	130109	12:30			cam	bac	1	dayNumTrials	889 79 350
+1	130109	12:30			cam	bac	1	note	"hold_time_rest_sensor 700ms up to 800ms, time_reward 350ms up to 450ms, reaction_time_until 1s, hold_time_target_sensor 200ms"
+1	130109	12:30			cam	bac	1	weight	9.60
+
+1	130110	12:30			cam	bac	1	prevDayFluid	362
+1	130110	12:30			cam	bac	1	dailyWater	"350mlwater+20mlfruits"	370
+1	130110	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Two sensors training"
+1	130110	12:30			cam	bac	1	dayNumTrials	967 85 350
+1	130110	12:30			cam	bac	1	note	"hold_time_rest_sensor 700ms up to 800ms, time_reward 350ms up to 450ms, reaction_time_until 1s, hold_time_target_sensor 200ms"
+1	130110	12:30			cam	bac	1	weight	9.55
+
+1	130111	12:30			cam	bac	1	prevDayFluid	370
+1	130111	12:30			cam	bac	1	dailyWater	"330mlwater+40mlfruits+afterwards -1"	-1
+1	130111	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Two sensors training"
+1	130111	12:30			cam	bac	1	dayNumTrials	917 87 330
+1	130111	12:30			cam	bac	1	note	"hold_time_rest_sensor 700ms up to 800ms, time_reward 350ms up to 450ms, reaction_time_until 1s, hold_time_target_sensor 200ms"
+1	130111	12:30			cam	bac	1	weight	9.65
+
+1	130114	12:30			cam	bac	1	prevDayFluid	-1
+1	130114	12:30			cam	bac	1	dailyWater	"250mlwater+40mlfruits"	290
+1	130114	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130114	12:30			cam	bac	1	aim	"make Bacchus use three sensors, two for the rest position of the hand and another as a target for the left hand, and associate the use of the sensors with visual cues on the screen"
+1	130114	12:30			cam	bac	1	dayNumTrials	754 76 250
+1	130114	12:30			cam	bac	1	note	"hold_time_rest_sensor 600ms, time_reward 350ms, reaction_time_until 1.5s, hold_time_target_sensor 200ms"
+1	130114	12:30			cam	bac	1	weight	10.35
+
+1	130115	12:30			cam	bac	1	prevDayFluid	290
+1	130115	12:30			cam	bac	1	dailyWater	"370mlwater+80mlfruits"	450
+1	130115	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130115	12:30			cam	bac	1	aim	"Before the sensors training, we started introducing Bacchus to head fixation, attaching the headpost holder to the headpost and holding that with our hands"
+1	130115	12:30			cam	bac	1	dayNumTrials	905 92 370
+1	130115	12:30			cam	bac	1	note	"hold_time_rest_sensor 600ms, time_reward 350ms, reaction_time_until 1.5s, hold_time_target_sensor 200ms"
+1	130115	12:30			cam	bac	1	weight	10.05
+
+1	130116	12:30			cam	bac	1	prevDayFluid	450
+1	130116	12:30			cam	bac	1	dailyWater	"350mlwater+90mlfruits"	440
+1	130116	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130116	12:30			cam	bac	1	dayNumTrials	852 95 350
+1	130116	12:30			cam	bac	1	note	"hold_time_rest_sensor 600ms up to 700ms, time_reward 350ms, reaction_time_until 1.5s down to 1.0s, hold_time_target_sensor 200ms"
+1	130116	12:30			cam	bac	1	weight	9.85
+
+1	130117	12:30			cam	bac	1	prevDayFluid	440
+1	130117	12:30			cam	bac	1	dailyWater	"350mlwater+80mlfruits"	430
+1	130117	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130117	12:30			cam	bac	1	dayNumTrials	847 95 350
+1	130117	12:30			cam	bac	1	note	"hold_time_rest_sensor 700ms, time_reward 350ms, reaction_time_until 1s, hold_time_target_sensor 200ms"
+1	130117	12:30			cam	bac	1	weight	9.75
+
+1	130118	12:30			cam	bac	1	prevDayFluid	430
+1	130118	12:30			cam	bac	1	dailyWater	"350mlwater+130mlfruits+afterwards -1"	-1
+1	130118	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130118	12:30			cam	bac	1	dayNumTrials	861 95 350
+1	130118	12:30			cam	bac	1	note	"hold_time_rest_sensor 700ms, time_reward 350ms, reaction_time_until 1s, hold_time_target_sensor 200ms"
+1	130118	12:30			cam	bac	1	weight	9.65
+
+1	130121	12:30			cam	bac	1	prevDayFluid	-1
+1	130121	12:30			cam	bac	1	dailyWater	"70mlwater+55mlfruits"	125
+1	130121	12:30			cam	bac	1	aim	"make Bacchus use three sensors, two as hands' rest position and the other one as a target for the right hand, the hand that was never used before to reach the target sensor"
+1	130121	12:30			cam	bac	1	note	"Bacchus didn't realize he should use the right hand to reach the target"
+1	130121	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130121	12:30			cam	bac	1	dayNumTrials	132 25 70
+1	130121	12:30			cam	bac	1	note	"hold_time_rest_sensor 500ms, time_reward 350ms, reaction_time_until 2s, hold_time_target_sensor 200ms"
+1	130121	12:30			cam	bac	1	weight	10.25
+
+1	130122	12:30			cam	bac	1	prevDayFluid	125
+1	130122	12:30			cam	bac	1	dailyWater	"350mlwater+80mlfruits"	430
+1	130122	12:30			cam	bac	1	aim	"make Bacchus use three sensors, two as hands' rest position and the other one as a target for the right hand"
+1	130122	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130122	12:30			cam	bac	1	dayNumTrials	508 67 350
+1	130122	12:30			cam	bac	1	note	"hold_time_rest_sensor 500ms, time_reward 450ms, reaction_time_until 2s, hold_time_target_sensor 200ms"
+1	130122	12:30			cam	bac	1	weight	9.8
+
+1	130123	12:30			cam	bac	1	prevDayFluid	430
+1	130123	12:30			cam	bac	1	dailyWater	"360mlwater+50mlfruits"	410
+1	130123	12:30			cam	bac	1	aim	"make Bacchus use three sensors, two as hands' rest position and the other one as a target for the right hand"
+1	130123	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130123	12:30			cam	bac	1	dayNumTrials	955 88 360
+1	130123	12:30			cam	bac	1	note	"hold_time_rest_sensor 500ms, time_reward 350ms, reaction_time_until 1.5 s, hold_time_target_sensor 200ms"
+1	130123	12:30			cam	bac	1	weight	9.85
+
+1	130124	12:30			cam	bac	1	prevDayFluid	410
+1	130124	12:30			cam	bac	1	dailyWater	"330mlwater+80mlfruits"	410
+1	130124	12:30			cam	bac	1	aim	"make Bacchus use three sensors, two as hands' rest position and the other one as a target for the right or the left hand. The use of the right or the left hand was separated by blocks"
+1	130124	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130124	12:30			cam	bac	1	dayNumTrials	1163 65 330
+1	130124	12:30			cam	bac	1	note	"hold_time_rest_sensor 500ms, time_reward 350ms, reaction_time_until 1.5 s, hold_time_target_sensor 200ms"
+1	130124	12:30			cam	bac	1	weight	9.85
+
+1	130125	12:30			cam	bac	1	prevDayFluid	410
+1	130125	12:30			cam	bac	1	dailyWater	"450mlwater+70mlfruits+afterwards -1"	-1
+1	130125	12:30			cam	bac	1	aim	"make Bacchus use three sensors, two as hands' rest position and the other one as a target for the right or the left hand. The use of the right or the left hand was separated by blocks"
+1	130125	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130125	12:30			cam	bac	1	dayNumTrials	1382 80 450
+1	130125	12:30			cam	bac	1	note	"hold_time_rest_sensor 500ms, time_reward 350ms, reaction_time_until 1.5 s, hold_time_target_sensor 200ms"
+1	130125	12:30			cam	bac	1	weight	9.80
+
+1	130128	12:30			cam	bac	1	prevDayFluid	-1
+1	130128	12:30			cam	bac	1	dailyWater	"250mlwater+25mlfruits"	275
+1	130128	12:30			cam	bac	1	aim	"make Bacchus use three sensors, two as hands' rest position and the other one as a target for the right or the left hand. The use of the right or the left hand was separated by blocks"
+1	130128	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130128	12:30			cam	bac	1	dayNumTrials	909 63 250
+1	130128	12:30			cam	bac	1	note	"hold_time_rest_sensor 500ms, time_reward 350ms, reaction_time_until 1.5 s, hold_time_target_sensor 200ms"
+1	130128	12:30			cam	bac	1	weight	10.65
+
+1	130129	12:30			cam	bac	1	prevDayFluid	275
+1	130129	12:30			cam	bac	1	dailyWater	"300mlwater+15mlfruits"	315
+1	130129	12:30			cam	bac	1	aim	"make Bacchus use three sensors, two as hands' rest position and the other one as a target for the right or the left hand. The use of the right or the left hand was random"
+1	130129	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130129	12:30			cam	bac	1	dayNumTrials	1284 41 300
+1	130129	12:30			cam	bac	1	note	"hold_time_rest_sensor 500ms, time_reward 400ms, reaction_time_until 2.5 s, hold_time_target_sensor 200ms"
+1	130129	12:30			cam	bac	1	weight	10.30
+
+1	130130	12:30			cam	bac	1	prevDayFluid	275
+1	130130	12:30			cam	bac	1	dailyWater	"300mlwater+40mlfruits"	340
+1	130130	12:30			cam	bac	1	aim	"make Bacchus use three sensors, two as hands' rest position and the other one as a target for the right or the left hand. The use of the right or the left hand was random"
+1	130130	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130130	12:30			cam	bac	1	dayNumTrials	1531 43 300
+1	130130	12:30			cam	bac	1	note	"hold_time_rest_sensor 500+random300ms, time_reward 350ms, reaction_time_until 2.5 s, hold_time_target_sensor 200ms"
+1	130130	12:30			cam	bac	1	weight	10.00
+
+1	130131	12:30			cam	bac	1	prevDayFluid	340
+1	130131	12:30			cam	bac	1	dailyWater	"30mlwater+70mlfruits"	100
+1	130131	12:30			cam	bac	1	aim	"make Bacchus use three sensors, two as hands' rest position and the other one as a target for the right or the left hand. The use of the right or the left hand was random. Unsuccessful trials were presented again"
+1	130131	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130131	12:30			cam	bac	1	dayNumTrials	133 36 30
+1	130131	12:30			cam	bac	1	note	"hold_time_rest_sensor 500+random300ms, time_reward 300ms, reaction_time_until 2.5 s, hold_time_target_sensor 200ms"
+1	130131	12:30			cam	bac	1	note	"The training was interrupted because Bacchus started to put the left leg out of the chair, trying to grab the target sensor."
+1	130131	12:30			cam	bac	1	weight	9.85
+
+1	130201	12:30			cam	bac	1	prevDayFluid	100
+1	130201	12:30			cam	bac	1	dailyWater	"420mlwater+90mlfruits+afterwards -1"	-1	
+1	130201	12:30			cam	bac	1	aim	"make Bacchus use three sensors, two as hands' rest position and the other one as a target for the right or the left hand. The use of the right or the left hand was random. Unsuccessful trials were presented again"
+1	130201	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130201	12:30			cam	bac	1	dayNumTrials	1784 40 420
+1	130201	12:30			cam	bac	1	note	"hold_time_rest_sensor 500+random300ms, time_reward 400ms, reaction_time_until 2.5 s, hold_time_target_sensor 200ms"
+1	130201	12:30			cam	bac	1	weight	9.50
+
+1	130204	12:30			cam	bac	1	prevDayFluid	-1
+1	130204	12:30			cam	bac	1	dailyWater	"150mlwater+35mlfruits" 185	
+1	130204	12:30			cam	bac	1	aim	"make Bacchus use three sensors, two as hands' rest position and the other one as a target for the right or the left hand. The use of the right or the left hand was random. Unsuccessful trials were presented again"
+1	130204	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130204	12:30			cam	bac	1	dayNumTrials	663 49 150
+1	130204	12:30			cam	bac	1	note	"hold_time_rest_sensor 500+random300ms, time_reward 350ms, reaction_time_until 2.5 s, hold_time_target_sensor 200ms"
+1	130204	12:30			cam	bac	1	weight	10.65
+
+1	130205	12:30			cam	bac	1	prevDayFluid	185
+1	130205	12:30			cam	bac	1	dailyWater	"320mlwater+50mlfruits" 370	
+1	130205	12:30			cam	bac	1	aim	"make Bacchus use three sensors, two as hands' rest position and the other one as a target for the right or the left hand. The use of the right or the left hand was random. Unsuccessful trials were presented again and had bigger intertrial interval"
+1	130205	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130205	12:30			cam	bac	1	dayNumTrials	1353 48 320
+1	130205	12:30			cam	bac	1	note	"hold_time_rest_sensor 500+random300ms, time_reward 350ms, reaction_time_until 2.5 s, hold_time_target_sensor 200ms"
+1	130205	12:30			cam	bac	1	weight	10.10
+
+1	130206	12:30			cam	bac	1	prevDayFluid	370
+1	130206	12:30			cam	bac	1	dailyWater	"275mlwater+45mlfruits" 320	
+1	130206	12:30			cam	bac	1	aim	"make Bacchus use three sensors, two as hands' rest position and the other one as a target for the right or the left hand. The use of the right or the left hand was random. Unsuccessful trials were presented again and had bigger intertrial interval"
+1	130206	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130206	12:30			cam	bac	1	dayNumTrials	1286 48 275
+1	130206	12:30			cam	bac	1	note	"hold_time_rest_sensor 500+random400ms, time_reward 400ms, reaction_time_until 2 s, hold_time_target_sensor 200ms"
+1	130206	12:30			cam	bac	1	weight	10.00
+
+1	130207	12:30			cam	bac	1	prevDayFluid	320
+1	130207	12:30			cam	bac	1	dailyWater	"310mlwater" 310	
+1	130207	12:30			cam	bac	1	aim	"make Bacchus use three sensors, two as hands' rest position and the other one as a target for the right or the left hand. The use of the right or the left hand was random. Unsuccessful trials were presented again and had bigger intertrial interval"
+1	130207	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130207	12:30			cam	bac	1	dayNumTrials	1230 44 310
+1	130207	12:30			cam	bac	1	note	"hold_time_rest_sensor 500+random400ms, time_reward 350ms, reaction_time_until 2 s, hold_time_target_sensor 200ms"
+1	130207	12:30			cam	bac	1	weight	10.05
+
+1	130208	12:30			cam	bac	1	prevDayFluid	310
+1	130208	12:30			cam	bac	1	dailyWater	"200mlwater+afterwards -1"	-1	
+1	130208	12:30			cam	bac	1	aim	"make Bacchus use three sensors, two as hands' rest position and the other one as a target for the right or the left hand. The use of the right or the left hand was random and mixed with trials in which Bacchus should keep the hands on rest sensors. Unsuccessful trials had bigger intertrial interval"
+1	130208	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130208	12:30			cam	bac	1	dayNumTrials	814 49 200
+1	130208	12:30			cam	bac	1	note	"hold_time_rest_sensor 500+random500ms, time_reward 250ms, reaction_time_until 3 s, hold_time_target_sensor 200ms"
+1	130208	12:30			cam	bac	1	weight	9.75
+
+1	130211	12:30			cam	bac	1	prevDayFluid	-1
+1	130211	12:30			cam	bac	1	dailyWater	"70mlwater+30mlfruits"	100	
+1	130211	12:30			cam	bac	1	aim	"make Bacchus use three sensors, two as hands' rest position and the other one as a target for the right or the left hand. The use of the right or the left hand was random and mixed with trials in which Bacchus should keep the hands on rest sensors. Unsuccessful trials had bigger intertrial interval"
+1	130211	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130211	12:30			cam	bac	1	dayNumTrials	412 43 70
+1	130211	12:30			cam	bac	1	note	"hold_time_rest_sensor 700+random700ms, time_reward 220ms, reaction_time_until 3 s, hold_time_target_sensor 200ms"
+1	130211	12:30			cam	bac	1	weight	10.70
+
+1	130212	12:30			cam	bac	1	prevDayFluid	100
+1	130212	12:30			cam	bac	1	dailyWater	"140mlwater+50mlfruits"	190	
+1	130212	12:30			cam	bac	1	aim	"make Bacchus use three sensors, two as hands' rest position and the other one as a target for the right or the left hand. The use of the right or the left hand was random and mixed with trials in which Bacchus should keep the hands on rest sensors. Unsuccessful trials had bigger intertrial interval"
+1	130212	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130212	12:30			cam	bac	1	dayNumTrials	572 63 140
+1	130212	12:30			cam	bac	1	note	"hold_time_rest_sensor 800+random600ms, time_reward 250ms, reaction_time_until 3 s, hold_time_target_sensor 200ms"
+1	130212	12:30			cam	bac	1	weight	10.30
+
+1	130213	12:30			cam	bac	1	prevDayFluid	190
+1	130213	12:30			cam	bac	1	dailyWater	"280mlwater+55mlfruits"	335	
+1	130213	12:30			cam	bac	1	aim	"make Bacchus use three sensors, two as hands' rest position and the other one as a target for the right or the left hand. The use of the right or the left hand was random and mixed with trials in which Bacchus should keep the hands on rest sensors. Unsuccessful trials had bigger intertrial interval"
+1	130213	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130213	12:30			cam	bac	1	dayNumTrials	1278 58 280
+1	130213	12:30			cam	bac	1	note	"hold_time_rest_sensor 800+random600ms, time_reward 300ms, reaction_time_until 3 s, hold_time_target_sensor 200ms"
+1	130213	12:30			cam	bac	1	weight	9.95
+
+1	130214	12:30			cam	bac	1	prevDayFluid	335
+1	130214	12:30			cam	bac	1	dailyWater	"150mlwater+60mlfruits"	210	
+1	130214	12:30			cam	bac	1	aim	"make Bacchus use three sensors, two as hands' rest position and the other one as a target for the right or the left hand. The use of the right or the left hand was random and mixed with trials in which Bacchus should keep the hands on rest sensors. Unsuccessful trials had bigger intertrial interval (6s) and was presented again"
+1	130214	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130214	12:30			cam	bac	1	dayNumTrials	654 65 150
+1	130214	12:30			cam	bac	1	note	"hold_time_rest_sensor 800+random600ms, time_reward 300ms, reaction_time_until 3 s, hold_time_target_sensor 200ms"
+1	130214	12:30			cam	bac	1	weight	9.85
+
+1	130215	12:30			cam	bac	1	prevDayFluid	210
+1	130215	12:30			cam	bac	1	dailyWater	"270mlwater+80mlfruits+afterwards -1"	-1	
+1	130215	12:30			cam	bac	1	aim	"make Bacchus use three sensors, two as hands' rest position and the other one as a target for the right or the left hand. The use of the right or the left hand was random and mixed with trials in which Bacchus should keep the hands on rest sensors. Unsuccessful trials had bigger intertrial interval (6s) and was presented again"
+1	130215	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130215	12:30			cam	bac	1	dayNumTrials	1025 62 270
+1	130215	12:30			cam	bac	1	note	"hold_time_rest_sensor 800+random600ms, time_reward 350ms, reaction_time_until 3 s, hold_time_target_sensor 200ms"
+1	130215	12:30			cam	bac	1	weight	9.70
+
+1	130218	12:30			cam	bac	1	prevDayFluid	-1
+1	130218	12:30			cam	bac	1	dailyWater	"50mlfruits"	50
+1	130218	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130218	12:30			cam	bac	1	note	"Bacchus had no motivation to train"
+1	130218	12:30			cam	bac	1	dayNumTrials	0 0 0	
+1	130218	12:30			cam	bac	1	weight	10.40
+
+1	130219	12:30			cam	bac	1	prevDayFluid	50
+1	130219	12:30			cam	bac	1	dailyWater	"180mlwater+50mlfruits"	230	
+1	130219	12:30			cam	bac	1	aim	"Three Sensors training. Bacchus received bigger rewards for consecutive successful trials"
+1	130219	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130219	12:30			cam	bac	1	dayNumTrials	700 66 180
+1	130219	12:30			cam	bac	1	note	"hold_time_rest_sensor 800+random600ms, time_reward 250 to 350ms, reaction_time_until 3 s, hold_time_target_sensor 200ms"
+1	130219	12:30			cam	bac	1	weight	10.15
+
+1	130220	12:30			cam	bac	1	prevDayFluid	230
+1	130220	12:30			cam	bac	1	dailyWater	"200mlwater+50mlfruits"	250	
+1	130220	12:30			cam	bac	1	aim	"Three Sensors training. Bacchus received bigger rewards for consecutive successful trials"
+1	130220	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130220	12:30			cam	bac	1	dayNumTrials	675 71 200
+1	130220	12:30			cam	bac	1	note	"hold_time_rest_sensor 800+random600ms, time_reward 250 to 350ms, reaction_time_until 3 s, hold_time_target_sensor 200ms"
+1	130220	12:30			cam	bac	1	weight	9.90
+
+1	130221	12:30			cam	bac	1	prevDayFluid	250
+1	130221	12:30			cam	bac	1	dailyWater	"250mlwater+50mlfruits"	300	
+1	130221	12:30			cam	bac	1	aim	"Three Sensors training. Bacchus received bigger rewards for consecutive successful trials"
+1	130221	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130221	12:30			cam	bac	1	dayNumTrials	754 73 250
+1	130221	12:30			cam	bac	1	note	"hold_time_rest_sensor 800+random600ms, time_reward 250ms to 400ms, reaction_time_until 3 s, hold_time_target_sensor 200ms"
+1	130221	12:30			cam	bac	1	weight	9.80
+
+1	130222	12:30			cam	bac	1	prevDayFluid	300
+1	130222	12:30			cam	bac	1	dailyWater	"260mlwater+10mlfruits+afterwards -1"	-1	
+1	130222	12:30			cam	bac	1	aim	"Three Sensors training. Bacchus received bigger rewards for consecutive successful trials"
+1	130222	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130222	12:30			cam	bac	1	dayNumTrials	802 73 260
+1	130222	12:30			cam	bac	1	note	"hold_time_rest_sensor 800+random600ms, time_reward 250ms to 400ms, reaction_time_until 3 s, hold_time_target_sensor 200ms"
+1	130222	12:30			cam	bac	1	weight	9.75
+
+1	130225	12:30			cam	bac	1	prevDayFluid	-1
+1	130225	12:30			cam	bac	1	dailyWater	"100mlwater+30mlfruits" 130	
+1	130225	12:30			cam	bac	1	aim	"Three Sensors training. Bacchus received bigger rewards for consecutive successful trials"
+1	130225	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130225	12:30			cam	bac	1	dayNumTrials	250 73 100
+1	130225	12:30			cam	bac	1	note	"hold_time_rest_sensor 800+random600ms, time_reward 250ms to 400ms, reaction_time_until 3 s, hold_time_target_sensor 200ms"
+1	130225	12:30			cam	bac	1	weight	10.60
+
+1	130226	12:30			cam	bac	1	prevDayFluid	130
+1	130226	12:30			cam	bac	1	dailyWater	"240mlwater+80mlfruits" 310	
+1	130226	12:30			cam	bac	1	aim	"Three Sensors training. Bacchus received bigger rewards for consecutive successful trials"
+1	130226	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130226	12:30			cam	bac	1	dayNumTrials	628 81 240
+1	130226	12:30			cam	bac	1	note	"Bacchus is starting to get nutrical to improve his fur"
+1	130226	12:30			cam	bac	1	note	"hold_time_rest_sensor 800+random600ms, time_reward 250ms to 400ms, reaction_time_until 3 s, hold_time_target_sensor 200ms"
+1	130226	12:30			cam	bac	1	weight	10.50
+
+1	130227	12:30			cam	bac	1	prevDayFluid	310
+1	130227	12:30			cam	bac	1	dailyWater	"350mlwater+55mlfruits" 405	
+1	130227	12:30			cam	bac	1	aim	"Three Sensors training. Bacchus received bigger rewards for consecutive successful trials"
+1	130227	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130227	12:30			cam	bac	1	note	"2nd day of the nutrical"
+1	130227	12:30			cam	bac	1	note	"hold_time_rest_sensor 800+random600ms, time_reward 250ms to 400ms, reaction_time_until 3 s, hold_time_target_sensor 200ms"
+1	130227	12:30			cam	bac	1	dayNumTrials	880 85 350
+1	130227	12:30			cam	bac	1	weight	10.20
+
+1	130228	12:30			cam	bac	1	prevDayFluid	405
+1	130228	12:30			cam	bac	1	dailyWater	"370mlwater+55mlfruits" 425	
+1	130228	12:30			cam	bac	1	aim	"Three Sensors training"
+1	130228	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130228	12:30			cam	bac	1	note	"3nd day of the nutrical"
+1	130228	12:30			cam	bac	1	note	"hold_time_rest_sensor 800+random600ms, time_reward 200ms to 350ms, reaction_time_until 3 s, hold_time_target_sensor 200ms"
+1	130228	12:30			cam	bac	1	dayNumTrials	883 86 370
+1	130228	12:30			cam	bac	1	weight	10.15
+
+1	130301	12:30			cam	bac	1	prevDayFluid	425
+1	130301	12:30			cam	bac	1	dailyWater	"380mlwater+85mlfruits+afterwards -1"	-1	
+1	130301	12:30			cam	bac	1	aim	"Three Sensors training"
+1	130301	12:00			cam	bac	1	dataFile	Bacchus_2013-03-01_01.mat
+1	130301	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130301	12:30			cam	bac	1	note	"4nd day of the nutrical"
+1	130301	12:30			cam	bac	1	note	"hold_time_rest_sensor 800+random600ms, time_reward 200ms to 350ms, reaction_time_until 3 s, hold_time_target_sensor 200ms"
+1	130301	12:30			cam	bac	1	dayNumTrials	977 92 380
+1	130301	12:30			cam	bac	1	weight	10.10
+
+1	130304	16:30			cam	bac	1	prevDayFluid	-1
+1	130304	16:30			cam	bac	1	dailyWater	"370mlwater+50mlfruits"	420
+1	130304	16:30			cam	bac	1	aim	"Three Sensors training"
+1	130304	16:30			cam	bac	1	dataFile	Bacchus_2013-03-04_01.mat
+1	130304	16:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130304	16:30			cam	bac	1	note	"5nd day of the nutrical"
+1	130304	16:30			cam	bac	1	note	"hold_time_rest_sensor 800+random600ms, time_reward 200ms to 350ms, reaction_time_until 3 s, hold_time_target_sensor 200ms"
+1	130304	16:30			cam	bac	1	dayNumTrials	977 93 370
+1	130304	16:30			cam	bac	1	weight	10.50
+
+1	130305	12:30			cam	bac	1	prevDayFluid	420
+1	130305	12:30			cam	bac	1	dailyWater	"220mlwater+80mlfruits"	300
+1	130305	12:30			cam	bac	1	aim	"Three Sensors training"
+1	130305	12:30			cam	bac	1	dataFile	Bacchus_2013-03-05_01.mat
+1	130305	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130305	12:30			cam	bac	1	note	"6nd day of the nutrical"
+1	130305	12:30			cam	bac	1	note	"hold_time_rest_sensor 800+random600ms, time_reward 200ms to 350ms, reaction_time_until 3 s, hold_time_target_sensor 200ms"
+1	130305	12:30			cam	bac	1	dayNumTrials	579 87 220
+1	130305	12:30			cam	bac	1	weight	10.60
+
+1	130306	12:30			cam	bac	1	prevDayFluid	300
+1	130306	12:30			cam	bac	1	dailyWater	"340mlwater+80mlfruits"	420
+1	130306	12:30			cam	bac	1	aim	"Three Sensors training"
+1	130306	12:30			cam	bac	1	dataFile	Bacchus_2013-03-06_01.mat
+1	130306	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130306	12:30			cam	bac	1	note	"7nd day of the nutrical"
+1	130306	12:30			cam	bac	1	note	"hold_time_rest_sensor 800+random600ms, time_reward 200ms to 350ms, reaction_time_until 3 s, hold_time_target_sensor 200ms"
+1	130306	12:30			cam	bac	1	dayNumTrials	936 91 340
+1	130306	12:30			cam	bac	1	weight	10.25
+
+1	130307	12:30			cam	bac	1	prevDayFluid	420
+1	130307	12:30			cam	bac	1	dailyWater	"330mlwater+95mlfruits"	430
+1	130307	12:30			cam	bac	1	aim	"Three Sensors training"
+1	130307	12:30			cam	bac	1	dataFile	Bacchus_2013-03-07_01.mat
+1	130307	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130307	12:30			cam	bac	1	note	"8nd day of the nutrical"
+1	130307	12:30			cam	bac	1	note	"hold_time_rest_sensor 800+random600ms, time_reward 200ms to 350ms, reaction_time_until 3 s, hold_time_target_sensor 200ms"
+1	130307	12:30			cam	bac	1	dayNumTrials	848 94 330
+1	130307	12:30			cam	bac	1	weight	10.35
+
+1	130308	12:30			cam	bac	1	prevDayFluid	430
+1	130308	12:30			cam	bac	1	dailyWater	"330mlwater+95mlfruits+afterwards -1"	-1	
+1	130308	12:30			cam	bac	1	aim	"Three Sensors training"
+1	130308	12:30			cam	bac	1	dataFile	Bacchus_2013-03-08_01.mat
+1	130308	12:30			cam	bac	1	dataFile	Bacchus_2013-03-08_02.mat
+1	130308	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130308	12:30			cam	bac	1	note	"9nd day of the nutrical"
+1	130308	12:30			cam	bac	1	note	"hold_time_rest_sensor 800+random600ms, time_reward 200ms to 350ms, reaction_time_until 3 s, hold_time_target_sensor 200ms"
+1	130308	12:30			cam	bac	1	dayNumTrials	864 92 330
+1	130308	12:30			cam	bac	1	weight	10.30
+
+1	130311	12:30			cam	bac	1	prevDayFluid	-1
+1	130311	12:30			cam	bac	1	dailyWater	"280mlwater+65mlfruits"	345	
+1	130311	12:30			cam	bac	1	aim	"Three Sensors training"
+1	130311	12:30			cam	bac	1	dataFile	Bacchus_2013-03-11_01.mat
+1	130311	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130311	12:30			cam	bac	1	note	"10nd day of the nutrical"
+1	130311	12:30			cam	bac	1	note	"hold_time_rest_sensor 800+random600ms, time_reward 200ms to 350ms, reaction_time_until 2 s, hold_time_target_sensor 200ms"
+1	130311	12:30			cam	bac	1	dayNumTrials	689 91 280
+1	130311	12:30			cam	bac	1	weight	10.35
+
+1	130312	12:30			cam	bac	1	prevDayFluid	345
+1	130312	12:30			cam	bac	1	dailyWater	"300mlwater+70mlfruits"	370	
+1	130312	12:30			cam	bac	1	aim	"Three Sensors training with Bacchus head-fixated"
+1	130312	12:30			cam	bac	1	dataFile	Bacchus_2013-03-12_01_HF.mat
+1	130312	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130312	12:30			cam	bac	1	note	"11nd day of the nutrical"
+1	130312	12:30			cam	bac	1	note	"hold_time_rest_sensor 800+random600ms, time_reward 200ms to 350ms, reaction_time_until 2.5 s, hold_time_target_sensor 200ms"
+1	130312	12:30			cam	bac	1	dayNumTrials	902 84 300
+1	130312	12:30			cam	bac	1	weight	10.20
+
+1	130313	12:30			cam	bac	1	prevDayFluid	370
+1	130313	12:30			cam	bac	1	dailyWater	"350mlwater+afterwards -1"	-1	
+1	130313	12:30			cam	bac	1	aim	"Three Sensors training with Bacchus head-fixated"
+1	130313	12:30			cam	bac	1	dataFile	Bacchus_2013-03-13_01_HF.mat
+1	130313	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130313	12:30			cam	bac	1	note	"12nd day of the nutrical"
+1	130313	12:30			cam	bac	1	note	"hold_time_rest_sensor 800+random600ms, time_reward 200ms to 350ms, reaction_time_until 2.5s, hold_time_target_sensor 200ms"
+1	130313	12:30			cam	bac	1	dayNumTrials	936 93 350
+1	130313	12:30			cam	bac	1	weight	10.05
+
+1	130318	12:30			cam	bac	1	prevDayFluid	-1
+1	130318	12:30			cam	bac	1	dailyWater	"280mlwater+50mlfruits"	330	
+1	130318	12:30			cam	bac	1	aim	"Three Sensors training with Bacchus head-fixated"
+1	130318	12:30			cam	bac	1	dataFile	Bacchus_2013-03-18_01_HF.mat
+1	130318	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130318	12:30			cam	bac	1	note	"13nd day of the nutrical"
+1	130318	12:30			cam	bac	1	note	"hold_time_rest_sensor 800+random600ms, time_reward 200ms to 350ms, reaction_time_until 2.5s, hold_time_target_sensor 200ms"
+1	130318	12:30			cam	bac	1	dayNumTrials	774 90 280
+1	130318	12:30			cam	bac	1	weight	9.95
+
+1	130319	12:30			cam	bac	1	prevDayFluid	330
+1	130319	12:30			cam	bac	1	dailyWater	"340mlwater+30mlfruits"	370	
+1	130319	12:30			cam	bac	1	aim	"Three Sensors training with Bacchus head-fixated"
+1	130319	12:30			cam	bac	1	dataFile	Bacchus_2013-03-19_01_HF.mat
+1	130319	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130319	12:30			cam	bac	1	note	"14nd day of the nutrical"
+1	130319	12:30			cam	bac	1	note	"hold_time_rest_sensor 800+random600ms, time_reward 200ms to 350ms, reaction_time_until 1.8s, hold_time_target_sensor 200ms"
+1	130319	12:30			cam	bac	1	dayNumTrials	884 93 340
+1	130319	12:30			cam	bac	1	weight	10.00
+
+1	130320	12:30			cam	bac	1	prevDayFluid	370
+1	130320	12:30			cam	bac	1	dailyWater	"370mlwater+75mlfruits"	445	
+1	130320	12:30			cam	bac	1	aim	"Three Sensors training with Bacchus head-fixated"
+1	130320	12:30			cam	bac	1	dataFile	Bacchus_2013-03-20_01_HF.mat
+1	130320	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130320	12:30			cam	bac	1	note	"15nd day of the nutrical"
+1	130320	12:30			cam	bac	1	note	"hold_time_rest_sensor 800+random600ms, time_reward 200ms to 350ms, reaction_time_until 1.5s, hold_time_target_sensor 200ms"
+1	130320	12:30			cam	bac	1	dayNumTrials	950 94 370
+1	130320	12:30			cam	bac	1	weight	10.10
+
+1	130321	12:30			cam	bac	1	prevDayFluid	445
+1	130321	12:30			cam	bac	1	dailyWater	"340mlwater+65mlfruits"	405	
+1	130321	12:30			cam	bac	1	aim	"Three Sensors training with Bacchus head-fixated"
+1	130321	12:30			cam	bac	1	dataFile	Bacchus_2013-03-21_01_HF.mat
+1	130321	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130321	12:30			cam	bac	1	note	"16nd day of the nutrical"
+1	130321	12:30			cam	bac	1	note	"Bacchus fought with Curius during an integration attempt and got a little scratch in one finger of the right hand right before training"
+1	130321	12:30			cam	bac	1	note	"hold_time_rest_sensor 800+random600ms, time_reward 200ms to 350ms, reaction_time_until 1.5s, hold_time_target_sensor 200ms"
+1	130321	12:30			cam	bac	1	dayNumTrials	962 89 340
+1	130321	12:30			cam	bac	1	weight	10.10
+
+1	130322	12:30			cam	bac	1	prevDayFluid	405
+1	130322	12:30			cam	bac	1	dailyWater	"380mlwater+afterwards -1"	-1	
+1	130322	12:30			cam	bac	1	aim	"Three Sensors training with Bacchus head-fixated"
+1	130322	12:30			cam	bac	1	dataFile	Bacchus_2013-03-22_01_HF.mat
+1	130322	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130322	12:30			cam	bac	1	note	"17nd day of the nutrical"
+1	130322	12:30			cam	bac	1	note	"I cleaned some puss on the front area of headpost"
+1	130322	12:30			cam	bac	1	note	"hold_time_rest_sensor 800+random600ms, time_reward 200ms to 350ms, reaction_time_release_rest_sensor 1s, reaction_time_reach_target_sensor 1.5s, hold_time_target_sensor 200ms"
+1	130322	12:30			cam	bac	1	dayNumTrials	978 94 380
+1	130322	12:30			cam	bac	1	weight	10.00
+
+1	130325	12:30			cam	bac	1	prevDayFluid	-1
+1	130325	12:30			cam	bac	1	dailyWater	"240mlwater+70mlfruits"	310	
+1	130325	12:30			cam	bac	1	aim	"Three Sensors training with Bacchus head-fixated. Putting the target sensor closer (from 32 cm to 22cm)"
+1	130325	12:30			cam	bac	1	dataFile	Bacchus_2013-03-25_01_HF.mat
+1	130325	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130325	12:30			cam	bac	1	note	"18nd day of the nutrical"
+1	130325	12:30			cam	bac	1	note	"hold_time_rest_sensor 800+random600ms, time_reward 200ms to 350ms, reaction_time_release_rest_sensor 1s, reaction_time_reach_target_sensor 1s, hold_time_target_sensor 200ms"
+1	130325	12:30			cam	bac	1	dayNumTrials	661 92 240
+1	130325	12:30			cam	bac	1	weight	9.95
+
+1	130326	12:30			cam	bac	1	prevDayFluid	310
+1	130326	12:30			cam	bac	1	dailyWater	"375mlwater+40mlfruits"	415	
+1	130326	12:30			cam	bac	1	aim	"Three Sensors training with Bacchus head-fixated. Putting the target sensor closer (from 22 cm to 18cm)"
+1	130326	12:30			cam	bac	1	dataFile	Bacchus_2013-03-26_01_HF.mat
+1	130326	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130326	12:30			cam	bac	1	note	"19nd day of the nutrical"
+1	130326	12:30			cam	bac	1	note	"hold_time_rest_sensor 800+random600ms, time_reward 200ms to 350ms, reaction_time_release_rest_sensor 1s, reaction_time_reach_target_sensor 1s, hold_time_target_sensor 200ms"
+1	130326	12:30			cam	bac	1	dayNumTrials	1031 92 375
+1	130326	12:30			cam	bac	1	weight	9.90
+
+1	130327	12:30			cam	bac	1	prevDayFluid	415
+1	130327	12:30			cam	bac	1	dailyWater	"380mlwater+50mlfruits"	430	
+1	130327	12:30			cam	bac	1	aim	"Three Sensors training with Bacchus head-fixated. Putting the target sensor closer (from 15 cm to 13cm)"
+1	130327	12:30			cam	bac	1	dataFile	Bacchus_2013-03-27_01_HF.mat
+1	130327	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130327	12:30			cam	bac	1	note	"20nd day of the nutrical"
+1	130327	12:30			cam	bac	1	note	"hold_time_rest_sensor 800+random600ms, time_reward 200ms to 350ms, reaction_time_release_rest_sensor 1s, reaction_time_reach_target_sensor 1s, hold_time_target_sensor 200ms"
+1	130327	12:30			cam	bac	1	dayNumTrials	994 95 380
+1	130327	12:30			cam	bac	1	weight	9.95
+
+1	130328	12:30			cam	bac	1	prevDayFluid	430
+1	130328	12:30			cam	bac	1	dailyWater	"370mlwater+50mlfruits"	420	
+1	130328	12:30			cam	bac	1	aim	"Three Sensors training with Bacchus head-fixated. Putting the target sensor closer (from 15 cm to 13cm)"
+1	130328	12:30			cam	bac	1	dataFile	Bacchus_2013-03-28_01_HF.mat
+1	130328	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130328	12:30			cam	bac	1	note	"hold_time_rest_sensor 800+random600ms, time_reward 200ms to 350ms, reaction_time_release_rest_sensor 1s, reaction_time_reach_target_sensor 1s, hold_time_target_sensor 200ms"
+1	130328	12:30			cam	bac	1	dayNumTrials	998 94 380
+1	130328	12:30			cam	bac	1	weight	9.90
+
+1	130328	12:30			cam	bac	1	prevDayFluid	430
+1	130328	12:30			cam	bac	1	dailyWater	"380mlwater+50mlfruits"	420	
+1	130328	12:30			cam	bac	1	aim	"Three Sensors training with Bacchus head-fixated. Putting the target sensor closer (from 13 cm to 12cm)"
+1	130328	12:30			cam	bac	1	dataFile	Bacchus_2013-03-29_01_HF.mat
+1	130328	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130328	12:30			cam	bac	1	note	"21nd day of the nutrical"
+1	130328	12:30			cam	bac	1	note	"hold_time_rest_sensor 800+random600ms, time_reward 200ms to 350ms, reaction_time_release_rest_sensor 0.7s, reaction_time_reach_target_sensor 0.5s, hold_time_target_sensor 200ms"
+1	130328	12:30			cam	bac	1	dayNumTrials	1005 95 380
+1	130328	12:30			cam	bac	1	weight	9.90
+
+1	130403	10:00			irp	bac	1	medicalProc	veterinaryProc  "TB-Test, Herpes B, taking blood samples for analyses, Wurmkur:Ivomec und Prazinex"
+1	130403	10:00			irp	bac	1	dailyWater	""	-1
+1	130403	10:00			irp	bac	1	weight	10.15
+1	130403	10:00			irp	bac	1	pdfAppendix	"blood results, page "
+1	130403	10:00			irp	bac	1	pdfAppendix	"Tb-Test, page "
+
+1	130409	12:30			cam	bac	1	prevDayFluid	-1
+1	130409	12:30			cam	bac	1	dailyWater	"170mlwater+30mlfruits"	200	
+1	130409	12:30			cam	bac	1	aim	"Three Sensors training with Bacchus head-fixated"
+1	130409	12:30			cam	bac	1	dataFile	Bacchus_2013-04-09_01_HF.mat
+1	130409	12:30			cam	bac	1	dataFile	Bacchus_2013-04-09_02_HF.mat
+1	130409	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130409	12:30			cam	bac	1	note	"24nd day of the nutrical"
+1	130409	12:30			cam	bac	1	note	"Bacchus fought through the mashes with Cornelius during reintegration in the last Saturday. Bacchus was not hurt, but Cornelius lost part of his tongue" 
+1	130409	12:30			cam	bac	1	note	"hold_time_rest_sensor 800+random600ms, time_reward 200ms to 350ms, reaction_time_release_rest_sensor 1s, reaction_time_reach_target_sensor 0.5s, hold_time_target_sensor 200ms"
+1	130409	12:30			cam	bac	1	dayNumTrials	405 92 170
+1	130409	12:30			cam	bac	1	weight	10.20
+
+1	130410	12:30			cam	bac	1	prevDayFluid	200
+1	130410	12:30			cam	bac	1	dailyWater	"350mlwater+30mlfruits"	380	
+1	130410	12:30			cam	bac	1	aim	"Three Sensors training with Bacchus head-fixated"
+1	130410	12:30			cam	bac	1	dataFile	Bacchus_2013-04-10_01_HF.mat
+1	130410	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130410	12:30			cam	bac	1	note	"25nd day of the nutrical"
+1	130410	12:30			cam	bac	1	note	"hold_time_rest_sensor 800+random600ms, time_reward 200ms to 350ms, reaction_time_release_rest_sensor .7s, reaction_time_reach_target_sensor 0.5s, hold_time_target_sensor 200ms"
+1	130410	12:30			cam	bac	1	dayNumTrials	988 90 350
+1	130410	12:30			cam	bac	1	weight	9.90
+
+1	130411	12:30			cam	bac	1	prevDayFluid	380
+1	130411	12:30			cam	bac	1	dailyWater	"130mlwater+50mlfruits"	180	
+1	130411	12:30			cam	bac	1	aim	"Start training eye fixation, and three sensors training without eye fixation after that"
+1	130411	12:30			cam	bac	1	dataFile	Bacchus_2013-04-11_01_HF.mat
+1	130411	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130411	12:30			cam	bac	1	note	"26nd day of the nutrical"
+1	130411	12:30			cam	bac	1	note	"hold_time_rest_sensor 800+random600ms, time_reward 200ms to 350ms, reaction_time_release_rest_sensor .7s, reaction_time_reach_target_sensor 0.5s, hold_time_target_sensor 200ms"
+1	130411	12:30			cam	bac	1	dayNumTrials	247 85 130
+1	130411	12:30			cam	bac	1	weight	10.00
+
+1	130412	12:30			cam	bac	1	prevDayFluid	180
+1	130412	12:30			cam	bac	1	dailyWater	"230mlwater+afterwards -1"	-1	
+1	130412	12:30			cam	bac	1	aim	"Training eye fixation, and three sensors training without after that"
+1	130412	12:30			cam	bac	1	dataFile	Bacchus_2013-04-12_01_HF.mat
+1	130412	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130412	12:30			cam	bac	1	note	"27nd day of the nutrical"
+1	130412	12:30			cam	bac	1	note	"hold_time_rest_sensor 800+random600ms, time_reward 200ms to 350ms, reaction_time_release_rest_sensor .7s, reaction_time_reach_target_sensor 0.5s, hold_time_target_sensor 200ms"
+1	130412	12:30			cam	bac	1	dayNumTrials	473 89 230
+1	130412	12:30			cam	bac	1	weight	9.95
+
+1	130415	12:30			cam	bac	1	prevDayFluid	-1
+1	130415	12:30			cam	bac	1	dailyWater	"250mlwater+40mlfruits"	290	
+1	130415	12:30			cam	bac	1	aim	"Three sensors training"
+1	130415	12:30			cam	bac	1	dataFile	Bacchus_2013-04-15_01_HF.mat
+1	130415	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130415	12:30			cam	bac	1	note	"hold_time_rest_sensor 800+random600ms, time_reward 200ms to 350ms, reaction_time_release_rest_sensor .7s, reaction_time_reach_target_sensor 0.5s, hold_time_target_sensor 200ms"
+1	130415	12:30			cam	bac	1	dayNumTrials	721 87 250
+1	130415	12:30			cam	bac	1	weight	9.85
+
+1	130416	12:30			cam	bac	1	prevDayFluid	290
+1	130416	12:30			cam	bac	1	dailyWater	"350mlwater+55mlfruits"	405	
+1	130416	12:30			cam	bac	1	aim	"Three sensors training"
+1	130416	12:30			cam	bac	1	dataFile	Bacchus_2013-04-16_01_HF.mat
+1	130416	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130416	12:30			cam	bac	1	note	"hold_time_rest_sensor 800+random600ms, time_reward 200ms to 350ms, reaction_time_release_rest_sensor .7s, reaction_time_reach_target_sensor 0.5s, hold_time_target_sensor 200ms"
+1	130416	12:30			cam	bac	1	dayNumTrials	990 92 350
+1	130416	12:30			cam	bac	1	weight	9.70
+
+1	130417	12:30			cam	bac	1	prevDayFluid	405
+1	130417	12:30			cam	bac	1	dailyWater	"360mlwater+45mlfruits"	405	
+1	130417	12:30			cam	bac	1	aim	"Three sensors training"
+1	130417	12:30			cam	bac	1	dataFile	Bacchus_2013-04-17_01_HF.mat
+1	130417	12:30			cam	bac	1	training	changeDetection	chair	freeViewing	"Three sensors training"
+1	130417	12:30			cam	bac	1	note	"hold_time_rest_sensor 800+random600ms, time_reward 200ms to 350ms, reaction_time_release_rest_sensor .7s, reaction_time_reach_target_sensor 0.5s, hold_time_target_sensor 200ms"
+1	130417	12:30			cam	bac	1	dayNumTrials	966 93 360
+1	130417	12:30			cam	bac	1	weight	9.75
