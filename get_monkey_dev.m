@@ -3,22 +3,25 @@ global SETTINGS
 %% VERSION LOG
 % version 1: first working version, Linus data from 20120317 to 20120417
 % version 2: reward probability added, Linus data from 20120418 to **
-% version 3: current version from 20160113, for use with custum condition
+% version 3: current version from 20160113, for usie with custum condition
 % files
-task.software                       = 'D:\Sources\MATLAB\monkeypsych2.0\monkeypsych_dev.m';
+task.software                       = 'D:\Sources\MATLAB\monkeypsych3.0\monkeypsych_dev.m';
 task.version                        = 3;
-task.version_modified               = '20160411';
+task.version_modified               = '20181212';
 
-%% Sound SETTINGS
-SETTINGS.INItrialSound              = 0;
-SETTINGS.FixationAcquisitionSound   = 0;
-SETTINGS.FixationBreakSound         = 1;
-SETTINGS.SensorsReleasedSound       = 1;
+SETTINGS.useSound                   = 1;
+SETTINGS.SoundType                  = 'Beep'; %KK changed in the condition file
 SETTINGS.TouchscreenSound           = 1;
-SETTINGS.MonkeyMovedSound           = 1;
-SETTINGS.RewardSound                = 1;
+SETTINGS.FixationBreakSound         = 1;
 SETTINGS.WrongTargetSound           = 1;
-
+SETTINGS.SensorsReleasedSound       = 1;
+SETTINGS.MonkeyMovedSound           = 0;
+SETTINGS.RewardSound                = 1;
+SETTINGS.FixationAcquisitionSound   = 0;
+SETTINGS.AllowManualSkipping        = 0;
+SETTINGS.special_error              = '';
+SETTINGS.VisFeedback_rest_hand      = 0;
+SETTINGS.allowMotionLate            = 0;
 %% DEFAULT SETTINGS:
 % GLOBAL VARIABLES
 % global STATE
@@ -65,7 +68,7 @@ task.rest_hand                      = [0 0];
 task.fraction_choice                = 0;
 task.correct_choice_target          = [1 2];
 task.custom_conditions              = '';
-task.condition_file                 = '\Sources\MATLAB\monkeypsych_2.0\conditions\default_conditions.txt'; % might remove at some point if only custom conditions used
+task.condition_file                 = '\Sources\MATLAB\monkeypsych_3.0\conditions\default_conditions.txt'; % might remove at some point if only custom conditions used
 
 %% RANDOMIZATIONS
 task.randomize_reach_hand           = 0;
@@ -99,18 +102,20 @@ else % something else other than black
 end
 
 %% COLOR DEFINITIONS
-task.hnd_stay.color_dim_fix         = [128 128 0];
+task.hnd_stay.color_dim_fix         = [127 127 0];
 task.hnd_stay.color_bright_fix      = [255 255 0];
-task.hnd_left.color_dim_fix         = [39 109 216];
-task.hnd_left.color_bright_fix      = [119 230 253];
+task.hnd_left.color_dim_fix         = [39 109 216];%[39 109 216]
+task.hnd_left.color_bright_fix      = [119 230 253];%[119 230 253]
 task.hnd_right.color_dim_fix        = [0 128 0];
-task.hnd_right.color_bright_fix     = [0 255 0];
-task.hnd_right.color_dim            = [0 128 0]; %
+task.hnd_right.color_bright_fix     = [0 255 0];%[0 255 0]
+task.hnd_right.color_dim            = [0 128 0]; %[0 128 0]
 task.hnd_right.color_bright         = [0 255 0];
 task.hnd_left.color_dim             = [39 109 216]; %
 task.hnd_left.color_bright          = [119 230 253];
 task.hnd_right.color_cue            = [0 128 0]; %[50 80 50]; %%isoluminance?
 task.hnd_left.color_cue             = [39 109 216]; %[64 77 80];
+task.reach_hand                     = 1; % left hand
+
 
 % task.hnd_right.color_cue= task.hnd_right.color_dim;
 % task.hnd_left.color_cue= task.hnd_left.color_dim;
@@ -138,24 +143,11 @@ task.eye.cue(2).shape               = 'circle';
 
 task.rings_only_on_cues             = 0;
 
-%% TARGET SIZE AND RADIUS DEFINITIONS (TO BE OVERWRITTEN BY CUSTOM CONDITIONS, just in case of analysis problems for not defined positions)
-% task.hnd.tar(1).size                = 5;
-% task.hnd.tar(2).size                = 5;
-% task.eye.tar(1).size                = 0.5;
-% task.eye.tar(2).size                = 0.5;
-% task.hnd.cue(1).size                = 5;
-% task.hnd.cue(2).size                = 5;
-% task.eye.cue(1).size                = 0.5;
-% task.eye.cue(2).size                = 0.5;
-%
-% task.hnd.tar(1).radius              = 5;
-% task.hnd.tar(2).radius              = 5;
-% task.eye.tar(1).radius              = 5;
-% task.eye.tar(2).radius              = 5;
-% task.hnd.cue(1).radius              = 5;
-% task.hnd.cue(2).radius              = 5;
-% task.eye.cue(1).radius              = 5;
-% task.eye.cue(2).radius              = 5;
+task.eye.fi2=struct([]);
+task.eye.ta2=struct([]);
+task.hnd.fi2=struct([]);
+task.hnd.ta2=struct([]);
+task.eye.cuA=struct([]);
 
 %% MONKEY DEFINITIONS
 switch monkey
@@ -163,28 +155,17 @@ switch monkey
     case 'Test'
         monkey_name                 = 'Tst';
         pathname                    = 'D:\Data\Test';
-          %task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_2.0\conditions\Normen\combined_condition_file_Normen_distractor_task';
-        %task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_2.0\conditions\Normen\combined_condition_file_hand_m2s_Normen';
-%        task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\Cornelius\standard_tasks';
-%         task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\Cornelius\M2S_exploration_in_black_8_positions_humans';
-        %task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\Cornelius\M2S_exploration_in_black_18_positions';
-        %task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\Cornelius\M2S_2targets_exploration_in_black';
-        task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\Cornelius\M2S_exploration_in_black_8_positions';
+        SETTINGS.SoundType                  = 'XBI_sounds';
         
-        %task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\Cornelius\combined_condition_file_Cornelius_distractor_task_full';
-        %task.custom_conditions      =  '\Sources\MATLAB\monkeypsych_2.0\conditions\combined_condition_file_eye_hand';
-        
-        %task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\combined_condition_file_test';
-        %task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\combined_condition_file_eye_hand';
-        %task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\Cornelius\Memory_ephys';
-        %task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\Curius\combined_condition_file_Curius_distractor_task';
-        %task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\Curius\combined_condition_file_Curius_setup_sacc';
-        %task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\combined_condition_file_eye_hand_Tes';
-%         task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\combined_condition_file_Bacchus_MRI_experiment';
-%         task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\combined_condition_file_Bacchus_MRI';
-        
-        task.vd                     = 32; %32 chair 2 %30; chair 1 % cm
-        task.screen_uh_cm           = 6; %32 chair 2 %30; chair 1 % cm
+      %task.custom_conditions      = '\Sources\MATLAB\monkeypsych_3.0\conditions\Cornelius\combined_condition_file_perceptual_Instructed_free_distractor';
+
+      % task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Norman\combined_condition_file_M2S_Fi2';
+       task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Norman\combined_condition_file_M2S_Wagering_2Wager';
+      % task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\eye_hand_and_rest_blocks_Mag';
+   
+        task.vd                     = 42;
+        task.screen_uh_cm           = 9.5;
+       
         
     case 'HumanNeglect'
         
@@ -196,70 +177,84 @@ switch monkey
         task.vd = 50; % cm
         task.screen_uh_cm           = 4; %32 chair 2 %30; chair 1 % cm
         
-    case 'TestTDT'
-        
-    case 'HumanM2S'
-        SETTINGS.INItrialSound              = 1;
-        SETTINGS.AllowManualSkipping        = 1;
-        monkey_name                 = 'AM1';
-        pathname                    = 'C:\Data\HumanM2S';
-        %task.custom_conditions      = '\sources\MATLAB\monkeypsych_2.0\conditions\HumanM2S\calibration_task';
-        task.custom_conditions      = '\sources\MATLAB\monkeypsych_2.0\conditions\HumanM2S\M2S_exploration';
-        task.vd                     = 35; %32 30 %chair 2 %chair 1 % cm
-        task.screen_uh_cm           = 16; %32 chair 2 %30; chair 1 % cm   
-        
-        
-    case 'Norman'      
+    case 'Norman'
         monkey_name                 = 'Nor';
-        pathname                    = 'V:\Projects\Wagering_monkey\Touch_M2S';
-        %task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_2.0\conditions\Norman\combined_condition_file_hand_m2s_Norman';
-        %task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_2.0\conditions\Norman\combined_condition_file_eye_hand_Norman_BasisTesla';
-        task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_2.0\conditions\Norman\combined_condition_file_Normen_distractor_task';
+        pathname                    = 'D:\Data\Norman';
+        %task.custom_conditions      = '\Sources\MATLAB\monkeypsych_3.0\conditions\Norman\combined_condition_file_eye_hand';
+       % task.custom_conditions      = '\Sources\MATLAB\monkeypsych_3.0\conditions\Norman\standard_tasks';
+        task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Norman\combined_condition_file_M2S_Wagering_2Wager';
 
-        task.vd                     = 26;
-        task.screen_uh_cm           = 3.0;
+       % task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Norman\combined_condition_file_M2S';
+        % task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Norman\combined_condition_file_M2S_Fi2';
+
+        % task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Norman\combined_condition_file_Norman_distractorM2S_Samplestays';
+       %  task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Norman\combined_condition_file_M2S_Wagering';
+        
+        
+        SETTINGS.SoundType                  = 'XBI_sounds';
+        task.vd                     = 42;
+        task.screen_uh_cm           = 9.5;
         
     case 'Cornelius'
         monkey_name                 = 'Cor';
-        %pathname                    = 'D:\Data\Cornelius';
-%          task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\Cornelius\standard_tasks';
-         task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\Cornelius\Memory_ephys';
-%        task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\Cornelius\M2S_exploration_in_black_18_positions';
-%         task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\Cornelius\M2S_exploration_in_black_8_positions';
-        task.vd                     = 36;  %chair 2 %30; %chair 1 % cm
-        task.screen_uh_cm           = 8;
-    
-    case 'Cornelius_ina'
-        monkey_name                 = 'Cor';
-        pathname                    = 'D:\Data\Cornelius_ina';
-%         task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\Cornelius\standard_tasks';
-       task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\Cornelius\Memory_ephys';
-%         task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\Cornelius\M2S_exploration_in_black_18_positions';
-        %task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\Cornelius\M2S_2targets_exploration_in_black';
-        %task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\Cornelius\M2S_exploration_in_black';
-        task.vd                     = 36;  %chair 2 %30; %chair 1 % cm
-        task.screen_uh_cm           = 8;%6; 
+        pathname                    = 'D:\Data\Cornelius';
+        SETTINGS.SoundType                  = 'XBI_sounds';
+        task.custom_conditions      = '\Sources\MATLAB\monkeypsych_3.0\conditions\Cornelius\standard_tasks';
+        %task.custom_conditions      = '\Sources\MATLAB\monkeypsych_3.0\conditions\Cornelius\combined_condition_file_perceptual_Instructed_free_distractor';
+        %task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Cornelius\combined_condition_file_Cornelius_distractorM2S';
+        %task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Cornelius\combined_condition_file_eye_hand';
+        
+        task.vd                     = 42; %32 30 %chair 2 %chair 1 % cm
+        %task.vd                     = 30.1; %32 chair 2 %30; chair 1 % cm
+        task.screen_uh_cm           = 9.5; %32 chair 2 %30; chair 1 % cm
         
     case 'Cornelius_phys'
         monkey_name                 = 'Cor';
         pathname                    = 'D:\Data\Cornelius_phys';
         %task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\Cornelius\standard_tasks';
-        %task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\Cornelius\Memory_ephys';
-        task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\Cornelius\M2S_exploration_in_black_16_positions';
+        task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\Cornelius\Memory_ephys';
+        %task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\Cornelius\M2S_exploration_in_black_8_positions';
         %task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\Cornelius\M2S_2targets_exploration_in_black';
         %task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\Cornelius\M2S_exploration_in_black';
-        task.vd                     = 36;  %chair 2 %30; %chair 1 % cm
-        task.screen_uh_cm           = 6; 
+        task.vd                     = 36; %32 chair 2 %30; chair 1 % cm
+        task.screen_uh_cm           = 6; %32 chair 2 %30; chair 1 % cm
+        
+        
+    case 'Curius'
+        monkey_name                 = 'Cur';
+        pathname                    = 'D:\Data\Curius';
+        SETTINGS.SoundType                  = 'XBI_sounds';
+        % task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_2.0\conditions\Curius\combined_condition_file_Curius_setup_sacc.m';
+        %task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_2.0\conditions\Curius\combined_condition_file_Curius_distractor_task_full.m';
+        task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_2.0\conditions\Curius\combined_condition_file_Curius_distractorM2S';
+        
+        switch SETTINGS.setup
+            case 1
+                task.vd                     = 42; % chair 1: 29, chair 2: 32, MRI 2: 54
+                task.screen_uh_cm           = 9.5;  % chair 1 and 2: 6, MRI 2: 14
+            case 3
+                task.vd                     = 30;
+                task.screen_uh_cm           = 7;
+        end
+    case 'TestTDT'
+        
+    case 'HumanM2S'
+        monkey_name                 = 'DW1';
+        pathname                    = 'C:\Data\HumanM2S';
+        task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\HumanM2S\calibration_task';
+        %task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\HumanM2S\M2S_exploration';
+        task.vd                     = 30; %32 30 %chair 2 %chair 1 % cm
+        task.screen_uh_cm           = 16; %32 chair 2 %30; chair 1 % cm
         
         
     case 'Linus'
         monkey_name                 = 'Lin';
         pathname                    = '\Data\Linus';
-        task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\combined_condition_file_eye_hand_DA';
-        task.vd                     = 29.0;
-        task.screen_uh_cm           = 6; 
-%         task.custom_conditions        = '\Sources\MATLAB\monkeypsych_2.0\conditions\combined_condition_file_flaffy';
-%         task.custom_conditions        = '\Sources\MATLAB\monkeypsych_2.0\conditions\combined_condition_file_lin_training';
+        task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\combined_condition_file_eye_hand';
+        task.vd                     = 29.5;
+        task.screen_uh_cm           = 6;
+        %         task.custom_conditions        = '\Sources\MATLAB\monkeypsych_2.0\conditions\combined_condition_file_flaffy';
+        %         task.custom_conditions        = '\Sources\MATLAB\monkeypsych_2.0\conditions\combined_condition_file_lin_training';
         
     case 'Linus_phys'
         monkey_name                 = 'Lin';
@@ -284,13 +279,12 @@ switch monkey
         task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\combined_condition_file_eye_hand';
         task.vd                     = 29.5;
         task.screen_uh_cm           = 6;
-     
-    
-
+        
     case 'Flaffus'
         monkey_name                 = 'Fla';
         pathname                    = '\Data\Flaffus';
-        task.custom_conditions      =  '\Sources\MATLAB\monkeypsych_2.0\conditions\combined_condition_file_eye_hand';
+        task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\combined_condition_file_eye_hand_FLA';
+        task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\combined_condition_file_eye_hand_flaffsta';
         switch SETTINGS.setup
             case 2
                 task.vd                     = 29.5;
@@ -303,24 +297,25 @@ switch monkey
     case 'Flaffus_phys'
         monkey_name                 = 'Fla';
         pathname                    = '\Data\Flaffus_phys';
-        task.custom_conditions      =  '\Sources\MATLAB\monkeypsych_2.0\conditions\combined_condition_file_eye_hand';
+        task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\combined_condition_file_eye_hand_FLA';
         task.vd                     = 29.5;
         task.screen_uh_cm           = 6.5;
         
-    case 'Flaffus_ina'
-        monkey_name                 = 'Fla';
-        pathname                    = '\Data\Flaffus_ina';
-        task.custom_conditions      =  '\Sources\MATLAB\monkeypsych_2.0\conditions\combined_condition_file_eye_hand';
-        task.vd                     = 29.5;
-        task.screen_uh_cm           = 6.5;   
         
     case 'Tesla'
         monkey_name                 = 'Tes';
         pathname                    = '\Data\Tesla';
         %task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\combined_condition_file_eye_hand';
         task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\combined_condition_file_eye_hand_Tes';
-        task.vd                     = 26;
+        task.vd                     = 26; % view distance
         task.screen_uh_cm           = 3.0;
+        
+    case 'Bacchus'
+        monkey_name                 = 'Bac';
+        pathname                    = '\Data\Bacchus';
+        task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\combined_condition_file_Bacchus_MRI';
+        task.vd                     = 52.5; %55
+        task.screen_uh_cm           = 16;
         
     case 'Bacchus_MRI'
         monkey_name                 = 'Bac';
@@ -328,13 +323,6 @@ switch monkey
         task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\combined_condition_file_Bacchus_MRI';
         task.vd                     = 52.5; %55
         task.screen_uh_cm           = 16;
-    
-    case 'Bacchus'
-        monkey_name                 = 'Bac';
-        pathname                    = '\Data\Bacchus';
-        task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\combined_condition_file_Bacchus_MRI';
-        task.vd                     = 46;
-        task.screen_uh_cm           = 15; %18 old screen
         
     case 'Bacchus_scanner' % DPZ scanner
         monkey_name                 = 'Bac';
@@ -343,14 +331,25 @@ switch monkey
         task.vd                     = 60;
         task.screen_uh_cm           = 20;
         
-    case 'Magnus'
+       
+      case 'Magnus'
         monkey_name                 = 'Mag';
         pathname                    = 'D:\Data\Magnus';
-        task.vd                     = 30;
-        task.screen_uh_cm           = 8;
-        %task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\Magnus\standard_tasks';
-        task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\Magnus\combined_condition_file_Magnus.m';
-    
+        task.vd                     = 32;
+        task.screen_uh_cm           = 10;
+        %task.custom_conditions      = '\Sources\MATLAB\monkeypsych_3.0\conditions\combined_condition_file_eye_hand_Mag.m';
+        task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Magnus\eye_hand_and_rest_blocks_Mag.m';
+        %task.custom_conditions      = '\Sources\MATLAB\monkeypsych_3.0\conditions\Norman\standard_tasks';
+        
+         case 'Magnus_phys'
+        monkey_name                 = 'Mag';
+        pathname                    = 'D:\Data\Magnus_phys';
+        task.vd                     = 28;
+        task.screen_uh_cm           = 6;
+        %task.custom_conditions      = '\Sources\MATLAB\monkeypsych_3.0\conditions\combined_condition_file_eye_hand_Mag.m';
+        task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Magnus\eye_hand_and_rest_blocks_Mag.m';
+        %task.custom_conditions      = '\Sources\MATLAB\monkeypsych_3.0\conditions\Norman\standard_tasks';
+        
     case 'Curius_microstim'
         monkey_name                 = 'Cur';
         pathname                    = '\Data\Curius_microstim';
@@ -367,19 +366,6 @@ switch monkey
         task.vd                     = 31.5;
         task.screen_uh_cm           = 20;
         
-    case 'Curius'
-        monkey_name                 = 'Cur';
-        pathname                    = '\Data\Curius';
-        % task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_2.0\conditions\Curius\combined_condition_file_Curius_setup_sacc.m';
-        task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_2.0\conditions\Curius\combined_condition_file_Curius_distractor_task_full.m';
-        switch SETTINGS.setup
-            case 1
-                task.vd                     = 29; % chair 1: 29, chair 2: 32, MRI 2: 54
-                task.screen_uh_cm           = 6;  % chair 1 and 2: 6, MRI 2: 14
-            case 3
-                task.vd                     = 30;
-                task.screen_uh_cm           = 7;
-        end
         
     case 'Curius_scanner'
         monkey_name                 = 'Cur';
@@ -387,5 +373,14 @@ switch monkey
         task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\Curius\combined_condition_file_Curius_MRI';
         task.vd                     = 65;
         task.screen_uh_cm           = 20;
+        
+    case 'Pinocchio'
+        monkey_name                 = 'Pin';
+        pathname                    = 'D:\Data\Pinocchio';
+%         task.custom_conditions      = '\Sources\MATLAB\monkeypsych_3.0\conditions\Pinocchio\combined_condition_file_pinocchio';
+        task.custom_conditions      = '\Sources\MATLAB\monkeypsych_3.0\conditions\Pinocchio\fixation_file_pinocchio';
+        task.vd                     = 36; %32 chair 2 %30; chair 1 % cm
+        task.screen_uh_cm           = 6; %32 chair 2 %30; chair 1 % cm
+        SETTINGS.SoundType                  = 'XBI_sounds';
         
 end

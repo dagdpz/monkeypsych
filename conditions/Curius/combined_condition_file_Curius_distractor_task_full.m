@@ -17,12 +17,15 @@
 if ~exist('dyn','var') || dyn.trialNumber == 1
 
 % Calibration
-%     esperimentazione = {'calibration'};    
+%     esperimentazione = {'calibration'};  
+
+% Fixation
+%     esperimentazione = {'fixation'}; 
    
 % Direct saccades
 % Single peripheral stimulus
 %     esperimentazione = {'instructed direct saccades'};
-%     esperimentazione = {'instructed distractor direct saccades'};
+%     esperimentazione = {'single distractor direct saccades'};
 % Choice
 %     esperimentazione = {'choice target-distractor direct saccades horizontal'};
 %     esperimentazione = {'choice target-distractor direct saccades diagonal'};
@@ -31,19 +34,23 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
 %     esperimentazione = {'choice target-target direct saccades horizontal'};
 %     esperimentazione = {'choice target-target direct saccades diagonal'};
 % Combinations   
-%     esperimentazione = {'instructed direct saccades','instructed distractor direct saccades'}; % only single-stimulus conditions
+%     esperimentazione = {'instructed direct saccades','single distractor direct saccades'}; % only single-stimulus conditions
 %
 %     color discrimination (determination of distractor color)
-    esperimentazione = {'choice target-distractor direct saccades horizontal','choice target-distractor direct saccades diagonal',...
-                        'choice distractor-distractor direct saccades horizontal','choice distractor-distractor direct saccades diagonal',...
-                        'choice target-target direct saccades horizontal','choice target-target direct saccades diagonal'};
+%     esperimentazione = {'choice target-distractor direct saccades horizontal','choice target-distractor direct saccades diagonal',...
+%                         'choice distractor-distractor direct saccades horizontal','choice distractor-distractor direct saccades diagonal',...
+%                         'choice target-target direct saccades horizontal','choice target-target direct saccades diagonal'};
 %     esperimentazione = {'choice target-distractor direct saccades horizontal','choice distractor-distractor direct saccades horizontal',...
 %                         'choice target-target direct saccades horizontal'};
+esperimentazione = {'choice target-distractor direct saccades horizontal','choice target-distractor direct saccades diagonal',...
+                        'choice distractor-distractor direct saccades horizontal','choice distractor-distractor direct saccades diagonal',...
+                        'choice target-target direct saccades horizontal','choice target-target direct saccades diagonal',...
+                        'instructed direct saccades','single distractor direct saccades'};
 
 % Memory saccades
 % Single peripheral stimulus
 %     esperimentazione = {'instructed memory saccades'};
-%     esperimentazione = {'instructed distractor memory saccades'};
+%     esperimentazione = {'single distractor memory saccades'};
 % Choice
 %     esperimentazione = {'choice target-distractor memory saccades horizontal'};
 %     esperimentazione = {'choice target-distractor memory saccades diagonal'};
@@ -52,7 +59,7 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
 %     esperimentazione = {'choice target-target memory saccades horizontal'};
 %     esperimentazione = {'choice target-target memory saccades diagonal'};
 % Combinations
-%     esperimentazione = {'instructed memory saccades','instructed distractor memory saccades'}; % only single-stimulus conditions
+%     esperimentazione = {'instructed memory saccades','single distractor memory saccades'}; % only single-stimulus conditions
 %
 %     color discrimination (determination of distractor color)
 %     esperimentazione = {'choice target-distractor memory saccades horizontal','choice target-distractor memory saccades diagonal',...
@@ -69,7 +76,6 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
         SETTINGS.GUI_in_acquisition         = 0;
         PEST_ON                             = 0;
         task.rest_hand                      = [0 0];
-        multiple_targets_per_trial          = 0;
         
         %% Order of fields here defines the order of parameters to be sent to TDT as the trial_classifiers
         All = struct(...
@@ -83,12 +89,14 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
         SETTINGS.check_motion_body          = 0;
         SETTINGS.MonkeyMovedSound           = 0;
         SETTINGS.FixationBreakSound         = 0;
+        SETTINGS.WrongTargetSound           = 0;
         
         fix_eye_y                           = 0;
         fix_hnd_y                           = 0;
         
-        task.force_conditions                    = 1; % 0 - trial will not be repeated, 1 - trial will be repeated immediately, 2 - trial will be put back into the pool of trials
-        task.shuffle_conditions                  = 1;
+        task.force_conditions               = 2; % 0 - trial will not be repeated, 1 - trial will be repeated immediately, 2 - trial will be put back into the pool of trials
+        force_conditions_mode               = 'target selected'; %'success' 'target selected'
+        task.shuffle_conditions             = 1;
         
         SETTINGS.take_angles_con            = 1;
         pool_of_angles                      = [0,20,340, 180,160,200]; %[0,30,330, 180,150,210] [0,20,340, 180,160,200] % [right-mid right-up right-bottom left-mid left-up left-bottom]
@@ -107,8 +115,15 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
         reward_memory                       = 0.09;
         reward_direct                       = 0.09;
         
-        N_repetitions_instructed            = 10;
-        N_repetitions_choice                = 10;
+        colors_tardist                      = [1 8]; % [1 5:8]
+        colors_distdist                     = [2 12]; % [2 9:12]
+        colors_dist                         = [4 16]; %[4 13:16];
+        
+        stim_con_direct                     = [0 1 2 3]; % [0 1 2 3] stimulation: 0 - no stimulation, 1 - 80ms before "go", 2 - at "go", 3 - 80ms after "go"
+        stim_con_memory                     = 0;
+        
+        N_repetitions_single                = 2; % long: 5; short: 2x2; 1x1;
+        N_repetitions_choice                = 1; % long: 3; short: 2x1; 1x1;
         
         switch experiment
             
@@ -122,14 +137,15 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
                 All.excentricities                  = [0];
                 All.angle_cases                     = [1];
                 
-                task.force_conditions                    = 1;
-                task.shuffle_conditions                  = 0;
+                task.force_conditions               = 1;
+                force_conditions_mode               = 'success'; %'success'
+                task.shuffle_conditions             = 0;
                 N_repetitions                       = 100;
                 
                 fix_eye_y                           = 0;
                 fix_hnd_y                           = 0;
                 
-                All.reward_time                     = 0.015; %
+                All.reward_time                     = 0.09; %
                 
                 All.offset_con                      = 0; % offset of fixation spot
                 All.effector_con                    = 0; % effector
@@ -137,20 +153,49 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
                 All.timing_con                      = 0;
                 All.size_con                        = 0;
                 All.instructed_choice_con           = [0];
+                All.stim_con                        = 0;
                 
-            case 'choice target-distractor memory saccades horizontal'    
+            case 'fixation'
+                
+                SETTINGS.check_motion_jaw           = 0;
+                SETTINGS.check_motion_body          = 0;
+                
+                SETTINGS.take_angles_con            = 1;
+                pool_of_angles                      = [0];
+                All.excentricities                  = [0];
+                All.angle_cases                     = [1];
+                
+                task.force_conditions               = 1;
+                force_conditions_mode               = 'success';
+                N_repetitions                       = 10;
+                
+                fix_eye_y                           = 0;
+                fix_hnd_y                           = 0;
+                
+                All.reward_time                     = 0.09; %
+                
+                All.offset_con                      = 0; % offset of fixation spot
+                All.effector_con                    = 0; % effector
+                All.type_con                        = 1; % fixation
+                All.timing_con                      = 0;
+                All.size_con                        = 2;
+                All.instructed_choice_con           = [0];
+                All.stim_con                        = [0 4]; % 0 - no stimulation, 4 - 500ms after beginning of fixation hold
+                
+            case 'choice target-distractor memory saccades horizontal'
                 
                 All.reward_time                     = reward_memory; %
-                 
+                
                 All.type_con                        = [3];
                 All.timing_con                      = 1;
                 All.size_con                        = 1;
                 All.instructed_choice_con           = [1];
                 All.correct_choice_target           = 1; % 0 - targets #1 and #2 correct, 1 - target #1 correct, 2 - target #2 correct, 3 - target #3 correct             
-                All.colors_con                      = [1 5:8];
+                All.colors_con                      = colors_tardist; % [1 5:8]
                 All.targets_con                     = 1; % 0 - one peripheral stimulus, 1 - two peripheral stimuli horizontal, 2 - two peripheral stimuli diagonal
                 All.shape_con                       = 1;
                 All.angle_cases                     = angle_cases_tardist_horz;
+                All.stim_con                        = stim_con_memory;
                 
                 N_repetitions                       = N_repetitions_choice;
                 
@@ -163,10 +208,11 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
                 All.size_con                        = 1;
                 All.instructed_choice_con           = [1];
                 All.correct_choice_target           = 1; % 0 - targets #1 and #2 correct, 1 - target #1 correct, 2 - target #2 correct, 3 - target #3 correct
-                All.colors_con                      = [1 5:8];
+                All.colors_con                      = colors_tardist; % [1 5:8]
                 All.targets_con                     = 2; % 0 - one peripheral stimulus, 1 - two peripheral stimuli horizontal, 2 - two peripheral stimuli diagonal
                 All.shape_con                       = 1;
-                All.angle_cases                     = angle_cases_tardist_diag; 
+                All.angle_cases                     = angle_cases_tardist_diag;
+                All.stim_con                        = stim_con_memory;
                 
                 N_repetitions                       = N_repetitions_choice;
                 
@@ -179,10 +225,11 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
                 All.size_con                        = 1;
                 All.instructed_choice_con           = [1];
                 All.correct_choice_target           = 1; % 0 - targets #1 and #2 correct, 1 - target #1 correct, 2 - target #2 correct, 3 - target #3 correct 
-                All.colors_con                      = [1 5 6 7 8]; %[1 5 6 7 8];
+                All.colors_con                      = colors_tardist; %[1 5 6 7 8];
                 All.targets_con                     = 1; % 0 - one peripheral stimulus, 1 - two peripheral stimuli horizontal, 2 - two peripheral stimuli diagonal
                 All.shape_con                       = 1;
                 All.angle_cases                     = angle_cases_tardist_horz;
+                All.stim_con                        = stim_con_direct;
                 
                 N_repetitions                       = N_repetitions_choice;
                 
@@ -195,10 +242,11 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
                 All.size_con                        = 1;
                 All.instructed_choice_con           = [1];
                 All.correct_choice_target           = 1; % 0 - targets #1 and #2 correct, 1 - target #1 correct, 2 - target #2 correct, 3 - target #3 correct
-                All.colors_con                      = [1 5 6 7 8]; %[1 5 6 7 8];
+                All.colors_con                      = colors_tardist; %[1 5 6 7 8];
                 All.targets_con                     = 2; % 0 - one peripheral stimulus, 1 - two peripheral stimuli horizontal, 2 - two peripheral stimuli diagonal
                 All.shape_con                       = 1;
-                All.angle_cases                     = angle_cases_tardist_diag; 
+                All.angle_cases                     = angle_cases_tardist_diag;
+                All.stim_con                        = stim_con_direct;
                 
                 N_repetitions                       = N_repetitions_choice;
                 
@@ -211,10 +259,11 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
                 All.size_con                        = 1;
                 All.instructed_choice_con           = [1];
                 All.correct_choice_target           = 3; % 0 - targets #1 and #2 correct, 1 - target #1 correct, 2 - target #2 correct, 3 - target #3 correct 
-                All.colors_con                      = [2 9:12];
+                All.colors_con                      = colors_distdist; % [2 9:12]
                 All.targets_con                     = 1; % 0 - one peripheral stimulus, 1 - two peripheral stimuli horizontal, 2 - two peripheral stimuli diagonal
                 All.shape_con                       = 1;
                 All.angle_cases                     = angle_cases_samesame_horz;
+                All.stim_con                        = stim_con_memory;
                 
                 N_repetitions                       = N_repetitions_choice;
                 
@@ -227,10 +276,11 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
                 All.size_con                        = 1;
                 All.instructed_choice_con           = [1];
                 All.correct_choice_target           = 3; % 0 - targets #1 and #2 correct, 1 - target #1 correct, 2 - target #2 correct, 3 - target #3 correct
-                All.colors_con                      = [2 9:12];
+                All.colors_con                      = colors_distdist; % [2 9:12]
                 All.targets_con                     = 2; % 0 - one peripheral stimulus, 1 - two peripheral stimuli horizontal, 2 - two peripheral stimuli diagonal
                 All.shape_con                       = 1;
-                All.angle_cases                     = angle_cases_samesame_diag; % only upper and lower positions
+                All.angle_cases                     = angle_cases_samesame_diag;
+                All.stim_con                        = stim_con_memory;
                 
                 N_repetitions                       = N_repetitions_choice;
                 
@@ -243,10 +293,11 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
                 All.size_con                        = 1;
                 All.instructed_choice_con           = [1];
                 All.correct_choice_target           = 3; % 0 - targets #1 and #2 correct, 1 - target #1 correct, 2 - target #2 correct, 3 - target #3 correct 
-                All.colors_con                      = [2 9:12]; %[2 9:12];
+                All.colors_con                      = colors_distdist; %[2 9:12];
                 All.targets_con                     = 1; % 0 - one peripheral stimulus, 1 - two peripheral stimuli horizontal, 2 - two peripheral stimuli diagonal
                 All.shape_con                       = 1;
                 All.angle_cases                     = angle_cases_samesame_horz;
+                All.stim_con                        = stim_con_direct;
                 
                 N_repetitions                       = N_repetitions_choice;
                 
@@ -259,10 +310,11 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
                 All.size_con                        = 1;
                 All.instructed_choice_con           = [1];
                 All.correct_choice_target           = 3; % 0 - targets #1 and #2 correct, 1 - target #1 correct, 2 - target #2 correct, 3 - target #3 correct
-                All.colors_con                      = [2 9:12]; %[2 9:12];
+                All.colors_con                      = colors_distdist; %[2 9:12];
                 All.targets_con                     = 2; % 0 - one peripheral stimulus, 1 - two peripheral stimuli horizontal, 2 - two peripheral stimuli diagonal
                 All.shape_con                       = 1;
-                All.angle_cases                     = angle_cases_samesame_diag; % only upper and lower positions
+                All.angle_cases                     = angle_cases_samesame_diag;
+                All.stim_con                        = stim_con_direct;
                 
                 N_repetitions                       = N_repetitions_choice;
                 
@@ -279,6 +331,7 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
                 All.targets_con                     = 1; % 0 - one peripheral stimulus, 1 - two peripheral stimuli horizontal, 2 - two peripheral stimuli diagonal
                 All.shape_con                       = 1;
                 All.angle_cases                     = angle_cases_samesame_horz;
+                All.stim_con                        = stim_con_memory;
                 
                 N_repetitions                       = N_repetitions_choice;
                 
@@ -295,6 +348,7 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
                 All.targets_con                     = 2; % 0 - one peripheral stimulus, 1 - two peripheral stimuli horizontal, 2 - two peripheral stimuli diagonal
                 All.shape_con                       = 1;
                 All.angle_cases                     = angle_cases_samesame_diag; % only upper and lower positions
+                All.stim_con                        = stim_con_memory;
                 
                 N_repetitions                       = N_repetitions_choice;
                 
@@ -311,6 +365,7 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
                 All.targets_con                     = 1; % 0 - one peripheral stimulus, 1 - two peripheral stimuli horizontal, 2 - two peripheral stimuli diagonal
                 All.shape_con                       = 1;
                 All.angle_cases                     = angle_cases_samesame_horz;
+                All.stim_con                        = stim_con_direct;
                 
                 N_repetitions                       = N_repetitions_choice;
                 
@@ -326,7 +381,8 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
                 All.colors_con                      = 0;
                 All.targets_con                     = 2; % 0 - one peripheral stimulus, 1 - two peripheral stimuli horizontal, 2 - two peripheral stimuli diagonal
                 All.shape_con                       = 1;
-                All.angle_cases                     = angle_cases_samesame_diag; % only upper and lower positions
+                All.angle_cases                     = angle_cases_samesame_diag;
+                All.stim_con                        = stim_con_direct;
                 
                 N_repetitions                       = N_repetitions_choice;
                 
@@ -342,8 +398,9 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
                 All.colors_con                      = [3];
                 All.targets_con                     = 0; % 0 - one peripheral stimulus, 1 - two peripheral stimuli horizontal, 2 - two peripheral stimuli diagonal
                 All.shape_con                       = 0;
+                All.stim_con                        = stim_con_memory;
                 
-                N_repetitions                       = N_repetitions_instructed;
+                N_repetitions                       = N_repetitions_single;
                 
             case 'instructed direct saccades'
                 
@@ -357,10 +414,11 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
                 All.colors_con                      = 3;
                 All.targets_con                     = 0; % 0 - one peripheral stimulus, 1 - two peripheral stimuli horizontal, 2 - two peripheral stimuli diagonal
                 All.shape_con                       = 0;
+                All.stim_con                        = stim_con_direct;
                 
-                N_repetitions                       = N_repetitions_instructed;
+                N_repetitions                       = N_repetitions_single;
                 
-            case 'instructed distractor memory saccades'
+            case 'single distractor memory saccades'
                 
                 All.reward_time                     = reward_memory; %
                 
@@ -369,13 +427,14 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
                 All.size_con                        = 1;
                 All.instructed_choice_con           = [1];
                 All.correct_choice_target           = 2; % 0 - targets #1 and #2 correct, 1 - target #1 correct, 2 - target #2 correct, 3 - target #3 correct
-                All.colors_con                      = [1 6];
+                All.colors_con                      = colors_dist;
                 All.targets_con                     = 0; % 0 - one peripheral stimulus, 1 - two peripheral stimuli horizontal, 2 - two peripheral stimuli diagonal
                 All.shape_con                       = 0;
+                All.stim_con                        = stim_con_memory;
                 
-                N_repetitions                       = N_repetitions_instructed;
+                N_repetitions                       = N_repetitions_single;
                 
-            case 'instructed distractor direct saccades'
+            case 'single distractor direct saccades'
                 
                 All.reward_time                     = reward_direct; %
                 
@@ -384,11 +443,12 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
                 All.size_con                        = 1;
                 All.instructed_choice_con           = [1];
                 All.correct_choice_target           = 2; % 0 - targets #1 and #2 correct, 1 - target #1 correct, 2 - target #2 correct, 3 - target #3 correct
-                All.colors_con                      = [4 13:14]; %[4 13:16];
+                All.colors_con                      = colors_dist; %[4 13:16];
                 All.targets_con                     = 0; % 0 - one peripheral stimulus, 1 - two peripheral stimuli horizontal, 2 - two peripheral stimuli diagonal
                 All.shape_con                       = 0;
+                All.stim_con                        = stim_con_direct;
                 
-                N_repetitions                       = N_repetitions_instructed;
+                N_repetitions                       = N_repetitions_single;
                 
         end
         
@@ -444,22 +504,45 @@ end
 %% Force conditions
 if exist('dyn','var') && dyn.trialNumber > 1,
     if task.force_conditions==1 % error trial will be repeated
-        if sum([trial.success])==length(sequence_indexes),
-            dyn.state = STATE.CLOSE; return
-        else
-            custom_trial_condition = sequence_indexes(sum([trial.success])+1);
+        switch force_conditions_mode % success as criterion to repeat a trial or not
+            case 'success'
+                if sum([trial.success])==length(sequence_indexes), 
+                    dyn.state = STATE.CLOSE; return
+                else
+                    custom_trial_condition = sequence_indexes(sum([trial.success])+1);
+                end
+            case 'target selected' % selection of a target as criterion to repeat a trial or not
+                targ_selected = arrayfun(@(x) ~isnan(x.target_selected(1)),trial,'uni',1);
+                if sum(targ_selected)==length(sequence_indexes),          
+                    dyn.state = STATE.CLOSE; return
+                else
+                    custom_trial_condition = sequence_indexes(sum(targ_selected)+1);
+                end
         end
-        
     elseif task.force_conditions==2 % semi-forced: if trial is not successful, the condition is put back into the pool
-        if trial(end-1).success==1
-            sequence_indexes=sequence_indexes(2:end);
-        else
-            sequence_indexes=Shuffle(sequence_indexes);
-        end
-        if numel(sequence_indexes)==0
-            dyn.state = STATE.CLOSE; return
-        else
-            custom_trial_condition = sequence_indexes(1);
+        switch force_conditions_mode % success as criterion to put a trial back in pool or not
+            case 'success'
+                if trial(end-1).success==1                               
+                    sequence_indexes=sequence_indexes(2:end);
+                else
+                    sequence_indexes=Shuffle(sequence_indexes);
+                end
+                if numel(sequence_indexes)==0
+                    dyn.state = STATE.CLOSE; return
+                else
+                    custom_trial_condition = sequence_indexes(1);
+                end
+            case 'target selected' % selection of a target as criterion to put a trial back in pool or not
+                if ~isnan(trial(end-1).target_selected(1))                 
+                    sequence_indexes=sequence_indexes(2:end);
+                else
+                    sequence_indexes=Shuffle(sequence_indexes);
+                end
+                if numel(sequence_indexes)==0
+                    dyn.state = STATE.CLOSE; return
+                else
+                    custom_trial_condition = sequence_indexes(1);
+                end
         end
     else
         if numel(trial)-1==length(sequence_indexes),
@@ -509,15 +592,6 @@ task.effector               = Current_con.effector_con;
 
 %% REACH hand
 task.reach_hand             = Current_con.reach_hand_con;
-
-%% STIMULATION timing
-switch Current_con.stim_con
-    case 0
-        task.microstim.stim_on      = 0;
-        task.microstim.state        = [STATE.TAR_ACQ];
-        task.microstim.start{1}     = [0] ;
-        task.microstim.end{1}       = [0];
-end
 
 %% TASK TIMING
 
@@ -632,7 +706,18 @@ switch Current_con.size_con
         task.hnd.fix.radius     = 4;
         task.hnd.fix.size       = 4;
         task.hnd.tar(1).size    = 4;
-        task.hnd.tar(1).radius  = 4;        
+        task.hnd.tar(1).radius  = 4;   
+        
+    case 2 %'fixation'
+        task.eye.fix.size       = 0.25;
+        task.eye.fix.radius     = 5;
+        task.eye.tar(1).size    = 0.25;
+        task.eye.tar(1).radius  = 5;
+        
+        task.hnd.fix.radius     = 4;
+        task.hnd.fix.size       = 4;
+        task.hnd.tar(1).size    = 4;
+        task.hnd.tar(1).radius  = 4;
         
 end
 
@@ -1112,3 +1197,53 @@ switch Current_con.colors_con
         end
         
 end
+
+%% STIMULATION timing
+switch Current_con.stim_con
+    
+    % direct saccades
+    case 0 % no stimulation
+        task.microstim.stim_on      = 0;
+        
+    case 1 % 80ms before "go"          
+        task.microstim.stim_on      = 1;
+        task.microstim.state        = [STATE.FIX_HOL];
+        task.microstim.start{1}     = [-0.08]; % -0.08 send trigger 80ms before end of fixation hold period
+        task.microstim.end{1}       = [-0]; % no stimulation triggers after end of fixation hold period
+        task.microstim.interval     = 1;
+        
+    case 2 % at "go"
+        task.microstim.stim_on      = 1;
+        task.microstim.state        = [STATE.TAR_ACQ];
+        task.microstim.start{1}     = [0]; % send trigger at beginning of target acquisition state
+        task.microstim.end{1}       = [0.2]; % no stimulation triggers after 200ms after beginning of target acquisition state
+        task.microstim.interval     = 1;
+        
+    case 3 % 80ms after "go"
+        task.microstim.stim_on      = 1;
+        task.microstim.state        = [STATE.TAR_ACQ];
+        task.microstim.start{1}     = [0.08];
+        task.microstim.end{1}       = [0.28];
+        task.microstim.interval     = 1;
+        
+    case 4 % 500ms after beginning of fixation hold to check for evoked saccades
+        task.microstim.stim_on      = 1;
+        task.microstim.state        = [STATE.FIX_HOL];
+        task.microstim.start{1}     = [0.5]; % send trigger 500ms after beginning of fixation hold period
+        task.microstim.end{1}       = [0.7];
+        task.microstim.interval     = 1;
+end
+
+
+% ??? Undefined function or variable "ms_side".
+% 
+% Error in ==> Buttons_161120 at 567
+%                       if ms_side == 1 && RestingPosition ==
+%                       SETTINGS.rest_buttons && left_match_to_sample == 1 ||
+%                       ms_side == 1 && RestingPosition ==  SETTINGS.right_button
+%                       && left_match_to_sample == 
+% 
+% ??? Undefined function or variable "Presentation_matchToSample".
+% 
+% Error in ==> Buttons_161120 at 422
+%         while Presentation_matchToSample

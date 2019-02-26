@@ -1,6 +1,6 @@
 function get_setup_dev
 global SETTINGS
-SETTINGS.setup                      = 3;         % see switch SETTINGS.setup below
+SETTINGS.setup          = 1;         % see switch SETTINGS.setup below
 
 %% General switches
 SETTINGS.GUI                        = 1;          % user GUI
@@ -9,7 +9,7 @@ SETTINGS.useParallel                = 1;
 SETTINGS.useSerial                  = 0;
 SETTINGS.useSound                   = 1;
 SETTINGS.useMouse                   = 0;         % 0 use mouse instead of eye position
-SETTINGS.useVPacq                   = 1;         % 1 enable ViewPoint eye position acquisition
+SETTINGS.useVPacq                   = 1;    %0     % 1 enable ViewPoint eye position acquisition
 SETTINGS.useViewAPI                 = 0;       % enable SMI eye position acquisition
 SETTINGS.vpx_calibration            = 0;
 SETTINGS.automatic_offset_update    = 0;
@@ -17,6 +17,7 @@ SETTINGS.AllowManualSkipping        = 0;
 SETTINGS.special_error              = '';
 
 %% Sound SETTINGS
+SETTINGS.SoundType                  = 'Beep'; %KK 
 SETTINGS.INItrialSound              = 0;
 SETTINGS.FixationAcquisitionSound   = 0;
 SETTINGS.FixationBreakSound         = 1;
@@ -25,74 +26,76 @@ SETTINGS.TouchscreenSound           = 1;
 SETTINGS.MonkeyMovedSound           = 1;
 SETTINGS.RewardSound                = 1;
 SETTINGS.WrongTargetSound           = 1;
-
-switch SETTINGS.setup,    
-    case -10 % Tübingen        
+SETTINGS.allowBlinksOnly            = 1; %%KK
+%% Others
+SETTINGS.BG_COLOR               = [0 0 0];   % screen background color
+SETTINGS.ITI_GUI_time_limit     = 5; % in seconds, fixed limit of trial time displayed in ITI GUI
+SETTINGS.pp.value_out_reward    = 255; % trigger all output pins for reward
+SETTINGS.AntiAlisingValue       = 0;
+switch SETTINGS.setup,
+    
+    case -10 % Tübingen
+        path(path,'C:\Program Files (x86)\SMI\iView X SDK\include') %mac
+        path(path,'C:\Program Files (x86)\SMI\iView X SDK\lib')
+        path(path,'C:\Program Files (x86)\SMI\iView X SDK\bin')
         
-        % Screen settings
-        SETTINGS.whichScreen                            = 1;
-        SETTINGS.screen_w_pix                           = 1920;
-        SETTINGS.screen_h_pix                           = 1200;
+        if computer('arch') == 'win32'
+            includename = 'iViewXAPI.h';
+            dllname = 'iViewXAPI.dll';
+            SETTINGS.ViewAPIlibrary = 'iViewXAPI';
+        else
+            includename = 'iViewXAPI.h';
+            dllname = 'iViewXAPI64.dll';
+            SETTINGS.ViewAPIlibrary = 'iViewXAPI64';
+        end
+        loadlibrary(dllname, includename);    
+        
+        SETTINGS.whichScreen = 1;
+        
+        %scrsz = [1 1 1280 1024]; %eizoscreen
         %SETTINGS.screen_w_pix = 1280;
         %SETTINGS.screen_h_pix = 1024;
-        SETTINGS.screen_w_cm                            = 57;
-        SETTINGS.screen_h_cm                            = 31.5;
-        SETTINGS.BG_COLOR                               = [100 100 100];   % screen background color
-        SETTINGS.GUI_aspect_ratio                       =  SETTINGS.screen_h_pix/SETTINGS.screen_w_pix;
-        SETTINGS.GUI_coordinates                        = [1930 300 1000 1000*SETTINGS.GUI_aspect_ratio];
-        SETTINGS.ITI_GUI_coordinates                    = [3020 300 600 600*SETTINGS.GUI_aspect_ratio];
-        SETTINGS.DefaultFigurePosition                  = [2500 300 600 600*SETTINGS.GUI_aspect_ratio];
-                
+        
         %Touchscreen 1920x1200 1280x720
-        SETTINGS.touchscreen                            = 0;
-        SETTINGS.touchscreen_calibration.y_gain         = 113;
-        SETTINGS.touchscreen_calibration.y_offset       = 535;
-        SETTINGS.touchscreen_calibration.x_gain         = -190;
-        SETTINGS.touchscreen_calibration.x_offset       = 980;
-        SETTINGS.touchscreen_calibration.x_threshold    = -4.2; %-8.2; % lowest Voltage still different from not touched
-        SETTINGS.touchscreen_calibration.y_threshold    = -4.2; % -8.2 lowest Voltage still different from not touched
+        SETTINGS.screen_w_pix = 1920;
+        SETTINGS.screen_h_pix = 1200;
+        SETTINGS.screen_w_cm = 57;
+        SETTINGS.screen_h_cm = 31.5;
+        SETTINGS.ai = 0;
+        SETTINGS.ao = 0;
+        SETTINGS.use_digital_to_TDT = 0;
+        SETTINGS.check_motion_jaw = 0;
+        SETTINGS.check_motion_body = 0;
+        SETTINGS.touchscreen = 0;
+        SETTINGS.interface_with_scanner = 0;
+        SETTINGS.daq_digital_output_port_to_TDT = 0;
         
-        %I/O Switches
-        SETTINGS.ai                                     = 0;
-        SETTINGS.ao                                     = 0;
-        SETTINGS.use_digital_to_TDT                     = 0;
-        SETTINGS.check_motion_jaw                       = 0;
-        SETTINGS.check_motion_body                      = 0;
-        SETTINGS.interface_with_scanner                 = 0;
-        SETTINGS.daq_digital_output_port_to_TDT         = 0;
-        
-        % I/O connection configuration
+        % I/O
         SETTINGS.AI_channels                            = [0 1 2 3]; % touch_x touch_y jaw_motion body_motion
+        SETTINGS.Motion_detection_interface             = 'Parallel';%'DAQ';%'DAQ'; % e.g. TDT
+        SETTINGS.GUI_coordinates                        = [2000 300 1000 1000*SETTINGS.screen_h_pix/SETTINGS.screen_w_pix];
+        SETTINGS.ITI_GUI_coordinates                    = [2500 300 600 600*SETTINGS.screen_h_pix/SETTINGS.screen_w_pix];
+        SETTINGS.DefaultFigurePosition                  = [2250 800 600 600*SETTINGS.screen_h_pix/SETTINGS.screen_w_pix];
         SETTINGS.sensor_pins                            = [10 11 12 13]; %sensor left, sensor right, jaw_motion, body_motion
-        SETTINGS.Motion_detection_interface             = 'Parallel';%'DAQ';
-        SETTINGS.TDT_interface                          = 'Parallel';%'DAQ'; 
-        SETTINGS.serial_port                            = 'com1';
-        SETTINGS.DAQ_card                               = 'nidaq';
-        SETTINGS.DAQSingleEnded                         = 1;
         SETTINGS.pp.address_inp                         = hex2dec('D051'); % e.g. sensors
         SETTINGS.pp.address_out_reward                  = hex2dec('D052'); % e.g. reward
         SETTINGS.pp.address_out_TDT                     = hex2dec('D050'); % e.g. TDT
-                
-        % Path definitions
-        SETTINGS.BASE_PATH = 'C:';
-        SETTINGS.dag_drive = 'C:';
-        path(path,'C:\Programme\SMI\iView X SDK\include') %mac
-        path(path,'C:\Programme\SMI\iView X SDK\lib')
-        path(path,'C:\Programme\SMI\iView X SDK\bin')
+        SETTINGS.TDT_interface                          = 'Parallel';%'DAQ'; % e.g. TDT
+        SETTINGS.touchscreen_calibration.y_gain         = 113;
+        SETTINGS.touchscreen_calibration.y_offset       = 535;
+        SETTINGS.touchscreen_calibration.x_gain         = -190;
+        SETTINGS.touchscreen_calibration.x_offset       = 980;        
+        SETTINGS.touchscreen_calibration.x_threshold    = -4.2; %-8.2; % lowest Voltage still different from not touched
+        SETTINGS.touchscreen_calibration.y_threshold    = -4.2; % -8.2 lowest Voltage still different from not touched
         
-        %if computer('arch') == 'win32'
-        includename = 'iViewXAPI.h';
-        dllname = 'iViewXAPI.dll';
-        loadlibrary(dllname, includename);
-        SETTINGS.ViewAPIlibrary = 'iViewXAPI';
-        % else
-        %includename = 'iViewXAPI.h';
-        % dllname = 'iViewXAPI64.dll';
-        %SETTINGS.ViewAPIlibrary = 'iViewXAPI64';
-        % end
+        SETTINGS.BASE_PATH = 'C:';
+        SETTINGS.DAQ_card = 'nidaq';
+        SETTINGS.serial_port = 'com1';
+        SETTINGS.DAQSingleEnded = 1;
+        SETTINGS.dag_drive = ['C:'];
         
         Screen('Preference','Verbosity',1);
-        Screen('Preference', 'SkipSyncTests', 1);
+        Screen('Preference', 'SkipSyncTests', 1); 
         
     case -3 % "DAG psychophysics"
         SETTINGS.whichScreen = 1;
@@ -118,7 +121,7 @@ switch SETTINGS.setup,
         SETTINGS.pp.address_inp                         = hex2dec('379'); % e.g. sensors
         SETTINGS.pp.address_out_reward                  = hex2dec('378'); % e.g. reward
         SETTINGS.pp.address_out_TDT                     = hex2dec('378'); % e.g. TDT
-        SETTINGS.TDT_interface                          = 'DAQ'; % e.g. TDT
+        SETTINGS.TDT_interface                          = 'DAQ'; % e.g. TDT        
         SETTINGS.touchscreen_calibration.y_gain         = -111;
         SETTINGS.touchscreen_calibration.y_offset       = 550;
         SETTINGS.touchscreen_calibration.x_gain         = 192;
@@ -159,7 +162,7 @@ switch SETTINGS.setup,
         SETTINGS.pp.address_inp                         = hex2dec('379'); % e.g. sensors
         SETTINGS.pp.address_out_reward                  = hex2dec('378'); % e.g. reward
         SETTINGS.pp.address_out_TDT                     = hex2dec('378'); % e.g. TDT
-        SETTINGS.TDT_interface                          = 'DAQ'; % e.g. TDT
+        SETTINGS.TDT_interface                          = 'DAQ'; % e.g. TDT        
         SETTINGS.touchscreen_calibration.y_gain         = -111;
         SETTINGS.touchscreen_calibration.y_offset       = 550;
         SETTINGS.touchscreen_calibration.x_gain         = 192;
@@ -200,7 +203,7 @@ switch SETTINGS.setup,
         SETTINGS.pp.address_inp                         = hex2dec('379'); % e.g. sensors
         SETTINGS.pp.address_out_reward                  = hex2dec('378'); % e.g. reward
         SETTINGS.pp.address_out_TDT                     = hex2dec('378'); % e.g. TDT
-        SETTINGS.TDT_interface                          = 'DAQ'; % e.g. TDT
+        SETTINGS.TDT_interface                          = 'DAQ'; % e.g. TDT        
         SETTINGS.touchscreen_calibration.y_gain         = -111;
         SETTINGS.touchscreen_calibration.y_offset       = 550;
         SETTINGS.touchscreen_calibration.x_gain         = 192;
@@ -241,7 +244,7 @@ switch SETTINGS.setup,
         SETTINGS.pp.address_inp                         = hex2dec('379'); % e.g. sensors
         SETTINGS.pp.address_out_reward                  = hex2dec('378'); % e.g. reward
         SETTINGS.pp.address_out_TDT                     = hex2dec('378'); % e.g. TDT
-        SETTINGS.TDT_interface                          = 'DAQ'; % e.g. TDT
+        SETTINGS.TDT_interface                          = 'DAQ'; % e.g. TDT        
         SETTINGS.touchscreen_calibration.y_gain         = -111;
         SETTINGS.touchscreen_calibration.y_offset       = 550;
         SETTINGS.touchscreen_calibration.x_gain         = 192;
@@ -258,19 +261,17 @@ switch SETTINGS.setup,
         Screen('Preference','Verbosity',1);
         Screen('Preference', 'SkipSyncTests', 1);
         
-    case 1
+     case 1 %Monkey setup 1
         % Screen settings
-        SETTINGS.whichScreen                            = 1;
+        SETTINGS.whichScreen                            = 2;
         SETTINGS.screen_w_pix                           = 1920;
         SETTINGS.screen_h_pix                           = 1080;
         SETTINGS.screen_w_cm                            = 59.5;
-        SETTINGS.screen_h_cm                            = 33;
-        SETTINGS.BG_COLOR                               = [0 0 0];   % screen background color
-        SETTINGS.GUI_aspect_ratio                       = SETTINGS.screen_h_pix/SETTINGS.screen_w_pix;
-        SETTINGS.GUI_coordinates                        = [800 -800 800 800*SETTINGS.GUI_aspect_ratio];
-        SETTINGS.ITI_GUI_coordinates                    = [190 -600 700 700*SETTINGS.GUI_aspect_ratio];
-        SETTINGS.DefaultFigurePosition                  = [190 -600 700 700*SETTINGS.GUI_aspect_ratio];
-        
+        SETTINGS.screen_h_cm                            = 33;        
+        SETTINGS.GUI_coordinates                        = [ 903  -656 800 800*SETTINGS.screen_h_pix/SETTINGS.screen_w_pix];
+        SETTINGS.ITI_GUI_coordinates                    = [ 1710        -654         845         449];
+        SETTINGS.DefaultFigurePosition                  = [190 -600 700 700*SETTINGS.screen_h_pix/SETTINGS.screen_w_pix];
+  
         % Touchscreen
         SETTINGS.touchscreen = 1;
         SETTINGS.touchscreen_calibration.y_gain         = -133; % Danial 20160204
@@ -283,7 +284,7 @@ switch SETTINGS.setup,
         % I/O
         SETTINGS.ai = 1;
         SETTINGS.ao = 1;
-        SETTINGS.AI_channels                            = [0 1 2 3]; % touch_x touch_y jaw_motion body_motion
+        SETTINGS.AI_channels                            = [0 1 2 3]; % touch_x touch_y jaw_motion body_motion   
         SETTINGS.sensor_pins                            = [11 13 10 12]; % [sensor-left sensor-right jaw-motion body-motion]
         SETTINGS.pp.value_out_reward                    = 1; % 1 - parallel port output pin 2 for reward
         SETTINGS.DAQ_card                               = 'nidaq';
@@ -292,162 +293,134 @@ switch SETTINGS.setup,
         SETTINGS.interface_with_scanner                 = 0;
         SETTINGS.Motion_detection_interface             = 'DAQ';%'Parallel'; %'DAQ'; % e.g. MD
         
-        % Original (broken) parallel port (behavioral client):
+        SETTINGS.check_motion_jaw = 0;
+        SETTINGS.check_motion_body = 0;
+        
+        
+        % Original (broken) parallel port (behavioral client): 
         SETTINGS.pp.address_inp                         = hex2dec('379'); % e.g. sensors
         SETTINGS.pp.address_out_reward                  = hex2dec('378'); % e.g. reward
         SETTINGS.pp.address_out_TDT                     = hex2dec('378'); % e.g. TDT
-        
+
         % Parallel port (external card): CCB0 - output, CCC0 - input
         %         SETTINGS.pp.address_inp                         = hex2dec('CCC0'); % e.g. sensors
         %         SETTINGS.pp.address_out_reward                  = hex2dec('CCB0'); % e.g. reward
-        %         SETTINGS.pp.address_out_TDT                     = hex2dec('CCC'); % e.g. TDT - not tested!
+        %         SETTINGS.pp.address_out_TDT                     = hex2dec('CCC'); % e.g. TDT - not tested!        
         
         % microstim settings
         SETTINGS.microstim_interface                    = 'Parallel'; %'Parallel' or 'DAQ';
-        SETTINGS.pp.value_out_microstim                 = 16; %16 - parallel port output pin 6 for microstim trigger
-        
+        SETTINGS.pp.value_out_microstim                 = 16; %16 - parallel port output pin 6 for microstim trigger  
+     
         % TDT related settings
         SETTINGS.daq_digital_output_port_to_TDT         = 0;
         SETTINGS.use_digital_to_TDT                     = 1;
-        SETTINGS.TDT_interface                          = 'DAQ'; % e.g. TDT
-        
+        SETTINGS.TDT_interface                          = 'DAQ'; % e.g. TDT        
+
         % data paths
         SETTINGS.BASE_PATH                              = 'D:';
-        SETTINGS.dag_drive = [filesep filesep 'fs02' filesep 'dag$'];
+        SETTINGS.dag_drive                              = 'Y:'; %temporary
         
     case 2
-        % Screen settings
-        SETTINGS.whichScreen                            = 2;
-        SETTINGS.screen_w_pix                           = 1920;
-        SETTINGS.screen_h_pix                           = 1080;
-        SETTINGS.screen_w_cm                            = 59.5;
-        SETTINGS.screen_h_cm                            = 33;
-        SETTINGS.BG_COLOR                               = [0 0 0];   % screen background color
-        SETTINGS.GUI_aspect_ratio                       = SETTINGS.screen_h_pix/SETTINGS.screen_w_pix;
-        SETTINGS.GUI_coordinates                        = [10 -700 1000 1000*SETTINGS.GUI_aspect_ratio];
-        SETTINGS.ITI_GUI_coordinates                    = [1020 -700 600 600*SETTINGS.GUI_aspect_ratio];
-        SETTINGS.DefaultFigurePosition                  = [1020 -700 600 600*SETTINGS.GUI_aspect_ratio];
-        
-        % Touchscreen
+         SETTINGS.whichScreen = 1;
+        SETTINGS.screen_w_pix = 1920;
+        SETTINGS.screen_h_pix = 1080;
+        SETTINGS.screen_w_cm = 59.5;
+        SETTINGS.screen_h_cm = 33;
+        SETTINGS.ai = 1;
+        SETTINGS.ao = 1;
+        SETTINGS.use_digital_to_TDT = 1;
+        SETTINGS.check_motion_jaw = 1;
+        SETTINGS.check_motion_body = 0;
         SETTINGS.touchscreen = 1;
-        SETTINGS.touchscreen_calibration.y_gain         = -113; % 20160331 Adan
-        SETTINGS.touchscreen_calibration.y_offset       = 545;  % 20160331 Adan
-        SETTINGS.touchscreen_calibration.x_gain         = 192;  % 20160331 Adan
-        SETTINGS.touchscreen_calibration.x_offset       = 965;  % 20160331 Adan
-        SETTINGS.touchscreen_calibration.x_threshold    = -4.5; % lowest Voltage still different from not touched
-        SETTINGS.touchscreen_calibration.y_threshold    = -4.5; % lowest Voltage still different from not touched
-        
-        % I/O switches
-        SETTINGS.ai                             = 1;
-        SETTINGS.ao                             = 1;
-        SETTINGS.use_digital_to_TDT             = 1;
-        SETTINGS.check_motion_jaw               = 1;
-        SETTINGS.check_motion_body          	= 0;
-        SETTINGS.interface_with_scanner         = 0;
+        SETTINGS.interface_with_scanner = 0;
         SETTINGS.daq_digital_output_port_to_TDT = 1;
         
-        % I/O connections configuration
+        % I/O
         SETTINGS.AI_channels                            = [0 2 4 6]; % touch_x touch_y jaw_motion body_motion
-        SETTINGS.sensor_pins                            = [10 12 11 13];
-        SETTINGS.DAQ_card                               = 'nidaq';
-        SETTINGS.DAQSingleEnded                         = 0;
-        SETTINGS.serial_port                            = 'com1';
-        SETTINGS.TDT_interface                          = 'DAQ'; % e.g. TDT
         SETTINGS.Motion_detection_interface             = 'DAQ';%'Parallel'; % e.g. MD
-        
-        % Parallel port connections configuration
+        SETTINGS.GUI_coordinates                        = [10 -700 1000 1000*SETTINGS.screen_h_pix/SETTINGS.screen_w_pix];
+        SETTINGS.ITI_GUI_coordinates                    = [1020 -700 600 600*SETTINGS.screen_h_pix/SETTINGS.screen_w_pix];
+        SETTINGS.DefaultFigurePosition                  = [1020 -700 600 600*SETTINGS.screen_h_pix/SETTINGS.screen_w_pix];
+        SETTINGS.sensor_pins                            = [10 12 11 13];
         SETTINGS.pp.address_inp                         = hex2dec('379'); % e.g. sensors
         SETTINGS.pp.address_out_reward                  = hex2dec('378'); % e.g. reward
         SETTINGS.pp.address_out_TDT                     = hex2dec('378'); % e.g. TDT
-        SETTINGS.pp.value_out_reward                    = 255; % 1 - parallel port output pin 2 for reward
-        SETTINGS.pp.value_out_microstim                 = 16; %16 - parallel port output pin 6 for microstim trigger
+        SETTINGS.TDT_interface                          = 'DAQ'; % e.g. TDT        
+        SETTINGS.touchscreen_calibration.y_gain         = -113; % 20160331 Adan
+        SETTINGS.touchscreen_calibration.y_offset       = 545;  % 20160331 Adan
+        SETTINGS.touchscreen_calibration.x_gain         = 192;  % 20160331 Adan
+        SETTINGS.touchscreen_calibration.x_offset       = 965;  % 20160331 Adan    
+        SETTINGS.touchscreen_calibration.x_threshold    = -4.5; % lowest Voltage still different from not touched
+        SETTINGS.touchscreen_calibration.y_threshold    = -4.5; % lowest Voltage still different from not touched
         
-        % Paths
         SETTINGS.BASE_PATH = 'D:';
-        SETTINGS.dag_drive = [filesep filesep 'fs02' filesep 'dag$'];
+        SETTINGS.DAQ_card = 'nidaq';
+        SETTINGS.serial_port = 'com1';
+        SETTINGS.DAQSingleEnded = 0;
+        SETTINGS.dag_drive = 'Y:'; %temporary
         
     case 3
-        % Screen settings
-        SETTINGS.whichScreen                            = 1;
-        SETTINGS.screen_w_pix                           = 1920;
-        SETTINGS.screen_h_pix                           = 1080;
-        %         SETTINGS.screen_w_cm = 59.5; %ACER
-        %         SETTINGS.screen_h_cm = 33;   %ACER
-        SETTINGS.screen_w_cm                            = 53;   %ASUS
-        SETTINGS.screen_h_cm                            = 30;     %ASUS
-        SETTINGS.BG_COLOR                               = [0 0 0];   % screen background color
-        SETTINGS.GUI_aspect_ratio                       =  SETTINGS.screen_h_pix/SETTINGS.screen_w_pix;
-        SETTINGS.GUI_coordinates                        = [1930 300 1000 1000*SETTINGS.GUI_aspect_ratio];
-        SETTINGS.ITI_GUI_coordinates                    = [3020 300 600 600*SETTINGS.GUI_aspect_ratio];
-        SETTINGS.DefaultFigurePosition                  = [2500 300 600 600*SETTINGS.GUI_aspect_ratio];
-        
-        % Touchscreen
-        SETTINGS.touchscreen                            = 0;
-        SETTINGS.touchscreen_calibration.y_gain         = 122;
-        SETTINGS.touchscreen_calibration.y_offset       = -121;
-        SETTINGS.touchscreen_calibration.x_gain         = -212;
-        SETTINGS.touchscreen_calibration.x_offset       = 2131;
-        SETTINGS.touchscreen_calibration.x_threshold    = 0.7; %-8.2; % lowest Voltage still different from not touched
-        SETTINGS.touchscreen_calibration.y_threshold    = 0.7; % -8.2 lowest Voltage still different from not touched
-        %         SETTINGS.touchscreen_calibration.y_gain         = -111;
-        %         SETTINGS.touchscreen_calibration.y_offset       = 765;
-        %         SETTINGS.touchscreen_calibration.x_gain         = 188;
-        %         SETTINGS.touchscreen_calibration.x_offset       = 550;
-        
-        % I/O switches
-        SETTINGS.ai                             = 1;
-        SETTINGS.ao                             = 1;
-        SETTINGS.use_digital_to_TDT             = 1;
+         SETTINGS.whichScreen = 1;
+        SETTINGS.screen_w_pix = 1920;
+        SETTINGS.screen_h_pix = 1080;
+        SETTINGS.screen_w_cm = 59.5;
+        SETTINGS.screen_h_cm = 33;
+        SETTINGS.ai = 1;
+        SETTINGS.ao = 1;
+        SETTINGS.use_digital_to_TDT = 1;
+        SETTINGS.check_motion_jaw = 1;
+        SETTINGS.check_motion_body = 1;
+        SETTINGS.touchscreen = 1;
+        SETTINGS.interface_with_scanner = 0;
         SETTINGS.daq_digital_output_port_to_TDT = 0;
-        SETTINGS.check_motion_jaw               = 1;
-        SETTINGS.check_motion_body          	= 1;
-        SETTINGS.interface_with_scanner         = 0;
         
-        % I/O connections configuration
+        % I/O
         SETTINGS.AI_channels                            = [0 1 2 3]; % touch_x touch_y jaw_motion body_motion
+        SETTINGS.Motion_detection_interface             = 'Parallel';%'DAQ';%'DAQ'; % e.g. TDT   
+        SETTINGS.GUI_coordinates                        = [1930 300 1000 1000*SETTINGS.screen_h_pix/SETTINGS.screen_w_pix];
+        SETTINGS.ITI_GUI_coordinates                    = [3020 300 600 600*SETTINGS.screen_h_pix/SETTINGS.screen_w_pix];
+        SETTINGS.DefaultFigurePosition                  = [2500 300 600 600*SETTINGS.screen_h_pix/SETTINGS.screen_w_pix];
         SETTINGS.sensor_pins                            = [10 11 12 13]; %sensor left, sensor right, jaw_motion, body_motion
-        SETTINGS.DAQ_card                               = 'nidaq';
-        SETTINGS.DAQSingleEnded                         = 1;
-        SETTINGS.serial_port                            = 'com1';
-        SETTINGS.TDT_interface                          = 'Parallel';%'DAQ'; % e.g. TDT
-        SETTINGS.Motion_detection_interface             = 'Parallel';%'DAQ';%'DAQ'; % e.g. TDT
-        SETTINGS.microstim_interface                    = 'DAQ';
-        % I/O parallel port connections configuration
         SETTINGS.pp.address_inp                         = hex2dec('D051'); % e.g. sensors
         SETTINGS.pp.address_out_reward                  = hex2dec('D052'); % e.g. reward
         SETTINGS.pp.address_out_TDT                     = hex2dec('D050'); % e.g. TDT
-        SETTINGS.pp.value_out_reward                    = 255; % 1 - parallel port output pin 2 for reward
-        SETTINGS.pp.value_out_microstim                 = 16; %16 - parallel port output pin 6 for microstim trigger
-                
-        % Paths     
+        SETTINGS.TDT_interface                          = 'Parallel';%'DAQ'; % e.g. TDT     
+        
+        SETTINGS.touchscreen_calibration.y_gain         = 123;   %MP 20190205
+        SETTINGS.touchscreen_calibration.y_offset       = -127;  %MP 20190205
+        SETTINGS.touchscreen_calibration.x_gain         = -214;  %MP 20190205
+        SETTINGS.touchscreen_calibration.x_offset       = 2168;  %MP 20190205
+        
+        SETTINGS.touchscreen_calibration.x_threshold    = 1; %-8.2; % lowest Voltage still different from not touched -2.7
+        SETTINGS.touchscreen_calibration.y_threshold    = 1; % -8.2 lowest Voltage still different from not touched -3
+        
         SETTINGS.BASE_PATH = 'D:';
-        %SETTINGS.dag_drive = [filesep filesep 'fs02' filesep 'dag$'];
-        %SETTINGS.dag_drive = ['Z:\dag02']; % temporary
-        SETTINGS.dag_drive = ['Y:']; % temporary 
+        SETTINGS.DAQ_card = 'nidaq';
+        SETTINGS.serial_port = 'com1';
+        SETTINGS.DAQSingleEnded = 1;
+        SETTINGS.dag_drive = 'Y:';
         
-        
-        
-        Screen('Preference','Verbosity',1);
-        Screen('Preference', 'SkipSyncTests', 1);
-        
+         Screen('Preference','Verbosity',1);
+         Screen('Preference', 'SkipSyncTests', 1);
+                    
     case 4 % scanner DPZ monkeys
-        % Screen settings
+         % Screen settings
         SETTINGS.whichScreen                        = 2;
-        SETTINGS.screen_w_pix                       = 800;
-        SETTINGS.screen_h_pix                       = 600;
-        SETTINGS.screen_w_cm                        = 65; %53
-        SETTINGS.screen_h_cm                        = 40.5; %39
+		SETTINGS.screen_w_pix                       = 800;
+		SETTINGS.screen_h_pix                       = 600;
+		SETTINGS.screen_w_cm                        = 65; %53
+		SETTINGS.screen_h_cm                        = 40.5; %39
         SETTINGS.GUI_coordinates                    = [574 288 700 700*SETTINGS.screen_h_pix/SETTINGS.screen_w_pix];
         SETTINGS.ITI_GUI_coordinates                = [190 -600 700 700*SETTINGS.screen_h_pix/SETTINGS.screen_w_pix];
-        SETTINGS.DefaultFigurePosition              = [190 -600 700 700*SETTINGS.screen_h_pix/SETTINGS.screen_w_pix];
-        
+        SETTINGS.DefaultFigurePosition              = [190 -600 700 700*SETTINGS.screen_h_pix/SETTINGS.screen_w_pix];        
+
         % I/O
         SETTINGS.ai                                 = 0;
-        SETTINGS.ao                                 = 0;
-        SETTINGS.check_motion_jaw                   = 1;
+		SETTINGS.ao                                 = 0;
+		SETTINGS.check_motion_jaw                   = 1;
         SETTINGS.check_motion_body                  = 0; % at the moment only checking of jaw motion possible
         SETTINGS.AI_channels                        = [0 1 2 3]; % [touch_x touch_y jaw_motion body_motion]
-        SETTINGS.Motion_detection_interface         = 'Parallel'; %'Parallel' or 'DAQ';
+        SETTINGS.Motion_detection_interface         = 'Parallel'; %'Parallel' or 'DAQ';         
         SETTINGS.sensor_pins                        = [13 15 11 12 10]; % [(sensor-left) (sensor-right) jaw-motion (body-motion) scanner-trigger] % pin 12 not so reliable on the hardware side!
         SETTINGS.pp.address_inp                     = hex2dec('D051'); % e.g. sensors
         SETTINGS.pp.address_out_reward              = hex2dec('D050'); % e.g. reward
@@ -455,7 +428,7 @@ switch SETTINGS.setup,
         SETTINGS.DAQ_card                           = 'mcc';
         SETTINGS.serial_port                        = 'com4';
         SETTINGS.DAQSingleEnded                     = 1;
-        
+  
         % Scanner settings
         SETTINGS.interface_with_scanner             = 0; % 0 - no scanner interface, 1 - UMG (trigger as keyboard button press), 2 - DPZ (trigger through parallel port)
         SETTINGS.skip_volumes	= 4;
@@ -464,10 +437,10 @@ switch SETTINGS.setup,
         
         % microstim settings
         SETTINGS.microstim_interface                = 'Parallel'; %'Parallel' or 'DAQ';
-        SETTINGS.pp.value_out_microstim                = 16; %16 - use output pin D4 for microstim trigger
+        SETTINGS.value_out_microstim                = 16; %16 - use output pin D4 for microstim trigger                
         
         % data paths
-        SETTINGS.BASE_PATH = 'D:'; % computer
+        SETTINGS.BASE_PATH = 'D:'; % computer        
         SETTINGS.dag_drive = 'W:'; % server % [filesep filesep 'fs02' filesep 'akn$' filesep 'DAG']
         
         % not used in scanner setup
@@ -483,10 +456,10 @@ switch SETTINGS.setup,
         SETTINGS.daq_digital_output_port_to_TDT         = 0;
         SETTINGS.pp.address_out_TDT                     = hex2dec('378'); % e.g. TDT
         
-        %         SETTINGS.pins  = [11 10 12 13 15]; % parallel port pins
-        %         SETTINGS.bits  = [7  6  5  4  3]; % bits when input comes through respective pin
-        %         SETTINGS.n_bit = SETTINGS.bits(arrayfun(@(x) find(SETTINGS.pins==x),[10 12]));
-        
+%         SETTINGS.pins  = [11 10 12 13 15]; % parallel port pins
+%         SETTINGS.bits  = [7  6  5  4  3]; % bits when input comes through respective pin
+%         SETTINGS.n_bit = SETTINGS.bits(arrayfun(@(x) find(SETTINGS.pins==x),[10 12]));  
+     
     case 100 % Lukas computer :P
         SETTINGS.whichScreen = 1;
         SETTINGS.screen_w_pix = 1920;
@@ -511,7 +484,7 @@ switch SETTINGS.setup,
         SETTINGS.pp.address_inp                         = hex2dec('379'); % e.g. sensors
         SETTINGS.pp.address_out_reward                  = hex2dec('378'); % e.g. reward
         SETTINGS.pp.address_out_TDT                     = hex2dec('378'); % e.g. TDT
-        SETTINGS.TDT_interface                          = 'DAQ'; % e.g. TDT
+        SETTINGS.TDT_interface                          = 'DAQ'; % e.g. TDT        
         SETTINGS.touchscreen_calibration.y_gain         = -111;
         SETTINGS.touchscreen_calibration.y_offset       = 550;
         SETTINGS.touchscreen_calibration.x_gain         = 192;
@@ -525,5 +498,5 @@ switch SETTINGS.setup,
         SETTINGS.DAQSingleEnded = 0;
         SETTINGS.dag_drive = 'D:';
         
-        
+     
 end

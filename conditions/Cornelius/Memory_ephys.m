@@ -4,10 +4,8 @@ global SETTINGS
     
 if ~exist('dyn','var') || dyn.trialNumber == 1   
 
-%experiment='Memory saccades';     
- experiment='Memory saccades ina';     
-%  experiment='Direct saccades';     
-%experiment='Memory saccades_training';    
+experiment='Memory saccades_training';     
+%experiment='Memory saccades';    
     
     % Presettings (not to change here !)
     
@@ -27,65 +25,11 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
              
     switch experiment 
                       
-        case 'Memory saccades ina'
-            SETTINGS.check_motion_jaw       = 0;                
-            task.force_conditions           = 2;            
-            N_repetitions                   = 10;
-            task.reward.time_neutral        = [0.12 0.12]; % 0.6s -> 0.2ml per hit
-            task.rest_hand                  = [0 0];             
-            
-            fix_eye_y                       = 2;
-            fix_hnd_y                       = 16;
-            fix_offset                      = 0;
-            tar_angle                       = 20; %in degrees
-            %pool_of_angles                  =[20,0,340,200,180,160]; 
-            
-            pool_of_angles                  = [20,0,340,270,90,160,180,200]; 
-            
-            All.type_con                    = 3; 
-            All.effector_con                = 0;
-            All.timing_con                  = 30;
-            All.size_con                    = 3;
-            %All.instructed_choice_con       = [0,1];
-            All.instructed_choice_con       = [0,1];
-            All.excentricities              = [12,24];   
-            %All.excentricities              = [12];   
-            %All.angle_cases                 = [1,2,3,4,5,6]; 
-            All.angle_cases                 = [1,2,3,6,7,8];   
-            All.stim_con                    = [0];    
-                      
-        case 'Direct saccades'
-            SETTINGS.check_motion_jaw       = 0;                
-            task.force_conditions           = 2;            
-            N_repetitions                   = 10;
-            task.reward.time_neutral        = [0.05 0.05]; % 0.6s -> 0.2ml per hit
-            task.rest_hand                  = [0 0];             
-            
-            fix_eye_y                       = 2;
-            fix_hnd_y                       = 16;
-            fix_offset                      = 0;
-            tar_angle                       = 20; %in degrees
-            %pool_of_angles                  =[20,0,340,200,180,160]; 
-            
-            pool_of_angles                  = [20,0,340,270,90,160,180,200]; 
-            
-            All.type_con                    = 2; 
-            All.effector_con                = 0;
-            All.timing_con                  = 30;
-            All.size_con                    = 3;
-            %All.instructed_choice_con       = [0,1];
-            All.instructed_choice_con       = [0,1];
-            All.excentricities              = [12,24];   
-            %All.excentricities              = [12];   
-            %All.angle_cases                 = [1,2,3,4,5,6]; 
-            All.angle_cases                 = [1,2,3,6,7,8];   
-            All.stim_con                    = [0];    
-                      
         case 'Memory saccades'
             SETTINGS.check_motion_jaw       = 0;                
-            task.force_conditions           = 2;            
+            task.force_conditions                = 2;            
             N_repetitions                   = 10;
-            task.reward.time_neutral        = [0.10 0.10]; % 0.6s -> 0.2ml per hit
+            task.reward.time_neutral        = [0.06 0.06]; % 0.6s -> 0.2ml per hit
             task.rest_hand                  = [0 0];             
             
             fix_eye_y                       = 0;
@@ -94,13 +38,12 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
             tar_angle                       = 20; %in degrees
             %pool_of_angles                  =[20,0,340,200,180,160]; 
             
-            pool_of_angles                  = [20,0,340,270,90,160,180,200]; 
+            pool_of_angles              =[20,0,340,270,90,160,180,200]; 
             
             All.type_con                    = 3; 
             All.effector_con                = 0;
             All.timing_con                  = 31;
             All.size_con                    = 3;
-            %All.instructed_choice_con       = [0,1];
             All.instructed_choice_con       = [0,1];
             All.excentricities              = [12,24];   
             %All.excentricities              = [12];   
@@ -110,8 +53,8 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
             
         case 'Memory saccades_training'
             SETTINGS.check_motion_jaw       = 0;                
-            task.force_conditions           = 1;            
-            N_repetitions                   = 10;
+            task.force_conditions                = 1;            
+            N_repetitions                   = 20;
             task.reward.time_neutral        = [0.06 0.06]; % 0.6s -> 0.2ml per hit
             task.rest_hand                  = [0 0];             
             
@@ -125,9 +68,9 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
             
             All.type_con                    = 3; 
             All.effector_con                = 0;
-            All.timing_con                  = 32;
+            All.timing_con                  = 31;
             All.size_con                    = 32;
-            All.instructed_choice_con       = [0,1];
+            All.instructed_choice_con       = [0];
             All.excentricities              = [12,24];   
             %All.excentricities              = [12];   
             %All.angle_cases                 = [1,2,3,4,5,6]; 
@@ -229,41 +172,11 @@ end
 
 %% TIMING
 switch Current_con.timing_con
-    case 30 %'memory ina'
-        task.rest_sensors_ini_time              = 0.5; % s, time to hold sensor(s) in initialize_trial before trial starts
-        task.timing.wait_for_reward             = 0.1;
-        task.timing.ITI_success                 = 2;
-        task.timing.ITI_success_var             = 0;
-        task.timing.ITI_fail                    = 1;
-        task.timing.ITI_fail_var                = 0;
-        task.timing.grace_time_eye              = 0;
-        task.timing.grace_time_hand             = 0;
-        task.timing.fix_time_to_acquire_hnd     = 1;
-        task.timing.tar_time_to_acquire_hnd     = 1.5;
-        task.timing.tar_inv_time_to_acquire_hnd = 2;
-        task.timing.fix_time_to_acquire_eye     = 0.5;
-        task.timing.tar_time_to_acquire_eye     = 0.5;
-        task.timing.tar_inv_time_to_acquire_eye = 0.5; %3
-        task.timing.fix_time_hold               = 0.5;
-        task.timing.fix_time_hold_var           = 0.5;
-        task.timing.cue_time_hold               = 0.28;
-        task.timing.cue_time_hold_var           = 0;
-%         task.timing.mem_time_hold               = 0.2; %% increase slowly
-        task.timing.mem_time_hold               = 2; %% increase slowly
-        task.timing.mem_time_hold_var           = 0.5;
-        task.timing.del_time_hold               = 0;
-        task.timing.del_time_hold_var           = 0;
-        task.timing.tar_inv_time_hold           = 0.3;
-        task.timing.tar_inv_time_hold_var       = 0.0;
-        task.timing.tar_time_hold               = 0.5;
-        task.timing.tar_time_hold_var           = 0.0;
-        
-        
     case 31 %'memory ephys'
         
         task.rest_sensors_ini_time              = 0.5; % s, time to hold sensor(s) in initialize_trial before trial starts
         task.timing.wait_for_reward             = 0.4;
-        task.timing.ITI_success                 = 2;
+        task.timing.ITI_success                 = 1;
         task.timing.ITI_success_var             = 0;
         task.timing.ITI_fail                    = 1;
         task.timing.ITI_fail_var                = 0;
@@ -292,7 +205,7 @@ switch Current_con.timing_con
         
         task.rest_sensors_ini_time              = 0.5; % s, time to hold sensor(s) in initialize_trial before trial starts
         task.timing.wait_for_reward             = 0.2;
-        task.timing.ITI_success                 = 2;
+        task.timing.ITI_success                 = 1;
         task.timing.ITI_success_var             = 0;
         task.timing.ITI_fail                    = 1;
         task.timing.ITI_fail_var                = 0;
@@ -330,7 +243,7 @@ end
 switch Current_con.size_con
     case 3 %'memory'
         task.eye.fix.size       = 0.5;
-        task.eye.fix.radius     = 5;
+        task.eye.fix.radius     = 4;
         task.eye.tar(1).size    = 0.5;
         task.eye.tar(1).radius  = 5;        
         

@@ -15,32 +15,53 @@
 %% Task settings
 
 if ~exist('dyn','var') || dyn.trialNumber == 1
-    
-%     esperimentazione        = {'calibration'};    
-%     
-%     esperimentazione        = {'choice target-distractor memory saccades'};
-%     esperimentazione        = {'choice target-distractor direct saccades'};
-%     esperimentazione        = {'choice distractor-distractor memory saccades'};
-%     esperimentazione        = {'choice distractor-distractor direct saccades'};
-%     esperimentazione        = {'choice target-target memory saccades'};
-%     esperimentazione        = {'choice target-target direct saccades'};
-%     
-%     esperimentazione        = {'instructed memory saccades'};
-%     esperimentazione        = {'instructed distractor memory saccades'};
-%     esperimentazione        = {'instructed direct saccades'};
-%     esperimentazione        = {'instructed distractor direct saccades'};
-%     
-%     esperimentazione        = {'instructed direct saccades','choice target-distractor direct saccades'};
-    esperimentazione        = {'choice target-distractor direct saccades','choice distractor-distractor direct saccades'};
-%
-%     esperimentazione        = {'choice target-distractor memory saccades','choice distractor-distractor memory saccades'};
-%     esperimentazione        = {'instructed memory saccades','choice target-distractor memory saccades'};
 
-% esperimentazione        = {'instructed memory saccades','instructed distractor memory saccades','choice target-distractor memory saccades','choice distractor-distractor memory saccades'};
-% esperimentazione        = {'instructed direct saccades','instructed distractor direct saccades','choice target-distractor direct saccades','choice distractor-distractor direct saccades'};
-% esperimentazione        = {'instructed direct saccades','instructed distractor direct saccades'};
-% esperimentazione        = {'instructed memory saccades','instructed distractor memory saccades'};
-        
+% Calibration
+%     esperimentazione = {'calibration'};    
+   
+% Direct saccades
+% Single peripheral stimulus
+    esperimentazione = {'instructed direct saccades'};
+%     esperimentazione = {'single distractor direct saccades'};
+% Choice
+%     esperimentazione = {'choice target-distractor direct saccades horizontal'};
+%     esperimentazione = {'choice target-distractor direct saccades diagonal'};
+%     esperimentazione = {'choice distractor-distractor direct saccades horizontal'};
+%     esperimentazione = {'choice distractor-distractor direct saccades diagonal'};
+%     esperimentazione = {'choice target-target direct saccades horizontal'};
+%     esperimentazione = {'choice target-target direct saccades diagonal'};
+% Combinations   
+%     esperimentazione = {'instructed direct saccades','single distractor direct saccades'}; % only single-stimulus conditions
+%
+%     color discrimination (determination of distractor color)
+%     esperimentazione = {'choice target-distractor direct saccades horizontal','choice target-distractor direct saccades diagonal',...
+%                         'choice distractor-distractor direct saccades horizontal','choice distractor-distractor direct saccades diagonal',...
+%                         'choice target-target direct saccades horizontal','choice target-target direct saccades diagonal'};
+%     esperimentazione = {'choice target-distractor direct saccades horizontal','choice distractor-distractor direct saccades horizontal',...
+%                         'choice target-target direct saccades horizontal'};
+
+% Memory saccades
+% Single peripheral stimulus
+%     esperimentazione = {'instructed memory saccades'};
+%     esperimentazione = {'single distractor memory saccades'};
+% Choice
+%     esperimentazione = {'choice target-distractor memory saccades horizontal'};
+%     esperimentazione = {'choice target-distractor memory saccades diagonal'};
+%     esperimentazione = {'choice distractor-distractor memory saccades horizontal'};
+%     esperimentazione = {'choice distractor-distractor memory saccades diagonal'};
+%     esperimentazione = {'choice target-target memory saccades horizontal'};
+%     esperimentazione = {'choice target-target memory saccades diagonal'};
+% Combinations
+%     esperimentazione = {'instructed memory saccades','single distractor memory saccades'}; % only single-stimulus conditions
+%
+%     color discrimination (determination of distractor color)
+%     esperimentazione = {'choice target-distractor memory saccades horizontal','choice target-distractor memory saccades diagonal',...
+%                         'choice distractor-distractor memory saccades horizontal','choice distractor-distractor memory saccades diagonal',...
+%                         'choice target-target memory saccades horizontal','choice target-target memory saccades diagonal'};
+%     esperimentazione = {'choice target-distractor memory saccades horizontal','choice distractor-distractor memory saccades horizontal',...
+%                         'choice target-target memory saccades horizontal'};
+%     esperimentazione = {'choice target-distractor memory saccades horizontal','choice target-distractor memory saccades diagonal',...
+%                         'choice distractor-distractor memory saccades diagonal','choice distractor-distractor memory saccades horizontal'};
 
     for n_exp = 1:numel(esperimentazione)
         experiment=esperimentazione{n_exp};
@@ -48,7 +69,6 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
         SETTINGS.GUI_in_acquisition         = 0;
         PEST_ON                             = 0;
         task.rest_hand                      = [0 0];
-        multiple_targets_per_trial          = 0;
         
         %% Order of fields here defines the order of parameters to be sent to TDT as the trial_classifiers
         All = struct(...
@@ -61,20 +81,37 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
         SETTINGS.check_motion_jaw           = 0;
         SETTINGS.check_motion_body          = 0;
         SETTINGS.MonkeyMovedSound           = 0;
+        SETTINGS.FixationBreakSound         = 0;
+        SETTINGS.WrongTargetSound           = 0;
         
         fix_eye_y                           = 0;
         fix_hnd_y                           = 0;
         
-        task.force_conditions                    = 0;
-        task.shuffle_conditions                  = 1;
+        task.force_conditions               = 1; % 0 - trial will not be repeated, 1 - trial will be repeated immediately, 2 - trial will be put back into the pool of trials
+        task.shuffle_conditions             = 1;
         
         SETTINGS.take_angles_con            = 1;
-        pool_of_angles                      = [20,0,340,200,180,160]; %[0,30,150,180,210,330] [20,0,340,200,180,160]
-        All.excentricities                  = [13];
+        pool_of_angles                      = [0,20,340, 180,160,200]; %[0,30,330, 180,150,210] [0,20,340, 180,160,200] % [right-mid right-up right-bottom left-mid left-up left-bottom]
+        All.excentricities                  = [20];
+        
         All.angle_cases                     = [1,2,3,4,5,6]; %[1,2,3,4,5,6];
+        angle_cases_tardist_horz            = All.angle_cases;
+        angle_cases_tardist_diag            = [2 3 5 6];
+        angle_cases_samesame_horz           = All.angle_cases(1:3);
+        angle_cases_samesame_diag           = All.angle_cases(2:3);
+        
         All.offset_con                      = 0; % offset of fixation spot (x dimension)
         All.effector_con                    = 0; % 0 - eye
-        All.stim_con                        = 0;
+        
+        stim_con_direct                     = [0 1 3]; % stimulation: 0 - no stimulation, 1 - 80ms before "go", 2 - at "go", 3 - 80ms after "go"
+        stim_con_memory                     = 0;
+        
+        reward_memory                       = 0.09;
+        reward_direct                       = 0.09;
+        reward_calibration                  = 0.05;
+        
+        N_repetitions_instructed            = 10;
+        N_repetitions_choice                = 10;
         
         switch experiment
             
@@ -83,45 +120,60 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
                 SETTINGS.check_motion_jaw           = 0;
                 SETTINGS.check_motion_body          = 0;                
                 
-                SETTINGS.take_angles_con            = 1;
                 pool_of_angles                      = [0];
                 All.excentricities                  = [0];
                 All.angle_cases                     = [1];
                 
-                task.force_conditions                    = 1;
-                task.shuffle_conditions                  = 0;
-                N_repetitions                       = 100;
+                task.force_conditions               = 1;
+                task.shuffle_conditions             = 0;
                 
-                fix_eye_y                           = 0;
-                fix_hnd_y                           = 0;
+                All.reward_time                     = reward_calibration;
                 
-                All.reward_time                     = 0.05; %
-                
-                All.offset_con                      = 0; % offset of fixation spot
-                All.effector_con                    = 0; % effector
                 All.type_con                        = 1; % fixation
                 All.timing_con                      = 0;
                 All.size_con                        = 0;
                 All.instructed_choice_con           = [0];
+                All.stim_con                        = 0;
                 
-            case 'choice target-distractor memory saccades'    
+                N_repetitions                       = 100;
+
+            case 'choice target-distractor memory saccades horizontal'    
                 
-                All.reward_time                     = 0.09; %
+                All.reward_time                     = reward_memory; %
                  
                 All.type_con                        = [3];
                 All.timing_con                      = 1;
                 All.size_con                        = 1;
                 All.instructed_choice_con           = [1];
                 All.correct_choice_target           = 1; % 0 - targets #1 and #2 correct, 1 - target #1 correct, 2 - target #2 correct, 3 - target #3 correct             
-                All.colors_con                      = [1 5]; %1; %[6 7];
-                All.targets_con                     = 1; % 0 - two targets, 1 - three targets
+                All.colors_con                      = [1 6];
+                All.targets_con                     = 1; % 0 - one peripheral stimulus, 1 - two peripheral stimuli horizontal, 2 - two peripheral stimuli diagonal
                 All.shape_con                       = 1;
+                All.angle_cases                     = angle_cases_tardist_horz;
+                All.stim_con                        = stim_con_memory;
                 
-                N_repetitions                       = 10;
+                N_repetitions                       = N_repetitions_choice;
                 
-            case 'choice target-distractor direct saccades'
+            case 'choice target-distractor memory saccades diagonal'
                 
-                All.reward_time                     = 0.09; %               
+                All.reward_time                     = reward_memory; %
+                
+                All.type_con                        = [3];
+                All.timing_con                      = 1;
+                All.size_con                        = 1;
+                All.instructed_choice_con           = [1];
+                All.correct_choice_target           = 1; % 0 - targets #1 and #2 correct, 1 - target #1 correct, 2 - target #2 correct, 3 - target #3 correct
+                All.colors_con                      = [1 6];
+                All.targets_con                     = 2; % 0 - one peripheral stimulus, 1 - two peripheral stimuli horizontal, 2 - two peripheral stimuli diagonal
+                All.shape_con                       = 1;
+                All.angle_cases                     = angle_cases_tardist_diag;
+                All.stim_con                        = stim_con_memory;
+                
+                N_repetitions                       = N_repetitions_choice;
+                
+            case 'choice target-distractor direct saccades horizontal'
+                
+                All.reward_time                     = reward_direct; %               
 
                 All.type_con                        = 2;
                 All.timing_con                      = 2;
@@ -129,29 +181,67 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
                 All.instructed_choice_con           = [1];
                 All.correct_choice_target           = 1; % 0 - targets #1 and #2 correct, 1 - target #1 correct, 2 - target #2 correct, 3 - target #3 correct 
                 All.colors_con                      = [1 5 6 7 8]; %[1 5 6 7 8];
-                All.targets_con                     = 1; % 0 - two targets, 1 - three targets
+                All.targets_con                     = 1; % 0 - one peripheral stimulus, 1 - two peripheral stimuli horizontal, 2 - two peripheral stimuli diagonal
                 All.shape_con                       = 1;
+                All.angle_cases                     = angle_cases_tardist_horz;
+                All.stim_con                        = stim_con_direct;
                 
-                N_repetitions                       = 12;
+                N_repetitions                       = N_repetitions_choice;
                 
-            case 'choice distractor-distractor memory saccades'
+            case 'choice target-distractor direct saccades diagonal'
                 
-                All.reward_time                     = 0.09; %                
+                All.reward_time                     = reward_direct; %
+                
+                All.type_con                        = 2;
+                All.timing_con                      = 2;
+                All.size_con                        = 1;
+                All.instructed_choice_con           = [1];
+                All.correct_choice_target           = 1; % 0 - targets #1 and #2 correct, 1 - target #1 correct, 2 - target #2 correct, 3 - target #3 correct
+                All.colors_con                      = [1 5 6 7 8]; %[1 5 6 7 8];
+                All.targets_con                     = 2; % 0 - one peripheral stimulus, 1 - two peripheral stimuli horizontal, 2 - two peripheral stimuli diagonal
+                All.shape_con                       = 1;
+                All.angle_cases                     = angle_cases_tardist_diag;
+                All.stim_con                        = stim_con_direct;
+                
+                N_repetitions                       = N_repetitions_choice;
+                
+            case 'choice distractor-distractor memory saccades horizontal'
+                
+                All.reward_time                     = reward_memory; %                
 
                 All.type_con                        = 3;
                 All.timing_con                      = 1;
                 All.size_con                        = 1;
                 All.instructed_choice_con           = [1];
                 All.correct_choice_target           = 3; % 0 - targets #1 and #2 correct, 1 - target #1 correct, 2 - target #2 correct, 3 - target #3 correct 
-                All.colors_con                      = [2 9];
-                All.targets_con                     = 1; % 0 - two targets, 1 - three targets
+                All.colors_con                      = [2 10];
+                All.targets_con                     = 1; % 0 - one peripheral stimulus, 1 - two peripheral stimuli horizontal, 2 - two peripheral stimuli diagonal
                 All.shape_con                       = 1;
+                All.angle_cases                     = angle_cases_samesame_horz;
+                All.stim_con                        = stim_con_memory;
                 
-                N_repetitions                       = 5;
+                N_repetitions                       = N_repetitions_choice;
                 
-            case 'choice distractor-distractor direct saccades'
+            case 'choice distractor-distractor memory saccades diagonal'
                 
-                All.reward_time                     = 0.09; %                
+                All.reward_time                     = reward_memory; %
+                
+                All.type_con                        = 3;
+                All.timing_con                      = 1;
+                All.size_con                        = 1;
+                All.instructed_choice_con           = [1];
+                All.correct_choice_target           = 3; % 0 - targets #1 and #2 correct, 1 - target #1 correct, 2 - target #2 correct, 3 - target #3 correct
+                All.colors_con                      = [2 10];
+                All.targets_con                     = 2; % 0 - one peripheral stimulus, 1 - two peripheral stimuli horizontal, 2 - two peripheral stimuli diagonal
+                All.shape_con                       = 1;
+                All.angle_cases                     = angle_cases_samesame_diag; % only upper and lower positions
+                All.stim_con                        = stim_con_memory;
+                
+                N_repetitions                       = N_repetitions_choice;
+                
+            case 'choice distractor-distractor direct saccades horizontal'
+                
+                All.reward_time                     = reward_direct; %                
                 
                 All.type_con                        = 2;
                 All.timing_con                      = 2;
@@ -159,14 +249,33 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
                 All.instructed_choice_con           = [1];
                 All.correct_choice_target           = 3; % 0 - targets #1 and #2 correct, 1 - target #1 correct, 2 - target #2 correct, 3 - target #3 correct 
                 All.colors_con                      = [2 9:12]; %[2 9:12];
-                All.targets_con                     = 1; % 0 - two targets, 1 - three targets
+                All.targets_con                     = 1; % 0 - one peripheral stimulus, 1 - two peripheral stimuli horizontal, 2 - two peripheral stimuli diagonal
                 All.shape_con                       = 1;
+                All.angle_cases                     = angle_cases_samesame_horz;
+                All.stim_con                        = stim_con_direct;
                 
-                N_repetitions                       = 6;
+                N_repetitions                       = N_repetitions_choice;
                 
-            case 'choice target-target memory saccades'
+            case 'choice distractor-distractor direct saccades diagonal'
                 
-                All.reward_time                     = 0.09; %                
+                All.reward_time                     = reward_direct; %
+                
+                All.type_con                        = 2;
+                All.timing_con                      = 2;
+                All.size_con                        = 1;
+                All.instructed_choice_con           = [1];
+                All.correct_choice_target           = 3; % 0 - targets #1 and #2 correct, 1 - target #1 correct, 2 - target #2 correct, 3 - target #3 correct
+                All.colors_con                      = [2 9:12]; %[2 9:12];
+                All.targets_con                     = 2; % 0 - one peripheral stimulus, 1 - two peripheral stimuli horizontal, 2 - two peripheral stimuli diagonal
+                All.shape_con                       = 1;
+                All.angle_cases                     = angle_cases_samesame_diag;
+                All.stim_con                        = stim_con_direct;
+                
+                N_repetitions                       = N_repetitions_choice;
+                
+            case 'choice target-target memory saccades horizontal'
+                
+                All.reward_time                     = reward_memory; %                
                 
                 All.type_con                        = 3;
                 All.timing_con                      = 1;
@@ -174,14 +283,33 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
                 All.instructed_choice_con           = [1];
                 All.correct_choice_target           = 0; % 0 - targets #1 and #2 correct, 1 - target #1 correct, 2 - target #2 correct, 3 - target #3 correct 
                 All.colors_con                      = 0;
-                All.targets_con                     = 1; % 0 - two targets, 1 - three targets
+                All.targets_con                     = 1; % 0 - one peripheral stimulus, 1 - two peripheral stimuli horizontal, 2 - two peripheral stimuli diagonal
                 All.shape_con                       = 1;
+                All.angle_cases                     = angle_cases_samesame_horz;
+                All.stim_con                        = stim_con_memory;
                 
-                N_repetitions                       = 10;
+                N_repetitions                       = N_repetitions_choice;
                 
-            case 'choice target-target direct saccades'
+            case 'choice target-target memory saccades diagonal'
                 
-                All.reward_time                     = 0.08; %
+                All.reward_time                     = reward_memory; %
+                
+                All.type_con                        = 3;
+                All.timing_con                      = 1;
+                All.size_con                        = 1;
+                All.instructed_choice_con           = [1];
+                All.correct_choice_target           = 0; % 0 - targets #1 and #2 correct, 1 - target #1 correct, 2 - target #2 correct, 3 - target #3 correct
+                All.colors_con                      = 0;
+                All.targets_con                     = 2; % 0 - one peripheral stimulus, 1 - two peripheral stimuli horizontal, 2 - two peripheral stimuli diagonal
+                All.shape_con                       = 1;
+                All.angle_cases                     = angle_cases_samesame_diag; 
+                All.stim_con                        = stim_con_memory;
+                
+                N_repetitions                       = N_repetitions_choice;
+                
+            case 'choice target-target direct saccades horizontal'
+                
+                All.reward_time                     = reward_direct; %
                 
                 All.type_con                        = 2;
                 All.timing_con                      = 2;
@@ -189,14 +317,33 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
                 All.instructed_choice_con           = [1];
                 All.correct_choice_target           = 0; % 0 - targets #1 and #2 correct, 1 - target #1 correct, 2 - target #2 correct, 3 - target #3 correct
                 All.colors_con                      = 0;
-                All.targets_con                     = 1; % 0 - two targets, 1 - three targets
+                All.targets_con                     = 1; % 0 - one peripheral stimulus, 1 - two peripheral stimuli horizontal, 2 - two peripheral stimuli diagonal
                 All.shape_con                       = 1;
+                All.angle_cases                     = angle_cases_samesame_horz;
+                All.stim_con                        = stim_con_direct;
                 
-                N_repetitions                       = 6;
+                N_repetitions                       = N_repetitions_choice;
+                
+            case 'choice target-target direct saccades diagonal'
+                
+                All.reward_time                     = reward_direct; %
+                
+                All.type_con                        = 2;
+                All.timing_con                      = 2;
+                All.size_con                        = 1;
+                All.instructed_choice_con           = [1];
+                All.correct_choice_target           = 0; % 0 - targets #1 and #2 correct, 1 - target #1 correct, 2 - target #2 correct, 3 - target #3 correct
+                All.colors_con                      = 0;
+                All.targets_con                     = 2; % 0 - one peripheral stimulus, 1 - two peripheral stimuli horizontal, 2 - two peripheral stimuli diagonal
+                All.shape_con                       = 1;
+                All.angle_cases                     = angle_cases_samesame_diag;
+                All.stim_con                        = stim_con_direct;
+                
+                N_repetitions                       = N_repetitions_choice;
                 
             case 'instructed memory saccades'
                 
-                All.reward_time                     = 0.09; %
+                All.reward_time                     = reward_memory; %
                 
                 All.type_con                        = [3];
                 All.timing_con                      = 1;
@@ -204,14 +351,15 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
                 All.instructed_choice_con           = [1];
                 All.correct_choice_target           = 1; % 0 - targets #1 and #2 correct, 1 - target #1 correct, 2 - target #2 correct, 3 - target #3 correct
                 All.colors_con                      = [3];
-                All.targets_con                     = 0; % 0 - two targets, 1 - three targets
+                All.targets_con                     = 0; % 0 - one peripheral stimulus, 1 - two peripheral stimuli horizontal, 2 - two peripheral stimuli diagonal
                 All.shape_con                       = 0;
+                All.stim_con                        = stim_con_memory;
                 
-                N_repetitions                       = 10;
+                N_repetitions                       = N_repetitions_instructed;
                 
             case 'instructed direct saccades'
                 
-                All.reward_time                     = 0.08; %
+                All.reward_time                     = reward_direct; %
                 
                 All.type_con                        = 2;
                 All.timing_con                      = 2;
@@ -219,29 +367,31 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
                 All.instructed_choice_con           = [1];
                 All.correct_choice_target           = 1; % 0 - targets #1 and #2 correct, 1 - target #1 correct, 2 - target #2 correct, 3 - target #3 correct
                 All.colors_con                      = 3;
-                All.targets_con                     = 0; % 0 - two targets, 1 - three targets
+                All.targets_con                     = 0; % 0 - one peripheral stimulus, 1 - two peripheral stimuli horizontal, 2 - two peripheral stimuli diagonal
                 All.shape_con                       = 0;
+                All.stim_con                        = stim_con_direct;
                 
-                N_repetitions                       = 6;
+                N_repetitions                       = N_repetitions_instructed;
                 
-            case 'instructed distractor memory saccades'
+            case 'single distractor memory saccades'
                 
-                All.reward_time                     = 0.09; %
+                All.reward_time                     = reward_memory; %
                 
                 All.type_con                        = [3];
                 All.timing_con                      = 1;
                 All.size_con                        = 1;
                 All.instructed_choice_con           = [1];
                 All.correct_choice_target           = 2; % 0 - targets #1 and #2 correct, 1 - target #1 correct, 2 - target #2 correct, 3 - target #3 correct
-                All.colors_con                      = [4 13];
-                All.targets_con                     = 0; % 0 - two targets, 1 - three targets
+                All.colors_con                      = [1 6];
+                All.targets_con                     = 0; % 0 - one peripheral stimulus, 1 - two peripheral stimuli horizontal, 2 - two peripheral stimuli diagonal
                 All.shape_con                       = 0;
+                All.stim_con                        = stim_con_memory;
                 
-                N_repetitions                       = 10;
+                N_repetitions                       = N_repetitions_instructed;
                 
-            case 'instructed distractor direct saccades'
+            case 'single distractor direct saccades'
                 
-                All.reward_time                     = 0.08; %
+                All.reward_time                     = reward_direct; %
                 
                 All.type_con                        = 2;
                 All.timing_con                      = 2;
@@ -249,10 +399,11 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
                 All.instructed_choice_con           = [1];
                 All.correct_choice_target           = 2; % 0 - targets #1 and #2 correct, 1 - target #1 correct, 2 - target #2 correct, 3 - target #3 correct
                 All.colors_con                      = [4 13:14]; %[4 13:16];
-                All.targets_con                     = 0; % 0 - two targets, 1 - three targets
+                All.targets_con                     = 0; % 0 - one peripheral stimulus, 1 - two peripheral stimuli horizontal, 2 - two peripheral stimuli diagonal
                 All.shape_con                       = 0;
+                All.stim_con                        = stim_con_direct;
                 
-                N_repetitions                       = 6;
+                N_repetitions                       = N_repetitions_instructed;
                 
         end
         
@@ -374,15 +525,6 @@ task.effector               = Current_con.effector_con;
 %% REACH hand
 task.reach_hand             = Current_con.reach_hand_con;
 
-%% STIMULATION timing
-switch Current_con.stim_con
-    case 0
-        task.microstim.stim_on      = 0;
-        task.microstim.state        = [STATE.TAR_ACQ];
-        task.microstim.start{1}     = [0] ;
-        task.microstim.end{1}       = [0];
-end
-
 %% TASK TIMING
 
 % general timing
@@ -424,7 +566,7 @@ switch Current_con.timing_con
         
     case 2 % choice direct saccades
         
-        task.timing.fix_time_hold               = 0.5;
+        task.timing.fix_time_hold               = 1; %0.5
         task.timing.fix_time_hold_var           = 0.4;
         task.timing.tar_time_hold               = 0.5;
         task.timing.tar_time_hold_var           = 0.0;
@@ -505,7 +647,7 @@ task.hnd.tar(2).size    = task.hnd.tar(1).size ; % deg
 task.eye.tar(2).radius  = task.eye.tar(1).radius;
 task.hnd.tar(2).radius  = task.hnd.tar(1).radius; % deg
 
-if Current_con.targets_con == 1
+if Current_con.targets_con == 1 || Current_con.targets_con == 2
     
     task.eye.tar(3).size    = task.eye.tar(1).size;
     task.hnd.tar(3).size    = task.hnd.tar(1).size ; % deg
@@ -557,7 +699,7 @@ switch Current_con.targets_con
         task.eye.tar(2).x = fix_eye_x;
         task.eye.tar(2).y = fix_eye_y;
         
-    case 1 % two peripheral targets, one fixation target (choice)
+    case 1 % two peripheral targets presented on a horizontal line either in the upper or lower hemifield or on the midline, one fixation target (choice)
 
         task.eye.tar(1).x = fix_eye_x  + tar_dis_1x;
         task.eye.tar(1).y = fix_eye_y  + tar_dis_1y;
@@ -572,14 +714,32 @@ switch Current_con.targets_con
         task.hnd.tar(2).y = fix_hnd_y  + tar_dis_2y;
         task.hnd.tar(3).x = fix_hnd_x;
         task.hnd.tar(3).y = fix_hnd_y; % + tar_dis_3y;
+        
+    case 2 % two peripheral targets presented on a diagonal line, i.e. if one stimulus is up left the second stimulus is bottom right, one fixation target (choice)
 
+        task.eye.tar(1).x = fix_eye_x  + tar_dis_1x;
+        task.eye.tar(1).y = fix_eye_y  + tar_dis_1y;
+        task.eye.tar(2).x = fix_eye_x  + tar_dis_2x;
+        task.eye.tar(2).y = fix_eye_y  - tar_dis_2y;
+        task.eye.tar(3).x = fix_eye_x;
+        task.eye.tar(3).y = fix_eye_y;
+        
+        task.hnd.tar(1).x = fix_hnd_x  + tar_dis_1x;
+        task.hnd.tar(1).y = fix_hnd_y  + tar_dis_1y;
+        task.hnd.tar(2).x = fix_hnd_x  + tar_dis_2x;
+        task.hnd.tar(2).y = fix_hnd_y  - tar_dis_2y;
+        task.hnd.tar(3).x = fix_hnd_x;
+        task.hnd.tar(3).y = fix_hnd_y;
 end
         
 %% COLORS of fixation spot and targets - see D:\Sources\color_luminance_measurements.txt for luminance
 
 task.eye.fix.color_dim          = [60 60 60]; % [128 0 0]
 task.eye.fix.color_bright       = [110 110 110]; % [255 0 0]
-      
+task.eye.tar(1).color_inv       = SETTINGS.BG_COLOR; % red target
+task.eye.tar(2).color_inv       = SETTINGS.BG_COLOR; % red target
+task.eye.tar(3).color_inv       = [60 60 60]; % fixation target
+
 switch Current_con.colors_con
     
     % conditions with basic distractor color
@@ -619,7 +779,8 @@ switch Current_con.colors_con
         task.eye.tar(1).color_dim       = [128 0 0]; % red target
         task.eye.tar(1).color_bright    = [255 0 0];
         task.eye.tar(2).color_dim       = [60 60 60]; % fixation target
-        task.eye.tar(2).color_bright    = [110 110 110];
+        task.eye.tar(2).color_bright    = [110 110 110];        
+        task.eye.tar(2).color_inv       = [60 60 60];     
         
         if numel(task.eye.tar) == 3
             task.eye.tar(3) = [];
@@ -630,7 +791,8 @@ switch Current_con.colors_con
         task.eye.tar(1).color_dim       = [60 60 0]; % yellow distractor
         task.eye.tar(1).color_bright    = [123 123 0];
         task.eye.tar(2).color_dim       = [60 60 60]; % fixation target
-        task.eye.tar(2).color_bright    = [110 110 110];
+        task.eye.tar(2).color_bright    = [110 110 110];        
+        task.eye.tar(2).color_inv       = [60 60 60];     
         
         if numel(task.eye.tar) == 3
             task.eye.tar(3) = [];
@@ -717,7 +879,8 @@ switch Current_con.colors_con
         task.eye.tar(1).color_dim       = [95 59 0]; % distractor
         task.eye.tar(1).color_bright    = [185 90 0];
         task.eye.tar(2).color_dim       = [60 60 60]; % fixation target
-        task.eye.tar(2).color_bright    = [110 110 110];
+        task.eye.tar(2).color_bright    = [110 110 110];        
+        task.eye.tar(2).color_inv       = [60 60 60];     
         
         if numel(task.eye.tar) == 3
             task.eye.tar(3) = [];
@@ -729,6 +892,7 @@ switch Current_con.colors_con
         task.eye.tar(1).color_bright    = [205 60 0];
         task.eye.tar(2).color_dim       = [60 60 60]; % fixation target
         task.eye.tar(2).color_bright    = [110 110 110];
+        task.eye.tar(2).color_inv       = [60 60 60];    
         
         if numel(task.eye.tar) == 3
             task.eye.tar(3) = [];
@@ -740,6 +904,7 @@ switch Current_con.colors_con
         task.eye.tar(1).color_bright    = [220 40 0];
         task.eye.tar(2).color_dim       = [60 60 60]; % fixation target
         task.eye.tar(2).color_bright    = [110 110 110];
+        task.eye.tar(2).color_inv       = [60 60 60];
         
         if numel(task.eye.tar) == 3
             task.eye.tar(3) = [];
@@ -751,6 +916,7 @@ switch Current_con.colors_con
         task.eye.tar(1).color_bright    = [228 20 0];
         task.eye.tar(2).color_dim       = [60 60 60]; % fixation target
         task.eye.tar(2).color_bright    = [110 110 110];
+        task.eye.tar(2).color_inv       = [60 60 60];   
         
         if numel(task.eye.tar) == 3
             task.eye.tar(3) = [];
@@ -851,7 +1017,7 @@ switch Current_con.colors_con
         task.eye.cue(3).color_dim       = [110 110 110];
         task.eye.cue(3).color_bright    = [110 110 110];
     
-    case 6 % choice target-distractor saccades
+    case 6
         
         task.eye.cue(1).color_dim       = [128 0 0];
         task.eye.cue(1).color_bright    = [128 0 0];
@@ -888,7 +1054,7 @@ switch Current_con.colors_con
         task.eye.cue(3).color_dim       = [110 110 110];
         task.eye.cue(3).color_bright    = [110 110 110];
         
-    case 10 % choice distractor-distractor saccades
+    case 10 
         
         task.eye.cue(1).color_dim       = [113 42 0];
         task.eye.cue(1).color_bright    = [113 42 0];
@@ -927,7 +1093,7 @@ switch Current_con.colors_con
             task.eye.cue(3) = [];
         end
         
-    case 14 % instructed saccades, only distractor
+    case 14
         
         task.eye.cue(1).color_dim       = [113 42 0];
         task.eye.cue(1).color_bright    = [113 42 0];
@@ -960,4 +1126,33 @@ switch Current_con.colors_con
             task.eye.cue(3) = [];
         end
         
+end
+
+%% STIMULATION timing
+switch Current_con.stim_con
+    
+    % direct saccades
+    case 0 % no stimulation
+        task.microstim.stim_on      = 0;
+        
+    case 1 % 80ms before "go"          
+        task.microstim.stim_on      = 1;
+        task.microstim.state        = [STATE.FIX_HOL];
+        task.microstim.start{1}     = [-0.08]; % -0.08 send trigger 80ms before end of fixation hold period
+        task.microstim.end{1}       = [-0]; % no stimulation triggers after end of fixation hold period
+        task.microstim.interval     = 1;
+        
+    case 2 % at "go"
+        task.microstim.stim_on      = 1;
+        task.microstim.state        = [STATE.TAR_ACQ];
+        task.microstim.start{1}     = [0]; % send trigger at beginning of target acquisition state
+        task.microstim.end{1}       = [0.2]; % no stimulation triggers after 200ms after beginning of target acquisition state
+        task.microstim.interval     = 1;
+        
+    case 3 % 80ms after "go"
+        task.microstim.stim_on      = 1;
+        task.microstim.state        = [STATE.TAR_ACQ];
+        task.microstim.start{1}     = [0.08];
+        task.microstim.end{1}       = [0.28];
+        task.microstim.interval     = 1;
 end

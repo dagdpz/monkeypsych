@@ -24,9 +24,10 @@ experiment='calibration' ;
 %experiment='Match to sample saccades'; 
 %   experiment='Baseline stim project memory saccades';
 %     experiment='RF Mapping'; 
+    
     % Presettings (not to change here !)
     
-    task.shuffle_conditions         = 1;
+    task.shuffle_conditions              = 1;
     task.calibration                = 0;
     %SETTINGS.GUI_in_acquisition     = 1;
     SETTINGS.check_motion_jaw       = 0;
@@ -54,7 +55,7 @@ experiment='calibration' ;
             task.calibration            = 1;
             
             N_repetitions               = 1;
-            task.reward.time_neutral    = [0.03 0.03]; 
+            task.reward.time_neutral    = [0.09 0.09]; %[0.03 0.03]; 
             task.rest_hand              = [0 0];         
             
             fix_eye_y                   = 0;
@@ -93,18 +94,16 @@ experiment='calibration' ;
             task.calibration            = 1;
             
             N_repetitions               = 2;
-            task.reward.time_neutral    = [0.03 0.03]; 
+            task.reward.time_neutral    = [0.05 0.05]; 
             task.rest_hand              = [0 0];         
             
-            %fix_eye_y                   = 0;
             fix_eye_y                   = 0;
             fix_hnd_y                   = 10;
             fix_offset                  = 0;
             tar_angle                   = 20; %in degrees
 %             tar_excentricity            = 20;
 %             tar_angle                   = 20; %in degrees
-            %pool_of_angles              =[17.5,0,342.5,162.5,180,197.5]; 
-            pool_of_angles              =[19.8,0,340.2,160.2,180,199.8]; 
+            pool_of_angles              =[17.5,0,342.5,162.5,180,197.5]; 
             
             All.type_con                    = 2; 
             All.effector_con                = 0;
@@ -112,8 +111,7 @@ experiment='calibration' ;
             All.timing_con                  = 0;
             All.size_con                    = 0;
             
-            %All.excentricities              = [25.2];   
-            All.excentricities              = [28.4];   
+            All.excentricities              = [25.2];   
             All.angle_cases                 = [1,3,4,6];    
             
             %All.tar_pos_con                 = [1,2,5:8];      
@@ -1006,9 +1004,9 @@ switch Current_con.size_con
         task.hnd.tar(1).radius  = 4;
     case 0 %'calibration'
         task.eye.fix.size       = 0.5;
-        task.eye.fix.radius     = 100;
+        task.eye.fix.radius     = 20;
         task.eye.tar(1).size    = 0.5;
-        task.eye.tar(1).radius  = 5;        
+        task.eye.tar(1).radius  = 7;        
         
         task.hnd.fix.radius     = 4;
         task.hnd.fix.size       = 4;

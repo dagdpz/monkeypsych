@@ -4,7 +4,7 @@ global SETTINGS
             task.reward.time_neutral        = [0.08 0.08];    
 if ~exist('dyn','var') || dyn.trialNumber == 1   
       
-% experiment='Match to sample saccades' ;  
+experiment='Match to sample saccades' ;  
 %experiment='Match to sample saccades random locations';
 
     % Presettings (not to change here !)

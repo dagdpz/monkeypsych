@@ -19,7 +19,6 @@ end
 
 if SETTINGS.DAQSingleEnded
     set(ai,'InputType','SingleEnded'); % for new NI card 6221
-    %set(ai,'InputType','Differential'); % for new NI card 6221
 end
 addchannel(ai,SETTINGS.AI_channels(1));
 addchannel(ai,SETTINGS.AI_channels(2));

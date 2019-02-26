@@ -2,7 +2,7 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
     
 % Set task here    
 %   esperimentazione        = {'calibration'};
-  esperimentazione        = {'fixation' 'memory saccades'};
+       esperimentazione        = {'fixation' 'memory saccades'};
 %     esperimentazione        = {'memory saccades'};
 %    esperimentazione        = {'fixation'};
     
@@ -66,7 +66,7 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
                 fix_eye_y                           = 0;
                 fix_hnd_y                           = 0;
                 
-                All.reward_time                     = 0.06; % setup 3: 0.04, setup 1: 0.08
+                All.reward_time                     = 0.08; % setup 3: 0.04, setup 1: 0.08
                                 
                 All.offset_con                      = 0; % offset of fixation spot
                 All.effector_con                    = 0; % effector
@@ -89,7 +89,7 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
                 All.excentricities                  = [0];
                 All.angle_cases                     = [1];
        
-                All.reward_time                     = 0.85; % setup 3: 10V: 0.75, 12V: 0.6, setup 1: 1
+                All.reward_time                     = 0.85; % setup 3: 12V 0.72, setup 1: 1
                 
                 All.offset_con                      = 0; % offset of fixation spot
                 All.effector_con                    = 0; % 0: eye
@@ -114,7 +114,7 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
                 All.excentricities                  = [12];
                 All.angle_cases                     = [1,2,3,4,5,6];
                              
-                All.reward_time                     = 1.1; % setup 3: 10V: 0.85, 12V: 0.7, setup 1: 1.15
+                All.reward_time                     = 1.1; % setup 3: 12V 0.85, setup 1: 1.15
                 
                 All.offset_con                      = 0; % offset of fixation spot
                 All.effector_con                    = 0; % effector

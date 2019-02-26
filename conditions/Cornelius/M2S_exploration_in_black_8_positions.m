@@ -26,55 +26,6 @@ experiment='Match to sample saccades' ;
         
         case 'Match to sample saccades'
             SETTINGS.GUI_in_acquisition     = 1;
-            task.force_conditions                = 3;
-            multiple_targets_per_trial      = 1; 
-            
-            task.correct_choice_target      = [1];
-            N_repetitions                   = 2;        % 1 repetition -> 96 trials
-            %task.reward.time_neutral        = [0.14 0.14];
-            task.rest_hand                  = [0 0];
-            
-            fix_eye_y             = -1;
-            fix_hnd_y             = 0;
-            fix_offset            = 0;
-            tar_angle             = 20; %in degrees
-            pool_of_angles        = [60,0,340,160,180,200];%% 20 instead of 60 so far!
-            %             tar_excentricity      = 16; %excentricity of center of target array LR
-            %             tar_angle             = 20; %in degrees
-            
-            f_h                   = fix_eye_y;
-            fix_height            = f_h;
-            d_pos                 = 8;    % relative shift of target positions
-            ex_cue                = 15;   % cue_excentricity
-            ex_BT                 = 8;
-            
-            All.type_con                    = 6;
-            All.effector_con                = 0;
-            All.timing_con                  = 5;
-            All.size_con                    = 5;
-            All.color_con                   = 3; %3 !!!
-            
-            % CUE NUMBER
-            All.instructed_choice_con       = 0; % 0 is one cue, 1 is two cues
-            %All.tar_pos_con                 = 99;
-            All.excentricities              = [8]; % & 20! the eccentricity is randomly chosen to be 12 or 20
-            All.angle_cases                 = [1];
-            All.tar_dis_con                 = [1:6]; 
-            All.mat_dis_con                 = 1;      % triangle pointing randomly left or right
-            All.cue_pos_con                 = 1:2;      % right and left cue
-            %All.shape_con                   = [1,3,6,8,10,11,3,6,10,11];    % target and distractor distribution
-            All.shape_con                   = [1:12];    % [3,6,10,11];% target and distractor distribution
-            %PEST_ON=0;
-            
-            % THINGS TO CHANGE
-            adjusted_curvature              = -1;      % change curvature here
-            % TIMING
-            % change timing for training: line 270
-            % make red dots to cue the position: line 411
-            % target size: line 300
-        
-        case 'Match to sample training'
-            SETTINGS.GUI_in_acquisition     = 1;
             task.force_conditions                = 2;
             multiple_targets_per_trial      = 1; 
             
@@ -94,9 +45,8 @@ experiment='Match to sample saccades' ;
             f_h                   = fix_eye_y;
             fix_height            = f_h;
             d_pos                 = 8;    % relative shift of target positions
-            ex_cue                = 20;   % cue_excentricity
-            %ex_BT                 = 8;
-            ex_BT                 = 8;
+            ex_cue                = 15;   % cue_excentricity
+            ex_BT                 = 7.5;
             
             All.type_con                    = 6;
             All.effector_con                = 0;
@@ -107,13 +57,13 @@ experiment='Match to sample saccades' ;
             % CUE NUMBER
             All.instructed_choice_con       = 0; % 0 is one cue, 1 is two cues
             %All.tar_pos_con                 = 99;
-            All.excentricities              = [8]; % & 20! the eccentricity is randomly chosen to be 12 or 20
+            All.excentricities              = [10]; % & 20! the eccentricity is randomly chosen to be 12 or 20
             All.angle_cases                 = [1];
-            All.tar_dis_con                 = [1:6]; 
+            All.tar_dis_con                 = [1:5 5]; 
             All.mat_dis_con                 = 1;      % triangle pointing randomly left or right
             All.cue_pos_con                 = 1:2;      % right and left cue
             %All.shape_con                   = [1,3,6,8,10,11,3,6,10,11];    % target and distractor distribution
-            All.shape_con                   = [1:12];    % [3,6,10,11];% target and distractor distribution
+            All.shape_con                   = [1:12];    % target and distractor distribution
             %PEST_ON=0;
             
             % THINGS TO CHANGE
@@ -285,10 +235,10 @@ switch Current_con.timing_con
         
         task.rest_sensors_ini_time              = 0.5; % s, time to hold sensor(s) in initialize_trial before trial starts        
         task.timing.wait_for_reward             = 0.5;
-        task.timing.ITI_success                 = 2;
+        task.timing.ITI_success                 = 1.7;
         task.timing.ITI_success_var             = 0;
-        task.timing.ITI_incorrect_completed     = 3;
-        task.timing.ITI_fail                    = 1;
+        task.timing.ITI_incorrect_completed     = 1.2;
+        task.timing.ITI_fail                    = 0.5;
         task.timing.ITI_fail_var                = 0;        
         task.timing.grace_time_eye              = 0;
         task.timing.grace_time_hand             = 0;        
@@ -298,7 +248,7 @@ switch Current_con.timing_con
         task.timing.fix_time_to_acquire_eye     = 1;
         task.timing.tar_time_to_acquire_eye     = 10;  % time to explore the black screen; 12 for the experiment
         task.timing.tar_inv_time_to_acquire_eye = 10;  
-        task.timing.fix_time_hold               = 0.3; % fixation time
+        task.timing.fix_time_hold               = 0.2; % fixation time
         task.timing.fix_time_hold_var           = 0.2;
         task.timing.cue_time_hold               = 1; % cue time
         task.timing.cue_time_hold_var           = 0;
@@ -352,13 +302,12 @@ task.hnd.tar(2).radius  = task.hnd.tar(1).radius; % deg
 
     % placeholder variables for all 8 positions
 
-ex_LR = 8;
+ex_LR = Current_con.excentricities;
     
 left_top_close  = [fix_eye_x-ex_LR,fix_eye_y+ex_BT];
 left_bot_close  = [fix_eye_x-ex_LR,fix_eye_y-ex_BT];
 right_top_close = [fix_eye_x+ex_LR,fix_eye_y+ex_BT];
 right_bot_close = [fix_eye_x+ex_LR,fix_eye_y-ex_BT];
-
 
 ex_LR = 24;
     
@@ -370,8 +319,9 @@ right_bot_far = [fix_eye_x+ex_LR,fix_eye_y-ex_BT];
 if     multiple_targets_per_trial == 1; % 18 positions for match to sample saccades(!)
         ex_LR = Current_con.excentricities;
         All_positions_left  = Shuffle({left_top_far, left_bot_far, left_top_close, left_bot_close});
-        All_positions_right = Shuffle({right_top_far, right_bot_far, right_bot_close,right_top_close});
-
+        %All_positions_right = Shuffle({right_top_close, right_bot_close, right_top_far, right_bot_far});
+        All_positions_right = Shuffle({right_top_far, right_bot_far});
+        %All_positions_right = Shuffle({right_top_far, right_bot_far, right_top_close, right_bot_close});
         tar_dis_1x = 0; tar_dis_1y = 0; tar_dis_2x = 0; tar_dis_2y = 0;     
 end  
 
@@ -424,7 +374,11 @@ task.hnd_stay.color_bright  = [255 255 0];
 
 %% target distribution left right (for Match to sample)    
 switch Current_con.tar_dis_con
-    case 1 %
+    case 0
+        N_targets_left=2;
+        N_targets_right=1; 
+        match_left=1;
+    case 1
         N_targets_left=2;
         N_targets_right=1; 
         match_left=1;
@@ -432,15 +386,15 @@ switch Current_con.tar_dis_con
         N_targets_left=1;
         N_targets_right=2; 
         match_left=1;
-    case 3 %
+    case 3
         N_targets_left=2;
         N_targets_right=1; 
         match_left=0;
-    case 4 %
+    case 4
         N_targets_left=1;
         N_targets_right=2; 
         match_left=0;
-    case 5 %
+    case 5
         N_targets_left=3;
         N_targets_right=0; 
         match_left=1;
@@ -459,12 +413,8 @@ task.n_targets=N_targets_left+N_targets_right;
 % all_sides={'LR','L','R','LR'};
 
 % %all_curv=[-0.8,-0.6,-0.4,-0.2];
-%all_curv=[-0.475,-0.4,0.4,0.5];
-all_curv=[-0.33,-0.23,0.23,0.35];
+all_curv=[-0.6,-0.4,0.4,0.7];
 all_sides={'LR','LR','LR','LR'};
-% 
-% all_curv=[-0.6,-0.4,-0.4,-0.7];
-% all_sides={'LR','LR','TB','TB'};
 
 switch Current_con.shape_con
 
@@ -566,11 +516,8 @@ if task.type==5 || task.type==6
             task.tar_pos{1}=All_positions_right{n_right};
             n_right=n_right+1;
         end
-        
-        targets_to_assign=Shuffle(2:task.n_targets);
-        for NN=2:task.n_targets %2:task.n_targets %
-            n_target=targets_to_assign(NN-1); %2:task.n_targets %
-            if NN+match_left-1<=N_targets_left
+        for n_target=2:task.n_targets
+            if n_target+match_left-1<=N_targets_left
                 task.tar_pos{n_target}=All_positions_left{n_left};
                 n_left=n_left+1;
             else
