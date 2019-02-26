@@ -17,12 +17,13 @@
 if ~exist('dyn','var') || dyn.trialNumber == 1
 
 % Calibration
-%     esperimentazione = {'calibration'};  
+ %    esperimentazione = {'calibration'};  
 
 % Fixation
-%    esperimentazione = {'fixation'}; 
+ %  esperimentazione = {'fixation'}; 
    
 % Direct saccades
+ % esperimentazione = {'instructed direct saccades', 'choice target-target direct saccades horizontal', 'choice target-target direct saccades diagonal'};
 % Single peripheral stimulus
 %     esperimentazione = {'instructed direct saccades'};
 %     esperimentazione = {'single distractor direct saccades'};
@@ -35,7 +36,7 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
 %     esperimentazione = {'choice target-target direct saccades diagonal'};
 % Combinations   
 %    esperimentazione = {'instructed direct saccades','single distractor direct saccades'}; % only single-stimulus conditions
-%    esperimentazione = {'choice target-distractor direct saccades horizontal','choice target-distractor direct saccades diagonal', ...
+%    esperimentazione = {'instructed direct saccades','single distractor direct saccades','choice target-distractor direct saccades horizontal','choice target-distractor direct saccades diagonal', ...
 %        'choice distractor-distractor direct saccades horizontal','choice distractor-distractor direct saccades diagonal' }; % only single-stimulus conditions
 
 %     color discrimination (determination of distractor color)
@@ -44,12 +45,12 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
 %                         'choice target-target direct saccades horizontal','choice target-target direct saccades diagonal'};
 %     esperimentazione = {'choice target-distractor direct saccades horizontal','choice distractor-distractor direct saccades horizontal',...
 %                         'choice target-target direct saccades horizontal'};
-% Experiment
+%Experiment
  esperimentazione = {'choice target-distractor direct saccades horizontal','choice target-distractor direct saccades diagonal',...
                          'choice distractor-distractor direct saccades horizontal','choice distractor-distractor direct saccades diagonal',...
                          'choice target-target direct saccades horizontal','choice target-target direct saccades diagonal',...
                          'instructed direct saccades','single distractor direct saccades'};
-%% % Psychophysic
+% % % Psychophysic
 % esperimentazione = {'choice target-distractor direct saccades horizontal','choice target-distractor direct saccades diagonal',...
 %                         'choice distractor-distractor direct saccades horizontal','choice distractor-distractor direct saccades diagonal'};
 %%
@@ -101,7 +102,7 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
         fix_hnd_y                           = 0;
         
         task.force_conditions               = 2; % 0 - trial will not be repeated, 1 - trial will be repeated immediately, 2 - trial will be put back into the pool of trials
-        force_conditions_mode               = 'target selected'; %'target selected'; %'success' 'target selected'
+        force_conditions_mode               = 'success'; %'target selected'; %'success' 'target selected'
         task.shuffle_conditions             = 1;
         
         SETTINGS.take_angles_con            = 1;
@@ -118,14 +119,14 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
         All.effector_con                    = 0; % 0 - eye
         All.stim_con                        = 0;
         
-        reward_memory                       = 0.12;
-        reward_direct                       = 0.12;
+        reward_memory                       = 0.14;
+        reward_direct                       = 0.2; %0.14;
         
-        colors_tardist                      = [1 8]; % [1 8] [1 5:8]
-        colors_distdist                     = [2 12]; % [2 12] [2 9:12]
-        colors_dist                         = [4 16]; %[4 16] [4 13:16];
+        colors_tardist                      = [1 ];  % [1 8]  psychphysic curve: [1 5:8]
+        colors_distdist                     = [2 ]; % [2 12] [2 9:12]
+        colors_dist                         = [4 ]; % [4 16] [4 13:16];
         
-        stim_con_direct                     = [0 1 2 3]; %stimulation: 0 - no stimulation, 1 - 80ms before "go", 2 - at "go", 3 - 80ms after "go"
+        stim_con_direct                     = [0 ]  ; %   [5 7 8] [0 1 2 3]; % stimulation: 0 - no stimulation, 5 - 250ms before "go",7 - 100ms before "go", 3 - 50ms before "go"
         stim_con_memory                     = 0;
         
         N_repetitions_single                = 5; % long: 5; short: 2x2; 1x1;
@@ -178,7 +179,7 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
                 fix_eye_y                           = 0;
                 fix_hnd_y                           = 0;
                 
-                All.reward_time                     = 0.09; %
+                All.reward_time                     = 0.10; %
                 
                 All.offset_con                      = 0; % offset of fixation spot
                 All.effector_con                    = 0; % effector
@@ -186,7 +187,7 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
                 All.timing_con                      = 0;
                 All.size_con                        = 2;
                 All.instructed_choice_con           = [0];
-                All.stim_con                        = [0 4]; % 0 - no stimulation, 4 - 500ms after beginning of fixation hold
+                All.stim_con                        = [0 4]; % 0 4 - no stimulation, 4 - 500ms after beginning of fixation hold
                 
             case 'choice target-distractor memory saccades horizontal'
                 
@@ -819,8 +820,8 @@ end
         
 %% COLORS of fixation spot and targets - see D:\Sources\color_luminance_measurements.txt for luminance
 
-task.eye.fix.color_dim          = [60 60 60]; % [60 60 60]; % [128 0 0]
-task.eye.fix.color_bright       = [110 110 110]; % [255 0 0]
+task.eye.fix.color_dim          = [128 0 0]; % [60 60 60]; % [128 0 0]
+task.eye.fix.color_bright       = [255 0 0]; % [255 0 0]
       
 switch Current_con.colors_con
     
@@ -911,7 +912,7 @@ switch Current_con.colors_con
         
         task.eye.tar(1).color_dim       = [128 0 0]; % red target
         task.eye.tar(1).color_bright    = [255 0 0];
-        task.eye.tar(2).color_dim       = [128 11 0]; % distractor
+        task.eye.tar(2).color_dim       = [128 11 0]; % distractor  Corny: [128 11 0]
         task.eye.tar(2).color_bright    = [228 20 0];
         task.eye.tar(3).color_dim       = [60 60 60]; % fixation target
         task.eye.tar(3).color_bright    = [110 110 110];
@@ -989,7 +990,7 @@ switch Current_con.colors_con
         
     case 16
         
-        task.eye.tar(1).color_dim       = [128 11 0]; % distractor for Curius
+        task.eye.tar(1).color_dim       = [128 11 0]; % distractor for Curius[128 18 0]  %% distractor for Cornelius [128 11 0]
         task.eye.tar(1).color_bright    = [228 20 0];
         task.eye.tar(2).color_dim       = [60 60 60]; % fixation target
         task.eye.tar(2).color_bright    = [110 110 110];
@@ -1237,6 +1238,56 @@ switch Current_con.stim_con
         task.microstim.state        = [STATE.FIX_HOL];
         task.microstim.start{1}     = [0.5]; % send trigger 500ms after beginning of fixation hold period
         task.microstim.end{1}       = [0.7];
+        task.microstim.interval     = 1;
+        
+    case 5 % 250ms before "go"          
+        task.microstim.stim_on      = 1;
+        task.microstim.state        = [STATE.FIX_HOL];
+        task.microstim.start{1}     = [-0.25]; % -0.25 send trigger 250ms before end of fixation hold period
+        task.microstim.end{1}       = [-0]; % no stimulation triggers after end of fixation hold period
+        task.microstim.interval     = 1;
+        
+        
+    case 6 % 150ms after beginning of fixation hold to check for evoked saccades
+        task.microstim.stim_on      = 1;
+        task.microstim.state        = [STATE.FIX_HOL];
+        task.microstim.start{1}     = [-0.15]; 
+        task.microstim.end{1}       = [-0];
+        task.microstim.interval     = 1;
+        
+    case 7 % 50ms after beginning of fixation hold to check for evoked saccades
+        task.microstim.stim_on      = 1;
+        task.microstim.state        = [STATE.FIX_HOL];
+        task.microstim.start{1}     = [-0.1]; 
+        task.microstim.end{1}       = [-0];
+        task.microstim.interval     = 1;
+        
+        
+    case 8 % 150ms after beginning of fixation hold to check for evoked saccades
+        task.microstim.stim_on      = 1;
+        task.microstim.state        = [STATE.FIX_HOL];
+        task.microstim.start{1}     = [-0.05]; 
+        task.microstim.end{1}       = [-0];
+        task.microstim.interval     = 1;
+        
+        
+    case 9% 50ms after beginning of fixation hold to check for evoked saccades
+        task.microstim.stim_on      = 1;
+        task.microstim.state        = [STATE.TAR_ACQ];
+        task.microstim.start{1}     = [0.05]; 
+        task.microstim.end{1}       = [0.25];
+        task.microstim.interval     = 1;
+    case 11% 150ms after beginning of fixation hold to check for evoked saccades
+        task.microstim.stim_on      = 1;
+        task.microstim.state        = [STATE.TAR_ACQ];
+        task.microstim.start{1}     = [0.1]; 
+        task.microstim.end{1}       = [0.3];
+        task.microstim.interval     = 1;
+    case 12% 150ms after beginning of fixation hold to check for evoked saccades
+        task.microstim.stim_on      = 1;
+        task.microstim.state        = [STATE.TAR_ACQ];
+        task.microstim.start{1}     = [0.15]; 
+        task.microstim.end{1}       = [0.35];
         task.microstim.interval     = 1;
 end
 

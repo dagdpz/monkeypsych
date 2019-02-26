@@ -98,7 +98,7 @@ esperimentazione        = {'intermediate saccades'};
                 task.force_conditions                    = 1; % 0 - no force, 1 - has to repeat the same condition immediately, 2 - failed condition at the end of the run
                 task.shuffle_conditions                  = 1;
               
-                task.reward.time_neutral            = [0.21 0.21]; %
+                task.reward.time_neutral            = [0.17 0.17]; %
                 
                 All.offset_con                      = 0; % offset of fixation spot
                 All.effector_con                    = 0; % effector
@@ -154,7 +154,7 @@ esperimentazione        = {'intermediate saccades'};
                 task.force_conditions                    = 1; % 0 - no force, 1 - has to repeat the same condition immediately, 2 - failed condition at the end of the run
                 task.shuffle_conditions                  = 1;
                 
-                task.reward.time_neutral            = [0.20 0.20]; %
+                task.reward.time_neutral            = [0.17 0.17]; %
                 
                 All.offset_con                      = 0; % offset of fixation spot
                 All.effector_con                    = 0; % effector
@@ -316,8 +316,8 @@ switch Current_con.timing_con
         task.timing.fix_time_hold_var           = 0.1;
         task.timing.cue_time_hold               = 0.1; % duration of the cue
         task.timing.cue_time_hold_var           = 0;
-        task.timing.mem_time_hold               = 0.7; %0.3 duration of the memory period
-        task.timing.mem_time_hold_var           = 0.3;
+        task.timing.mem_time_hold               = 0.50; %0.3 duration of the memory period
+        task.timing.mem_time_hold_var           = 0.0;
         task.timing.tar_inv_time_to_acquire_eye = 6; %0.5
         task.timing.tar_inv_time_hold           = 0.1;
         task.timing.tar_inv_time_hold_var       = 0;  

@@ -3,7 +3,7 @@ function check_monitor_t=DAG_check_monitor_timing
 
 %-----------Input definitions
 Monitor=1;
-Par_port_out='D052';
+Par_port_out='D050';
 triggio=2;
 
 
@@ -278,7 +278,7 @@ if triggio==1
     Times(m)=GetSecs;m=m+1;
     set(s,'DataTerminalReady','off');
 elseif triggio==2
-    io32(ioObj, hex2dec(Par_port_out), 255);
+    io32(ioObj, hex2dec(Par_port_out), 1);
     Times(m)=GetSecs;m=m+1;
     WaitSecs(pulse_duration);
     Times(m)=GetSecs;m=m+1;

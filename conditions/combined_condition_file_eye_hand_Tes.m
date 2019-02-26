@@ -4,10 +4,13 @@ global SETTINGS
 
 if ~exist('dyn','var') || dyn.trialNumber == 1
     
-    % esperimentazione        = {'calibration'};
-     esperimentazione        = {'Delay diss_reach'};
-    % esperimentazione        = {'Delay free_gaze'};
-    % esperimentazione        = {'Delay diss_saccade'};
+   %  esperimentazione        = {'calibration'};
+  
+   esperimentazione        = {'Delay free_gaze'};
+   % esperimentazione        = {'Delay diss_reach'};
+  % esperimentazione        = {'Delay diss_saccade'};
+    
+     % esperimentazione        = {'Delay saccade'};
     % esperimentazione        = {'Direct diss_reach'};
     % esperimentazione        = {'RFmapping_Del_fr_gz'};
     
@@ -21,7 +24,7 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
     
     for n_exp = 1:numel(esperimentazione)
         experiment=esperimentazione{n_exp};
-        task.shuffle_conditions                  = 1;
+        task.shuffle_conditions             = 1;
         task.calibration                    = 0;
         SETTINGS.GUI_in_acquisition         = 0;
         SETTINGS.check_motion_jaw           = 0;
@@ -48,7 +51,7 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
                 SETTINGS.check_motion_jaw           = 0;
                 SETTINGS.take_angles_con            = 1;
                 
-                task.force_conditions                    = 1;
+                task.force_conditions               = 1;
                 N_repetitions                       = 200;
                 
                 fix_eye_y                           = 0;
@@ -82,37 +85,36 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
                     PEST_effector                   = 1;
                 end
                 
-                
-                
+          
             case 'Delay free_gaze'
-                SETTINGS.check_motion_jaw           = 1;
+                SETTINGS.check_motion_jaw           = 0;
                 SETTINGS.take_angles_con            = 1;
                 
-                task.force_conditions                    = 2;
+                task.force_conditions               = 2;
                 N_repetitions                       = 10;
                 
                 fix_eye_y                           = -5; %23
                 fix_hnd_y                           = -9; %19
                 pool_of_angles                      = [40,0,320,140,180,220]; %[40,0,320,140,180,220];
                 
-                All.time_neutral                    = [0.11]; %
-                task.rest_hand                      = [1 1];
+                All.time_neutral                    = [0.12]; %
+                task.rest_hand                      = [0 0];
                 % task.randomize_reach_hand           = 1;
                 
                 All.offset_con                      = 0;
-                All.reach_hand_con                  = [1 2];
+                All.reach_hand_con                  = [2]; % 1 left 2 right
                 All.type_con                        = 4;
-                All.effector_con                    = 6;
+                All.effector_con                    = 1;%6
                 All.timing_con                      = 31;
                 All.size_con                        = 31;
-                All.instructed_choice_con           = [0 1]; % [0 1]
+                All.instructed_choice_con           = [0 1 ]; % 0 instructed  1 choice
                 
                 if ~SETTINGS.take_angles_con
                     All.exact_excentricity_con_x    = [-15 0 15];
                     All.exact_excentricity_con_y    = [-10 0 10];
                 else
                     All.excentricities              = [15];
-                    All.angle_cases                 = [1,2,3,4,5,6];
+                    All.angle_cases                 = [2,5];
                 end
                 All.stim_con                        = 0;
                 if PEST_ON==1
@@ -126,7 +128,7 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
                 SETTINGS.check_motion_jaw           = 1;
                 SETTINGS.take_angles_con            = 1;
                 
-                task.force_conditions                    = 2;
+                task.force_conditions               = 2;
                 N_repetitions                       = 10;
                 
                 fix_eye_y                           = -5;
@@ -135,7 +137,7 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
                 % [45, 30, 0, 330, 315, 225, 210, 180, 150, 135];
                 % [40,0,320,140,180,220]; %[20,0,340,200,180,160];
                 All.time_neutral                    = [0.13]; %
-                task.rest_hand                      = [1 1];
+                task.rest_hand                      = [0 0];
                 %task.randomize_reach_hand           = 1;
                 
                 All.offset_con                      = 0;
@@ -161,18 +163,18 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
                 end
                 
             case 'Delay diss_saccade'
-                SETTINGS.check_motion_jaw           = 1;
+                SETTINGS.check_motion_jaw           = 0;
                 SETTINGS.take_angles_con            = 1;
                 
-                task.force_conditions                    = 2;
+                task.force_conditions               = 2;
                 N_repetitions                       = 10;
                 
                 fix_eye_y                           = -9; %9
                 fix_hnd_y                           = -13; %5
                 pool_of_angles                      = [40,0,320,140,180,220]; %[20,0,340,200,180,160];
                 
-                All.time_neutral                    = [0.10]; %
-                task.rest_hand                      = [1 1];
+                All.time_neutral                    = [0.11]; %
+                task.rest_hand                      = [0 0];
                 %task.randomize_reach_hand           = 1;
                 
                 All.offset_con                      = 0;
@@ -181,7 +183,7 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
                 All.effector_con                    = 3;
                 All.timing_con                      = 31;
                 All.size_con                        = 32;
-                All.instructed_choice_con           = [0 1];
+                All.instructed_choice_con           = [0 ];
                 
                 if ~SETTINGS.take_angles_con
                     All.exact_excentricity_con_x    = [-15 0 15];
@@ -196,20 +198,55 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
                     PEST_hnd_or_eye                 = 'eye';
                     PEST_effector                   = 1;
                 end
-            
+            case 'Delay saccade'
+                SETTINGS.check_motion_jaw           = 0;
+                SETTINGS.take_angles_con            = 1;
+                
+                task.force_conditions               = 2;
+                N_repetitions                       = 10;
+                
+                fix_eye_y                           = -9; %9
+                fix_hnd_y                           = -13; %5
+                pool_of_angles                      = [40,0,320,140,180,220]; %[20,0,340,200,180,160];
+                
+                All.time_neutral                    = [0.10]; %
+                task.rest_hand                      = [0 0];
+                %task.randomize_reach_hand           = 1;
+                
+                All.offset_con                      = 0;
+                All.reach_hand_con                  = [1 2];
+                All.type_con                        = 3;
+                All.effector_con                    = 0;
+                All.timing_con                      = 31;
+                All.size_con                        = 32;
+                All.instructed_choice_con           = [0 ];
+                
+                if ~SETTINGS.take_angles_con
+                    All.exact_excentricity_con_x    = [-15 0 15];
+                    All.exact_excentricity_con_y    = [-10 0 10];
+                else
+                    All.excentricities              = [15];
+                    All.angle_cases                 = [2,5];
+                end
+                All.stim_con                        = 0;
+                if PEST_ON==1
+                    All.stim_con                    = 0;
+                    PEST_hnd_or_eye                 = 'eye';
+                    PEST_effector                   = 1;
+                end
+                
              case 'Direct diss_reach'
                 SETTINGS.check_motion_jaw           = 1;
                 SETTINGS.take_angles_con            = 1;
                 
-                task.force_conditions                    = 2;
+                task.force_conditions               = 2;
                 N_repetitions                       = 10;
                 
                 fix_eye_y                           = -5;
+                
                 fix_hnd_y                           = -9;
                 pool_of_angles                      = [40,0,320,140,180,220]; % [340, 320, 200, 220]
-                % [45, 30, 0, 330, 315, 225, 210, 180, 150, 135];
-                % [40,0,320,140,180,220]; %[20,0,340,200,180,160];
-                All.time_neutral                    = [0.10]; %
+                All.time_neutral                    = [0.11]; %
                 task.rest_hand                      = [1 1];
                 %task.randomize_reach_hand           = 1;
                 
@@ -578,9 +615,9 @@ switch Current_con.timing_con
         
         task.rest_sensors_ini_time              = 0.500; % s, time to hold sensor(s) in initialize_trial before trial starts
         task.timing.wait_for_reward             = 0.500; % 0.25
-        task.timing.ITI_success                 = 3;
+        task.timing.ITI_success                 = 2.5;
         task.timing.ITI_success_var             = 0;
-        task.timing.ITI_fail                    = 3;
+        task.timing.ITI_fail                    = 2.5;
         task.timing.ITI_fail_var                = 0;
         
         task.timing.grace_time_eye              = 0;
@@ -593,18 +630,18 @@ switch Current_con.timing_con
         task.timing.tar_time_to_acquire_eye     = 0.8;
         task.timing.tar_inv_time_to_acquire_eye = 0.8; %3
         
-        task.timing.fix_time_hold               = 0.700; %0.500
-        task.timing.fix_time_hold_var           = 0.500; % 0
-        task.timing.cue_time_hold               = 0.300; % 0.280
-        task.timing.cue_time_hold_var           = 0.000; % 0
-        task.timing.mem_time_hold               = 0.700;
-        task.timing.mem_time_hold_var           = 0.200;
-        task.timing.del_time_hold               = 0.700; % 0.800
-        task.timing.del_time_hold_var           = 0.300; % 0
-        task.timing.tar_inv_time_hold           = 0.100;
-        task.timing.tar_inv_time_hold_var       = 0.000;
-        task.timing.tar_time_hold               = 0.500;
-        task.timing.tar_time_hold_var           = 0.000;
+        task.timing.fix_time_hold               = 0.600; % 0.700
+        task.timing.fix_time_hold_var           = 0.400; % 0.4
+        task.timing.cue_time_hold               = 0.300; % 0.300
+        task.timing.cue_time_hold_var           = 0.000; % 0.0
+        task.timing.mem_time_hold               = 0.700; % 0.7
+        task.timing.mem_time_hold_var           = 0.400; % 0.3
+        task.timing.del_time_hold               = 0.600; % 0.600
+        task.timing.del_time_hold_var           = 0.400; % 0.3
+        task.timing.tar_inv_time_hold           = 0.100; % 0.1
+        task.timing.tar_inv_time_hold_var       = 0.000; % 0.0
+        task.timing.tar_time_hold               = 0.500; % 0.5
+        task.timing.tar_time_hold_var           = 0.000; % 0.0
     case 32 %'memory learning'
         
     case 5 %'Match to sample'
@@ -641,7 +678,7 @@ switch Current_con.size_con
         
     case 31 %' ephys'
         task.eye.fix.size       = 0.5;
-        task.eye.fix.radius     = 6.5;
+        task.eye.fix.radius     = 6;
         task.eye.tar(1).size    = 0.5; % 0.5;
         task.eye.tar(1).radius  = 6;
         
@@ -652,7 +689,7 @@ switch Current_con.size_con
         
     case 32 %' ephys' saccade
         task.eye.fix.size       = 0.5;
-        task.eye.fix.radius     = 6.5;
+        task.eye.fix.radius     = 6;
         task.eye.tar(1).size    = 4; % 0.5;
         task.eye.tar(1).radius  = 6;
         
@@ -770,8 +807,8 @@ task.eye.tar(1).color_bright    = [255 0 0];
 task.eye.tar(2).color_dim       = [128 0 0]; %  % 2.5 or 3
 task.eye.tar(2).color_bright    = [255 0 0];
 
-task.hnd_right.color_dim        = [0 128 0]; %
-task.hnd_right.color_bright     = [0 255 0];
+task.hnd_right.color_dim        = [0 128 0]; %[0 128 0]
+task.hnd_right.color_bright     = [0 255 0]; %[0 255 0]
 
 task.hnd_left.color_dim         = [39 109 216]; %
 task.hnd_left.color_bright      = [119 230 253];

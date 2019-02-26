@@ -49,7 +49,7 @@ experiment='vpx_calibration' ;
 %             tar_angle                   = 20; %in degrees
             pool_of_angles              =[1:16];
             
-            All.type_con                    = [1]; 
+            All.type_con                    = 1; 
             All.effector_con                = 0;
             All.reach_hand_con              = 2;
             All.timing_con                  = 10;

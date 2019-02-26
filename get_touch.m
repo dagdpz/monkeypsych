@@ -7,10 +7,10 @@ function [x y touching] = get_touch(ai)
 %   x,y     hand position in screen pixels (origin at upper left)
 %
 % Last modified: 20141218 Danial
-
 global SETTINGS
 
 data = getsample(ai);
+
 x = round(data(1)*SETTINGS.touchscreen_calibration.x_gain + SETTINGS.touchscreen_calibration.x_offset);
 y = round(data(2)*SETTINGS.touchscreen_calibration.y_gain + SETTINGS.touchscreen_calibration.y_offset);
 

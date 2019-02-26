@@ -11,7 +11,7 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
     %     esperimentazione        = {'Direct saccades_shifted'};
     %         esperimentazione        = {'Memory saccades_shifted'};
     
-     %esperimentazione        = {'Memory saccades','Memory free_gaze','Memory joint','Memory diss_reach'};
+    %         esperimentazione        = {'Memory saccades'};
     %         esperimentazione        = {'Memory free_gaze'};
     %         esperimentazione        = {'Memory joint'};
     %         esperimentazione        = {'Memory diss_reach'};
