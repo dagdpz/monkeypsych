@@ -1,6 +1,6 @@
 function [dailyStats] = evaluateTrainingDataALL(monkeyName,dataDirIn)
 % monkeyName='Cornelius';
-% dataDirIn='D:\Data\Cornelius\20180320';
+% dataDirIn='Z:\Data\Cornelius\20130909';
 % Calculate daily performance and print to terminal.
 %   2012-04-04: changed to read .mat files for the latest version of the "monkeypsych_reach"
 %               output: [Date trials IT hits percent_of_all_trials
@@ -115,7 +115,18 @@ end
 %     d = datesAvailable(i,3);
 %runs = runsAvailable(runsAvailable(:,1)==y & runsAvailable(:,2)==m & runsAvailable(:,3)==d,4);
 
-    for r = 1:length(~isnan(runsAvailable));            
+    for r = 1:length(~isnan(runsAvailable));   
+        
+        %sm20170103: start
+        %sm20170103: the above testdoes not what it thinks it does:
+        %~isnan([1, 2, 3, 3, NaN, NaN]) =   1     1     1     1     0     0
+        %length(~isnan([1, 2, 3, 3, NaN, NaN])) = 6
+        if isnan(runsAvailable(r))
+            display(['Nominally availabe run ', num2str(r), ' has issues, skipping this...']);
+            continue
+        end
+        %sm20170103: end
+        
 %       fname = [monkeyName(1:3) num2str(y) '-' num2str(m,'%02d') '-' num2str(d,'%02d') '_' num2str(r,'%02d') '.mat'];
 
         fid=load([dataDirIn filesep fnames{r}]);

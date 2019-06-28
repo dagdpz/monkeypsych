@@ -3,10 +3,10 @@ function Sounds(SoundCase)
 global SETTINGS
 switch SoundCase
 case 'Failure'
-[wavedata freq  ] = wavread('D:\Sources\MATLAB\Norman_M2S\failure.wav'); % load sound file (make sure that it is in the same folder as this script
+[wavedata freq  ] = wavread('D:\Sources\MATLAB\monkeypsych_3.0\failure.wav'); % load sound file (make sure that it is in the same folder as this script
 wavedata = [wavedata,wavedata];
 case 'Reward'
-[wavedata freq  ] = wavread('D:\Sources\MATLAB\Norman_M2S\reward.wav'); % load sound file (make sure that it is in the same folder as this script
+[wavedata freq  ] = wavread('D:\Sources\MATLAB\monkeypsych_3.0\reward.wav'); % load sound file (make sure that it is in the same folder as this script
 end
 
 

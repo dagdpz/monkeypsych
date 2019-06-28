@@ -94,7 +94,7 @@ experiment='calibration' ;
             task.calibration            = 1;
             
             N_repetitions               = 2;
-            task.reward.time_neutral    = [0.05 0.05]; 
+            task.reward.time_neutral    = [0.17 0.17]; 
             task.rest_hand              = [0 0];         
             
             fix_eye_y                   = 0;
@@ -111,7 +111,7 @@ experiment='calibration' ;
             All.timing_con                  = 0;
             All.size_con                    = 0;
             
-            All.excentricities              = [25.2];   
+            All.excentricities              = [22];   
             All.angle_cases                 = [1,3,4,6];    
             
             %All.tar_pos_con                 = [1,2,5:8];      
@@ -1004,7 +1004,7 @@ switch Current_con.size_con
         task.hnd.tar(1).radius  = 4;
     case 0 %'calibration'
         task.eye.fix.size       = 0.5;
-        task.eye.fix.radius     = 20;
+        task.eye.fix.radius     = 10;
         task.eye.tar(1).size    = 0.5;
         task.eye.tar(1).radius  = 7;        
         

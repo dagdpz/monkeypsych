@@ -3,9 +3,6 @@ global SETTINGS
 %
 
 if ~exist('dyn','var') || dyn.trialNumber == 1
-    
-    
-    
     %  esperimentazione        = {'calibration'};
      esperimentazione     = {'Fixation'};
 
@@ -37,14 +34,7 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
         
         task.reward.time_neutral            = [0.25 0.25]; % 0.6s -> 0.2ml per hit
         task.rest_hand                      = [0 0]; % which hands on the sensor to start the trial
-        
-        %% IMPORTANT TO CHECK!!!
-        if strcmp(experiment,'calibration') || strcmp(experiment,'Baseline stim project direct saccades') || strcmp(experiment,'Baseline stim project memory saccades')
-            SETTINGS.take_angles_con        = 1;
-        else
-            SETTINGS.take_angles_con        = 0;
-        end
-        
+                
         %% Order of fields here defines the order of parameters to be sent to TDT as the trial_classifiers
         All = struct('angle_cases',0,'instructed_choice_con',0,'type_con',0,'effector_con',0,'reach_hand_con',0,'excentricities',0,'stim_con',0,'timing_con',0,'size_con',0,...
             'tar_dis_con',0,'mat_dis_con',0,'cue_pos_con',0,'shape_con',0,'offset_con',0,'invert_con',0,'exact_excentricity_con_x',NaN,'exact_excentricity_con_y',NaN,'reward_con',1,'reward_sound_con',1,'rest_hands_con',1,'var_x',0,'var_y',0);
@@ -55,7 +45,6 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
             
             case 'calibration'
                 SETTINGS.GUI_in_acquisition         = 1;
-                SETTINGS.take_angles_con            = 1;
                 
                 N_repetitions                       = 100;
                 
@@ -75,13 +64,8 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
                 All.var_x                           = 0;
                 All.var_y                           = 0;
                 
-                if ~SETTINGS.take_angles_con
-                    All.exact_excentricity_con_x    = [-24 -12 12 24];
-                    All.exact_excentricity_con_y    = [20 0 -20];
-                else
                     All.excentricities              = 12;
                     All.angle_cases                 = [1,2,3,4,5,6];
-                end
                 PEST_ON                             = 0;
                 SETTINGS.GUI_in_acquisition         = 1;
                 
@@ -90,7 +74,6 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
                 
             case 'Fixation'
                 
-                SETTINGS.take_angles_con            = 1;
                 N_repetitions                       = 10; % N trials for each condition
                 
                 reward_time                         =  0.2;
@@ -107,19 +90,9 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
                 All.var_x                           = 0;
                 All.var_y                           = 0;
                 
-                if ~SETTINGS.take_angles_con
-                    All.exact_excentricity_con_x    = [-15 0 15]; % [-15 0 15]
-                    All.exact_excentricity_con_y    = [-10 0 10];% [-10 0 10]
-                else
                     All.excentricities              = [0];
                     All.angle_cases                 = [1,2,3];
-                end
                 All.stim_con                        = 0;
-                if PEST_ON==1
-                    All.stim_con                    = 0;
-                    PEST_hnd_or_eye                 = 'eye';
-                    PEST_effector                   = 1;
-                end
                 
                 
                 
@@ -407,11 +380,6 @@ end
 
 %% RADIUS & SIZES
 
-if task.type==5 || task.type==6
-    task.eye=rmfield(task.eye,'tar');
-    task.hnd=rmfield(task.hnd,'tar');
-end
-
 switch Current_con.size_con
     case 0 %'calibration'
         task.eye.fix.size       = 1;
@@ -461,51 +429,25 @@ switch Current_con.size_con
         task.eye.fix.radius     = 0;      
         task.hnd.fix.radius     = 10; %6
         task.hnd.fix.size       = 8; %4 
+        % irrelevant but needs to be defined
+        task.eye.tar(1).size    = 0;
+        task.eye.tar(1).radius  = 300;
+        task.hnd.tar(1).size    = 0;
+        task.hnd.tar(1).radius  = 0;
 end
 
 
 %% POSITIONS
 
-if SETTINGS.take_angles_con
-    current_angle=pool_of_angles(Current_con.angle_cases); %
-    tar_dis_x   = Current_con.excentricities*cos(current_angle*2*pi/360);
-    tar_dis_y   = Current_con.excentricities*sin(current_angle*2*pi/360);
-else
-    tar_dis_x   = Current_con.exact_excentricity_con_x;
-    tar_dis_y   = Current_con.exact_excentricity_con_y;
-end
+current_angle=pool_of_angles(Current_con.angle_cases); %
+tar_dis_x   = Current_con.excentricities*cos(current_angle*2*pi/360);
+tar_dis_y   = Current_con.excentricities*sin(current_angle*2*pi/360);
 
 tar_dis_1x = + tar_dis_x + Current_con.var_x;
 tar_dis_1y = + tar_dis_y + Current_con.var_y;
 tar_dis_2x = - tar_dis_x + Current_con.var_x;  %%%%% CHANGE HERE TO (-) FOR SYMETRIC CONTRACTION EXPANSION OR (+) FOR SYMETRIC LEFT RIGHT
 tar_dis_2y = + tar_dis_y + Current_con.var_y;
 
-if     multiple_targets_per_trial == 1; % 18 positions for match to sample saccades(!)
-    ex_LR = Current_con.excentricities;
-    All_positions_right= Shuffle({ [ex_LR,f_h], [ex_LR,f_h+d_pos], [ex_LR,f_h-d_pos], [ex_LR+d_pos,f_h], [ex_LR+d_pos,f_h+d_pos], [ex_LR+d_pos,f_h-d_pos], [ex_LR-d_pos,f_h], [ex_LR-d_pos,f_h+d_pos], [ex_LR-d_pos,f_h-d_pos]});
-    All_positions_left = Shuffle({[-ex_LR,f_h],[-ex_LR,f_h+d_pos],[-ex_LR,f_h-d_pos],[-ex_LR+d_pos,f_h],[-ex_LR+d_pos,f_h+d_pos],[-ex_LR+d_pos,f_h-d_pos],[-ex_LR-d_pos,f_h],[-ex_LR-d_pos,f_h+d_pos],[-ex_LR-d_pos,f_h-d_pos]});
-    tar_dis_1x = 0; tar_dis_1y = 0; tar_dis_2x = 0; tar_dis_2y = 0;
-    
-elseif multiple_targets_per_trial == 2 % Positions for RF mapping(!)
-    Used_pool_of_angles=pool_of_angles(All.angle_cases);
-    %Current_pool_of_excentircities = Current_con.excentricities;
-    
-    %         All_positions_x=[];
-    %         All_positions_y=[];
-    %for ex_idx=1:numel(Current_pool_of_excentircities)
-    All_positions_x=Current_con.excentricities*cos(Used_pool_of_angles*2*pi/360);
-    All_positions_y=Current_con.excentricities*sin(Used_pool_of_angles*2*pi/360);
-    %end
-    
-    All_positions_mat =[All_positions_x+ fix_offset;All_positions_y+ f_h]';
-    All_positions     =num2cell(All_positions_mat,2);
-    if shuffle_angles_per_trial
-        All_positions = Shuffle(All_positions);
-    end
-    % + fix_offset
-    % + f_h
-    tar_dis_1x = 0; tar_dis_1y = 0; tar_dis_2x = 0; tar_dis_2y = 0;
-end
 
 if task.type==1
     
@@ -543,7 +485,7 @@ elseif task.effector==4 || task.effector==6
     task.hnd.tar(1).y = fix_hnd_y  + tar_dis_1y;
     task.hnd.tar(2).x = fix_hnd_x  + tar_dis_2x;
     task.hnd.tar(2).y = fix_hnd_y  + tar_dis_2y;
-else
+else %if task.type~=1
     
     task.eye.tar(1).x = fix_eye_x  + tar_dis_1x;
     task.eye.tar(1).y = fix_eye_y  + tar_dis_1y;
@@ -586,13 +528,6 @@ task.hnd_right.color_bright_fix     = [110 110 110];%[0 255 0]
 task.eye.cue                                        = task.eye.tar;
 task.hnd.cue                                        = task.hnd.tar;
 
-switch Current_con.cue_pos_con
-    case 1
-        task.cue_pos                                = {[-ex_cue,fix_height],[ex_cue,fix_height]};
-    case 2
-        task.cue_pos                                = {[ex_cue,fix_height],[-ex_cue,fix_height]};
-end
-
 if task.effector==0 || task.effector==1 || task.effector==2
     %         task.eye.cue(1).color_dim       = [80 50 50];
     %         task.eye.cue(1).color_bright    = [80 50 50];
@@ -603,32 +538,6 @@ if task.effector==0 || task.effector==1 || task.effector==2
 %     task.eye.cue(1).color_bright                    = [255 0 0];
 %     task.eye.cue(2).color_dim                       = [128 0 0];
 %     task.eye.cue(2).color_bright                    = [255 0 0];
-end
-
-
-
-%% Inverting fixation and target
-if Current_con.invert_con == 1
-    temp_eye_fix_x                                  = task.eye.fix.x;
-    temp_eye_fix_y                                  = task.eye.fix.y;
-    temp_hnd_fix_x                                  = task.hnd.fix.x;
-    temp_hnd_fix_y                                  = task.hnd.fix.y;
-    
-    task.eye.fix.x                                  = task.eye.tar(1).x;
-    task.eye.fix.y                                  = task.eye.tar(1).y;
-    task.hnd.fix.x                                  = task.hnd.tar(1).x;
-    task.hnd.fix.y                                  = task.hnd.tar(1).y;
-    
-    task.eye.tar(1).x                               = temp_eye_fix_x;
-    task.eye.tar(1).y                               = temp_eye_fix_y;
-    task.hnd.tar(1).x                               = temp_hnd_fix_x;
-    task.hnd.tar(1).y                               = temp_hnd_fix_y;
-    
-    task.eye.cue(1).x                               = temp_eye_fix_x;
-    task.eye.cue(1).y                               = temp_eye_fix_y;
-    
-    task.hnd.cue(1).x                               = temp_hnd_fix_x;
-    task.hnd.cue(1).y                               = temp_hnd_fix_y;
 end
 
 

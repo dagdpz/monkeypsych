@@ -4,11 +4,11 @@ global SETTINGS
     
 if ~exist('dyn','var') || dyn.trialNumber == 1   
 
+experiment='calibration' ;  
+%experiment='Memory reaches' ;  
+
 %experiment='vpx_calibration' ; 
-experiment='calibration' ;    
-%experiment='Baseline stim project direct saccades';
-
-
+%experiment='Learning memory saccades' ;      
 %experiment='Match to sample saccades' ; 
 
 %experiment='Learning memory saccades' ; 
@@ -27,7 +27,7 @@ experiment='calibration' ;
     
     % Presettings (not to change here !)
     
-    shuffle_conditions              = 1;
+    task.shuffle_conditions              = 1;
     task.calibration                = 0;
     %SETTINGS.GUI_in_acquisition     = 1;
     SETTINGS.check_motion_jaw       = 0;
@@ -50,12 +50,12 @@ experiment='calibration' ;
             
             SETTINGS.check_motion_jaw   = 0;  
             SETTINGS.GUI_in_acquisition = 1;
-            shuffle_conditions          = 1;
-            force_conditions            = 0;
+            task.shuffle_conditions          = 1;
+            task.force_conditions            = 0;
             task.calibration            = 1;
             
             N_repetitions               = 1;
-            task.reward.time_neutral    = [0.03 0.03]; 
+            task.reward.time_neutral    = [0.09 0.09]; %[0.03 0.03]; 
             task.rest_hand              = [0 0];         
             
             fix_eye_y                   = 0;
@@ -89,21 +89,21 @@ experiment='calibration' ;
         case 'calibration'
             SETTINGS.check_motion_jaw       = 0;  
             SETTINGS.GUI_in_acquisition     = 1;
-            shuffle_conditions          = 1;
-            force_conditions            = 2;
+            task.shuffle_conditions          = 1;
+            task.force_conditions            = 2;
             task.calibration            = 1;
             
-            N_repetitions               = 500;
-            task.reward.time_neutral    = [0.11 0.11]; 
+            N_repetitions               = 2;
+            task.reward.time_neutral    = [0.09 0.09]; 
             task.rest_hand              = [0 0];         
             
             fix_eye_y                   = 0;
-            fix_hnd_y                   = 0;
+            fix_hnd_y                   = 10;
             fix_offset                  = 0;
-            tar_angle                   = 40; %in degrees
+            tar_angle                   = 20; %in degrees
 %             tar_excentricity            = 20;
 %             tar_angle                   = 20; %in degrees
-            pool_of_angles              =[17.5,0,342.5,162.5,180,187.5];  
+            pool_of_angles              =[17.5,0,342.5,162.5,180,197.5]; 
             
             All.type_con                    = 2; 
             All.effector_con                = 0;
@@ -118,11 +118,11 @@ experiment='calibration' ;
             PEST_ON                         = 0;            
             SETTINGS.GUI_in_acquisition     = 1;
             
-         case 'dissociated test'
+        case 'dissociated test'
             SETTINGS.check_motion_jaw       = 0;  
             SETTINGS.GUI_in_acquisition     = 1;
-            shuffle_conditions          = 1;
-            force_conditions            = 1;
+            task.shuffle_conditions          = 1;
+            task.force_conditions            = 1;
             task.calibration            = 0;
             
             N_repetitions               = 2;
@@ -152,7 +152,7 @@ experiment='calibration' ;
                 
         case 'Baseline stim project direct saccades'
             SETTINGS.check_motion_jaw       = 1;            
-            force_conditions                = 2;            
+            task.force_conditions                = 2;            
             N_repetitions                   = 10;
             task.reward.time_neutral        = [0.07 0.07];   % 0.45s -> 0.15ml per hit
             task.rest_hand                  = [0 0];      
@@ -179,7 +179,7 @@ experiment='calibration' ;
             
         case 'Baseline stim project memory saccades'
             SETTINGS.check_motion_jaw       = 1;                
-            force_conditions                = 2;            
+            task.force_conditions                = 2;            
             N_repetitions                   = 20;
             task.reward.time_neutral        = [0.08 0.08]; % 0.6s -> 0.2ml per hit
             task.rest_hand                  = [0 0];             
@@ -206,7 +206,7 @@ experiment='calibration' ;
             
         case 'Baseline stim project direct reaches'
             SETTINGS.check_motion_jaw       = 1;            
-            force_conditions                = 2;            
+            task.force_conditions                = 2;            
             N_repetitions                   = 10;
             task.reward.time_neutral        = [0.1 0.1];   % 0.45s -> 0.15ml per hit
             task.rest_hand                  = [1 1];      
@@ -235,7 +235,7 @@ experiment='calibration' ;
             
         case 'Baseline stim project memory dissociated reaches '
             SETTINGS.check_motion_jaw       = 1;
-            force_conditions                = 2;
+            task.force_conditions                = 2;
             N_repetitions                   = 10;
             task.reward.time_neutral        = [0.2 0.2];   % 0.45s -> 0.15ml per hit
             task.rest_hand                  = [1 1];
@@ -263,8 +263,8 @@ experiment='calibration' ;
             
         case 'Learning memory saccades'
             SETTINGS.check_motion_jaw       = 0;                
-            force_conditions                = 1;            
-            N_repetitions                   = 100;
+            task.force_conditions                = 1;            
+            N_repetitions                   = 50;
             task.reward.time_neutral        = [0.06 0.06]; % 0.6s -> 0.2ml per hit
             task.rest_hand                  = [0 0];             
             
@@ -274,7 +274,7 @@ experiment='calibration' ;
             tar_angle                       = 20; %in degrees
             %pool_of_angles                  =[20,0,340,200,180,160]; 
             
-            pool_of_angles              =[17.5,0,342.5,162.5,180,187.5]; 
+            pool_of_angles              =[17.5,0,342.5,162.5,180,197.5]; 
             
             All.type_con                    = 3; 
             All.effector_con                = 0;
@@ -295,7 +295,7 @@ experiment='calibration' ;
              
         case 'RF mapping memory reaches'
             
-            force_conditions                =2;
+            task.force_conditions                =2;
             
             N_repetitions                   = 5;
             task.reward.time_neutral        = [0.1 0.1];
@@ -318,7 +318,7 @@ experiment='calibration' ;
             
         case 'RF mapping memory saccades'
             
-            force_conditions                = 2;
+            task.force_conditions                = 2;
             
             N_repetitions                   = 15;
             task.reward.time_neutral        = [0.07 0.07];
@@ -339,7 +339,7 @@ experiment='calibration' ;
             
         case 'Direct saccades stim'
             
-            force_conditions                = 2;
+            task.force_conditions                = 2;
             
             N_repetitions                   = 10;
             task.reward.time_neutral        = [0.04 0.04];  
@@ -365,9 +365,40 @@ experiment='calibration' ;
                 PEST_hnd_or_eye='eye';
                 PEST_effector=1;
             end
+            
+        case 'Memory reaches'
+            
+            task.force_conditions                = 2;
+            
+            N_repetitions                   = 10;
+            task.reward.time_neutral        = [0.1 0.1];  
+            task.rest_hand                  = [1 1];              
+            
+            fix_eye_y                       = 0;
+            fix_hnd_y                       = -4;
+            fix_offset                      = 0;
+            tar_angle                       = 20; %in degrees
+            pool_of_angles                  =[20,0,340,200,180,160]; 
+            
+            All.type_con                    = 1; 
+            All.effector_con                = 1;
+            All.timing_con                  = 3;
+            All.size_con                    = 2;
+            All.instructed_choice_con       = [0];
+            All.excentricities              = [15];   
+            All.angle_cases                 = [1,2,3,4,5,6];  
+            All.stim_con                    = [0];  
+            All.reach_hand_con              = [2];
+%            All.stim_con                    = [0,2,9,10,11];    
+            if PEST_ON==1
+                All.stim_con                = 0;            
+                PEST_hnd_or_eye='eye';
+                PEST_effector=1;
+            end    
+            
         case 'Memory saccades stim'
             
-            force_conditions                = 2;
+            task.force_conditions                = 2;
             
             N_repetitions                   = 5;
             task.reward.time_neutral        = [0.06 0.06];  
@@ -379,7 +410,7 @@ experiment='calibration' ;
             tar_angle                       = 20; %in degrees
             pool_of_angles                  =[20,0,340,200,180,160]; 
             
-            All.type_con                    = 3; 
+            All.type_con                    = 2; 
             All.effector_con                = 0;
             All.timing_con                  = 3;
             All.size_con                    = 3;
@@ -396,7 +427,7 @@ experiment='calibration' ;
         case 'Match to sample saccades'
             
             SETTINGS.GUI_in_acquisition     = 1;
-            force_conditions                = 2;
+            task.force_conditions                = 2;
             multiple_targets_per_trial      = 4;%1;3
             
             N_repetitions                   = 3;
@@ -433,7 +464,7 @@ experiment='calibration' ;
         case 'RF Mapping'
             SETTINGS.check_motion_jaw       = 1;  
             shuffle_angles_per_trial        = 1;
-            force_conditions                = 2; %0 for not forcing 
+            task.force_conditions                = 2; %0 for not forcing 
                                                  %1 forced to succeed to proceed in conditions 
                                                  %2 put back to the pool of conditions if error
             
@@ -527,20 +558,20 @@ end
 fix_hnd_x             = fix_eye_x;
 
 %% Shuffling conditions
-if ~exist('dyn','var') || (dyn.trialNumber == 1 && shuffle_conditions==0)
+if ~exist('dyn','var') || (dyn.trialNumber == 1 && task.shuffle_conditions==0)
     sequence_indexes = ordered_sequence_indexes;
-elseif dyn.trialNumber == 1 && (shuffle_conditions==1 || shuffle_conditions==2)
+elseif dyn.trialNumber == 1 && (task.shuffle_conditions==1 || task.shuffle_conditions==2)
     sequence_indexes = Shuffle(ordered_sequence_indexes);    
 end
 if exist('dyn','var') && dyn.trialNumber > 1,
-    if force_conditions==1
+    if task.force_conditions==1
         if sum([trial.success])==length(sequence_indexes),
             dyn.state = STATE.CLOSE; return
         else
             custom_trial_condition = sequence_indexes(sum([trial.success])+1);
         end
         % semi-forced: if trial is unsuccessful, the condition is put back into the pool
-    elseif force_conditions==2 
+    elseif task.force_conditions==2 
         if trial(end-1).success==1
             sequence_indexes=sequence_indexes(2:end);
         else
@@ -551,7 +582,7 @@ if exist('dyn','var') && dyn.trialNumber > 1,
         else
         custom_trial_condition = sequence_indexes(1);
         end
-    elseif force_conditions==3 
+    elseif task.force_conditions==3 
         if trial(end-1).completed==1
             sequence_indexes=sequence_indexes(2:end);
         else
@@ -674,7 +705,7 @@ switch Current_con.timing_con
         task.timing.fix_time_to_acquire_eye     = 0.5;
         task.timing.tar_time_to_acquire_eye     = 0.5;
         task.timing.tar_inv_time_to_acquire_eye = 0.5; %3
-        task.timing.fix_time_hold               = 0.5;
+        task.timing.fix_time_hold               = 0.8;
         task.timing.fix_time_hold_var           = 0.2;
         task.timing.cue_time_hold               = 0.5;
         task.timing.cue_time_hold_var           = 0;
@@ -684,7 +715,7 @@ switch Current_con.timing_con
         task.timing.del_time_hold_var           = 0;
         task.timing.tar_inv_time_hold           = 0;
         task.timing.tar_inv_time_hold_var       = 0;
-        task.timing.tar_time_hold               = 0.2;
+        task.timing.tar_time_hold               = 0.5;
         task.timing.tar_time_hold_var           = 0;
         
     case 10 % 'vpx calibration'
@@ -972,10 +1003,10 @@ switch Current_con.size_con
         task.hnd.tar(1).size    = 4;
         task.hnd.tar(1).radius  = 4;
     case 0 %'calibration'
-        task.eye.fix.size       = 2;
-        task.eye.fix.radius     = 100;
-        task.eye.tar(1).size    = 2;
-        task.eye.tar(1).radius  = 20;        
+        task.eye.fix.size       = 0.5;
+        task.eye.fix.radius     = 20;
+        task.eye.tar(1).size    = 0.5;
+        task.eye.tar(1).radius  = 7;        
         
         task.hnd.fix.radius     = 4;
         task.hnd.fix.size       = 4;
@@ -997,20 +1028,20 @@ switch Current_con.size_con
         task.eye.tar(1).size    = 0.5;
         task.eye.tar(1).radius  = 5;  
         
-        task.hnd.fix.radius     = 4;
-        task.hnd.fix.size       = 4;
-        task.hnd.tar(1).size    = 4;
-        task.hnd.tar(1).radius  = 4;
+        task.hnd.fix.radius     = 2;
+        task.hnd.fix.size       = 2;
+        task.hnd.tar(1).size    = 2;
+        task.hnd.tar(1).radius  = 2;
     case 2 %'direct'
         task.eye.fix.size       = 0.5;
         task.eye.fix.radius     = 5;
         task.eye.tar(1).size    = 0.5;
         task.eye.tar(1).radius  = 5;        
         
-        task.hnd.fix.radius     = 0.5;
-        task.hnd.fix.size       = 4;
-        task.hnd.tar(1).size    = 0.5;
-        task.hnd.tar(1).radius  = 4;
+        task.hnd.fix.radius     = 2.7;
+        task.hnd.fix.size       = 2.7;
+        task.hnd.tar(1).size    = 2.7;
+        task.hnd.tar(1).radius  = 2.7;
     case 3 %'memory'
         task.eye.fix.size       = 0.5;
         task.eye.fix.radius     = 5;
@@ -1018,8 +1049,8 @@ switch Current_con.size_con
         task.eye.tar(1).radius  = 5;        
         
         task.hnd.fix.radius     = 5;
-        task.hnd.fix.size       = 5;
-        task.hnd.tar(1).size    = 5;
+        task.hnd.fix.size       = 2;
+        task.hnd.tar(1).size    = 2;
         task.hnd.tar(1).radius  = 5;
         
     case 32 %'memory learning'

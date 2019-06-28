@@ -219,6 +219,7 @@ switch Current_con.timing_con
         task.timing.wait_for_reward             = 0;
         task.timing.ITI_success                 = 1;
         task.timing.ITI_success_var             = 0;
+        task.timing.ITI_incorrect_completed     = 1;
         task.timing.ITI_fail                    = 1;
         task.timing.ITI_fail_var                = 0;        
         task.timing.grace_time_eye              = 0;

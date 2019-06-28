@@ -74,7 +74,7 @@ esperimentazione = {'choice target-distractor direct saccades horizontal'};
         fix_hnd_y                           = 0;
         
         All.offset_con                      = 0; % offset of fixation spot (x dimension)
-        All.effector_con                    = 6; % 1 - hand 6
+        All.effector_con                    = 1; % 1 - hand 6
         All.stim_con                        = 0;
         All.reach_hand_con                  = 2; % 2=right 1= links, [1,2] = alterniered
         All.type_con                        = 9;
@@ -88,7 +88,7 @@ esperimentazione = {'choice target-distractor direct saccades horizontal'};
         task.shuffle_conditions             = 1;
         
         All.differenceBetweenSamples        = 3;
-        difficultyLevels                    = [7 4 3 2 1];
+        difficultyLevels                    = [ 5]; %2 4 5 [7 4 3 2 1]
         All.rotations                       = 147:All.differenceBetweenSamples:174; %147:All.differenceBetweenSamples:174;% 194; % 167:All.differenceBetweenSamples:173 %30:All.differenceBetweenSamples:58; %10 different samples
         All.rotationDifference              = 4*difficultyLevels;
         All.distractorRotation              = [-1,1];       
@@ -104,8 +104,8 @@ esperimentazione = {'choice target-distractor direct saccades horizontal'};
         angle_cases_singleOption            = All.angle_cases;
         angle_cases_twoOptions              = All.angle_cases(1);
      % TimeOut & Reward 
-        All.reward_time                     = 0.18;
-        N_repetitions                       = 1; % long: 3; short: 2x1; 1x1;
+        All.reward_time                     = 0.2;
+        N_repetitions                       = 2; % long: 3; short: 2x1; 1x1;
         
         %Microstimulation
         stim_con_direct                     = 0  ; %   [0 5 7 9] [0 1 2 3]; % stimulation: 0 - no stimulation, 5 - 250ms before "go",7 - 100ms before "go", 3 - 50ms before "go"
@@ -240,13 +240,12 @@ elseif dyn.trialNumber == 1 && (task.shuffle_conditions==1)
     sequence_indexes = Shuffle(ordered_sequence_indexes);
     
     %% forward & backward approach for the choice of the non-match 
-    %(sequence_matrix(IndRotation,:) + sequence_matrix(IndRotationDiff,:))
     if All.type_con == 9 || All.type_con == 10
          IndRotationDiff = find(~cellfun(@isempty, strfind(all_fieldnames, 'rotationDifference')));
          Ind_NonMatchRotation = find(~cellfun(@isempty, strfind(all_fieldnames, 'distractorRotation')));
-         sequence_matrix(IndRotationDiff,:) = sequence_matrix(Ind_NonMatchRotation,:).*sequence_matrix(IndRotationDiff,:);
-        
-    end
+         sequence_matrix(IndRotationDiff,:) = sequence_matrix(Ind_NonMatchRotation,:).*sequence_matrix(IndRotationDiff,:);  
+    end 
+
 end
 
 %% Force conditions
@@ -370,7 +369,7 @@ task.timing.ITI_incorrect_completed = 1.5;
 
 task.timing.mem_time_hold=0;
 task.timing.mem_time_hold_var=0;
-task.timing.msk_time_hold=0.3; %MASK
+task.timing.msk_time_hold=0.5; %MASK
 task.timing.msk_time_hold_var=0;
 
 
@@ -395,7 +394,7 @@ switch Current_con.timing_con
         task.timing.mem_time_hold_var           = 0;
         task.timing.tar_time_to_acquire_eye     = 0;
         task.timing.tar_inv_time_to_acquire_eye = 0; %0.5
-        task.timing.tar_time_to_acquire_hnd     = 0.9; %0.6
+        task.timing.tar_time_to_acquire_hnd     = 0.8; %0.6
         task.timing.tar_inv_time_to_acquire_hnd = 0; %0.5
         task.timing.tar_inv_time_hold           = 0;
         task.timing.tar_inv_time_hold_var       = 0;  
@@ -470,7 +469,7 @@ task.hnd.tar(3).radius  = task.hnd.tar(1).radius; % deg
 
 %size of the bar
 task.hnd.tar(1).shape.BarSize_L    = task.hnd.tar(1).size ;
-task.hnd.tar(1).shape.BarSize_W    = 0.7;
+task.hnd.tar(1).shape.BarSize_W    = 0.6;
 task.hnd.tar(2).shape.BarSize_L    = task.hnd.tar(2).size ;
 task.hnd.tar(2).shape.BarSize_W    = task.hnd.tar(1).shape.BarSize_W; 
 task.hnd.tar(3).shape.BarSize_L    = task.hnd.tar(3).size ;
@@ -483,18 +482,18 @@ task.eye.fix.color_dim          = [0 0 0]; % [60 60 60]; % [128 0 0]
 task.eye.fix.color_bright       = [0 0 0]; % [255 0 0]
 %task.eye.cue.color_dim          = [0 0 0]; % [60 60 60]; % [128 0 0]
 %task.eye.cue.color_bright       = [0 0 0]; 
-task.hnd_stay.color_dim_fix         = [0 255 0]; %memory period
-task.hnd_stay.color_bright_fix      = [0 255 0];
-task.hnd_left.color_dim_fix         = [0 255 0];
-task.hnd_left.color_bright_fix      = [0 255 0];
-task.hnd_right.color_dim_fix        = [0 255 0];
-task.hnd_right.color_bright_fix     = [0 255 0];
-task.hnd_right.color_dim            = [0 255 0]; 
-task.hnd_right.color_bright         = [0 255 0];
-task.hnd_left.color_dim             = [0 255 0]; 
-task.hnd_left.color_bright          = [0 255 0];
-task.hnd_right.color_cue            = [0 255 0]; 
-task.hnd_left.color_cue             = [0 255 0]; 
+task.hnd_stay.color_dim_fix         = [60 60 60]; %memory period
+task.hnd_stay.color_bright_fix      = [60 60 60];
+task.hnd_left.color_dim_fix         = [60 60 60];
+task.hnd_left.color_bright_fix      = [60 60 60];
+task.hnd_right.color_dim_fix        = [60 60 60];
+task.hnd_right.color_bright_fix     = [60 60 60];
+task.hnd_right.color_dim            = [60 60 60]; 
+task.hnd_right.color_bright         = [60 60 60];
+task.hnd_left.color_dim             = [60 60 60]; 
+task.hnd_left.color_bright          = [60 60 60];
+task.hnd_right.color_cue            = [60 60 60]; 
+task.hnd_left.color_cue             = [60 60 60]; 
 
 %% CUE assignment: Positions and colors
 % same color & shape parameter as target

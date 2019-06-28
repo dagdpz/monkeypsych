@@ -11,15 +11,18 @@ function monkeypsych_dev(monkey)
 % 20151120  New function get_setup for ALL setup relevant information (including ports, pins, and GUI coordinates)
 %           This changes subfunctions and external functions: get_touch, setup_pp, get_sensors_state, TouchDemo, CalibrateTouchScreen, reward_pump_calibration,
 
+% 20190620 Substantial restructuring of aux_FillPar, and how stimuli get defined, reward modulation rework,
+%           Removal of task.condition_file, SETTINGS.BASE_PATH, and several unnecessary fields
+%
+%           This changes subfunctions and external functions: get_touch, setup_pp, get_sensors_state, TouchDemo, CalibrateTouchScreen, reward_pump_calibration,
 % TODO list
-% implement reward modulation for eye targets
-% make function copy_fields_with_exceptions for copying e.g. tar to cue
-% thinks about updating offsets - when and how to record it
-% reward modulation for all effector conditions
-% dissociated memory tasks
+% REWARD modulation for all effector conditions
+% a) reward in fixation tasks (because reward is currently taken from reward structure)
+% b) Adans reward modulation stimuli and assignment of reward values (task.reward_small, task.reward_big, and task.reward_neutral)
+% c) payoff matrix
+% SOUNDS needs some proper restructuring
 close all;
-%Priority([2]);
-ListenChar(2);
+Priority(2);
 
 global SETTINGS
 global STATE
@@ -43,15 +46,15 @@ SETTINGS.version = ['monkeypsych_dev_' datestr(version_filename.datenum,'yyyymmd
 %% Setup and monkey specific settings
 get_setup_dev; %setting pertain to setup-specific DAQ and display params
 set(0,'DefaultFigurePosition',SETTINGS.DefaultFigurePosition);
-[task monkey_name]  = get_monkey_dev(monkey);
+[task monkey_name DATA_PATH]  = get_monkey_dev(monkey);
 SETTINGS.vd         = task.vd;
 sequence_indexes    = 0;
 
-conditions      = read_conditions([SETTINGS.BASE_PATH task.condition_file]);
-task.conditions = conditions;
+% conditions      = read_conditions([SETTINGS.BASE_PATH task.condition_file]);
+% task.conditions = conditions;
 session_folder  = datestr(date,30);
 session_folder  = session_folder(1:8);
-DATA_PATH       = [SETTINGS.BASE_PATH '\Data\' monkey];
+%DATA_PATH       = [SETTINGS.BASE_PATH '\Data\' monkey];
 pathname        = [DATA_PATH filesep session_folder];
 
 if ~exist(pathname,'dir'),
@@ -75,7 +78,7 @@ if exist([DATA_PATH filesep 'last_eyecal.mat'],'file'),
     disp(['Found previous eye calibation in ' DATA_PATH filesep 'last_eyecal.mat']);
     load([DATA_PATH filesep 'last_eyecal.mat']);
 else
-    eye_offset_x=0;eye_offset_y=0;eye_gain_x=0;eye_gain_y=0;
+    eye_offset_x=0;eye_offset_y=0;eye_gain_x=1;eye_gain_y=1;
 end
 task.eye.offset_x = eye_offset_x;
 task.eye.offset_y = eye_offset_y;
@@ -98,6 +101,8 @@ SETTINGS.dyn.memoryBuffer           = single(nan(SETTINGS.bufferSize,11)); % buf
 SETTINGS.FlipSyncMode               = 0;   % 0: wait for screen refresh, 1,2: dont wait. See 'dontsync' in PTB Flip documentation.
 
 %% Initialize I/O
+
+
 
 %% DAQ Analog input (touching and motion detection)
 if SETTINGS.ai,
@@ -173,7 +178,7 @@ if  SETTINGS.use_digital_to_TDT
 end
 
 %% Feedback sound - test            Sounds('Reward')                 Sounds('Failure')
-if SETTINGS.useSound && strcmp(SETTINGS.SoundType, 'Beep')
+if  SETTINGS.useSound && strcmp(SETTINGS.SoundType, 'Beep')
     InitializePsychSound(1);
     sampleRate = 8192;
     SETTINGS.audioPort = PsychPortAudio('Open', [], 1, 0, sampleRate,2,[],0.1,[],16);
@@ -228,7 +233,7 @@ end
 %% Initialize Psychophysic toolbox
 Screen('Preference', 'VisualDebugLevel', 1);
 [SETTINGS.window, SETTINGS.screenSize] = Screen(SETTINGS.whichScreen, 'Openwindow', [ ],[],[],[],[],SETTINGS.AntiAlisingValue); % 3     % put 'window' on complete screen
-Screen('FillRect', SETTINGS.window, SETTINGS.BG_COLOR);               % fill whole screen black
+Screen('FillRect', SETTINGS.window, SETTINGS.BG_COLOR); % fill whole screen black
 Screen(SETTINGS.window,'Flip');
 
 %% Open graphics ("GUIs")
@@ -317,14 +322,34 @@ if SETTINGS.interface_with_scanner
     dyn.trialNumber = 1;
     run(task.custom_conditions);
     dyn.trialNumber = 0;
-    
-    par_eye = aux_FillPar(task.eye.fix.shape, [task.eye.fix(1).x  task.eye.fix(1).y task.eye.fix(1).size  task.eye.fix(1).radius 0], task.eye.fix.color_bright); % present central fixation before run starts so monkeys are focused
-    aux_PrepareStimuli(par_eye(1));
+    switch task.effector
+        case {0,3}
+            dyn.effector='eye';
+        case {1,2,4,5,6}
+            dyn.effector='hnd';
+    end
+    displaybackground(SETTINGS,task,dyn)
+    par_temp=task.eye.fix;
+    par_temp.color=par_temp.color_bright;
+    par_temp.pos=[par_temp.x par_temp.y par_temp.size  par_temp.radius 1];
+    par = aux_FillPar(par_temp);
+    aux_PrepareStimuli(par);
     Screen(SETTINGS.window,'Flip');
     
     switch SETTINGS.interface_with_scanner
+        
         case 1 % UMG
-            pause;
+            %pause;
+            ScannerStarted = false;
+            while ScannerStarted  == false
+                [pressed,~,keyCode] = KbCheck;
+                if pressed
+                    %if find(keyCode) ==  57 || find(keyCode) ==  53
+                    if find(keyCode) ==  double('9')
+                        ScannerStarted = true;
+                    end
+                end
+            end
             
         case 2 % DPZ
             while true
@@ -346,6 +371,7 @@ else
     SETTINGS.run_volumes	= NaN;
 end
 
+ListenChar(2);
 %% MAIN LOOP
 
 SETTINGS.time_start=GetSecs;
@@ -384,13 +410,9 @@ while true
             dyn.stay_condition              = 0; % for Poffenberger
             dyn.abort_code                  = 'NO ABORT';
             dyn.completed                   = 0;
-            dyn.tar_struct            = 'tar'  ; %KK
-            dyn.fix_struct            = 'fix'  ; %KK
+            dyn.tar_struct                  = 'tar'  ; %KK
+            dyn.fix_struct                  = 'fix'  ; %KK
             
-            task.eye.cue(1).ringColor=[];
-            task.eye.tar(1).ringColor=[];
-            task.hnd.cue(1).ringColor=[];
-            task.hnd.tar(1).ringColor=[];
             
             %% buffer manual inputs
             if any([task.overriding.radius,task.overriding.positions,task.overriding.type,task.overriding.effector,task.overriding.reach_hand,task.overriding.reward,task.overriding.improvers] == 1),
@@ -410,39 +432,7 @@ while true
                 manual_inputs.vpx_calibration_point =task.overriding.vpx_point;
             end
             
-            %% select fix/tar condition: target locations from position conditions file (overwritten from custom conditions)
-            [condition] = aux_SelectCondtion(conditions);
-            
-            task.condition      =condition(1);
-            task.eye.fix.x      =condition(2);
-            task.eye.fix.y      =condition(3);
-            
-            task.eye.tar(1).x   =condition(4);
-            task.eye.tar(1).y   =condition(5);
-            task.eye.tar(2).x   =condition(6);
-            task.eye.tar(2).y   =condition(7);
-            
-            
-            task.hnd.fix.x      =condition(8);
-            task.hnd.fix.y      =condition(9);
-            task.hnd.tar(1).x   =condition(10);
-            task.hnd.tar(1).y   =condition(11);
-            task.hnd.tar(2).x   =condition(12);
-            task.hnd.tar(2).y   =condition(13);
-            
-            
-            task.eye.cue(1).x   =condition(4);
-            task.eye.cue(1).y   =condition(5);
-            task.eye.cue(2).x   =condition(6);
-            task.eye.cue(2).y   =condition(7);
-            
-            task.hnd.cue(1).x   =condition(10);
-            task.hnd.cue(1).y   =condition(11);
-            task.hnd.cue(2).x   =condition(12);
-            task.hnd.cue(2).y   =condition(13);
-            
             %% RANDOMIZATIONS (overwritten with custom_conditions)
-            
             if task.randomize_effector, % Randomize effector
                 if dyn.trialNumber > 1,
                     if trial(dyn.trialNumber-1).success || task.force_effector == 0,
@@ -453,7 +443,6 @@ while true
                     end
                 end
             end
-            
             if task.randomize_reach_hand, % Randomize reach_hand
                 if dyn.trialNumber > 1,
                     if trial(dyn.trialNumber-1).success || task.force_hand == 0,
@@ -527,7 +516,7 @@ while true
                 task.eye.tar(1).y               = manual_inputs.eye_tar1_y;
                 task.eye.cue(1).x               = manual_inputs.eye_tar1_x;
                 task.eye.cue(1).y               = manual_inputs.eye_tar1_y;
-                task.condition                  = manual_inputs.condition ;
+                %task.condition                  = manual_inputs.condition ;
             end
             if task.overriding.type==1
                 task.type                       = manual_inputs.type;
@@ -558,21 +547,9 @@ while true
             trial(dyn.trialNumber).choice               = task.choice;
             trial(dyn.trialNumber).reward_modulation    = task.reward_modulation;
             trial(dyn.trialNumber).small_reward         = task.small_reward;
+            trial(dyn.trialNumber).CueAuditiv           = task.CueAuditiv;
             
-            trial(dyn.trialNumber).condition      = task.condition;
-            trial(dyn.trialNumber).eye.fix.pos    = [task.eye.fix.x task.eye.fix.y task.eye.fix.size  task.eye.fix.radius 0];
-            trial(dyn.trialNumber).hnd.fix.pos    = [task.hnd.fix.x task.hnd.fix.y task.hnd.fix.size  task.hnd.fix.radius 1];
-            
-            trial(dyn.trialNumber).eye.fix.shape  = task.eye.fix.shape;
-            trial(dyn.trialNumber).hnd.fix.shape  = task.hnd.fix.shape;
-            if task.type == 10 %KK
-                trial(dyn.trialNumber).eye.fi2.shape  = task.eye.fi2.shape;
-                trial(dyn.trialNumber).hnd.fi2.shape  = task.hnd.fi2.shape;
-                trial(dyn.trialNumber).eye.fi2.pos    = [task.eye.fi2.x task.eye.fi2.y task.eye.fi2.size  task.eye.fi2.radius 0];
-                trial(dyn.trialNumber).hnd.fi2.pos    = [task.hnd.fi2.x task.hnd.fi2.y task.hnd.fi2.size  task.hnd.fi2.radius 1];
-                trial(dyn.trialNumber).CueAuditiv     = task.CueAuditiv;
-            end
-            %% Assign reward values to targets in this trial
+            %% Assign reward values to targets in this trial... this we will remove
             if task.reward_modulation
                 if task.small_reward,
                     trial(dyn.trialNumber).reward_size              = 1; % tar1 is "small"
@@ -629,31 +606,6 @@ while true
                 trial(dyn.trialNumber).eye.cue(2).ringColor2 = trial(dyn.trialNumber).eye.tar(2).ringColor2;
             end
             
-            if ~task.reward_modulation % no reward modulation
-                trial(dyn.trialNumber).reward_size = 2;
-                for t = 1:numel(task.eye.cue) % assign values for each target
-                    trial(dyn.trialNumber).eye.cue(t).ringColor         = task.eye.cue(t).ringColor;
-                    trial(dyn.trialNumber).eye.cue(t).ringColor2        = [];                    
-                end
-                for t = 1:numel(task.hnd.cue) % assign values for each target
-                    trial(dyn.trialNumber).hnd.cue(t).ringColor         = task.hnd.cue(t).ringColor;
-                    trial(dyn.trialNumber).hnd.cue(t).ringColor2        = [];                  
-                end
-                for t = 1:numel(task.eye.tar) % assign values for each target
-                    trial(dyn.trialNumber).eye.tar(t).ringColor         = task.eye.tar(t).ringColor;
-                    trial(dyn.trialNumber).eye.tar(t).ringColor2        = [];
-                    trial(dyn.trialNumber).eye.tar(t).reward            = 2;
-                    trial(dyn.trialNumber).eye.tar(t).reward_time       = task.reward.time_neutral;
-                    trial(dyn.trialNumber).eye.tar(t).reward_prob       = task.reward.prob_neutral;
-                end
-                for t = 1:numel(task.hnd.tar)
-                    trial(dyn.trialNumber).hnd.tar(t).ringColor         = task.hnd.tar(t).ringColor;
-                    trial(dyn.trialNumber).hnd.tar(t).ringColor2        = [];
-                    trial(dyn.trialNumber).hnd.tar(t).reward            = 2;
-                    trial(dyn.trialNumber).hnd.tar(t).reward_time       = task.reward.time_neutral;
-                    trial(dyn.trialNumber).hnd.tar(t).reward_prob       = task.reward.prob_neutral;
-                end
-            end
             
             if task.force_target_location, % force the location of the movement target
                 if dyn.trialNumber > 1,
@@ -665,10 +617,10 @@ while true
             end
             
             if isfield(task,'rings_only_on_cues') && task.rings_only_on_cues==1 % for cuing reward only on the cues, especially for M2S task
-                [trial(dyn.trialNumber).hnd.tar.ringColor]         = deal([]);
-                [trial(dyn.trialNumber).hnd.tar.ringColor2]        = deal([]);
-                [trial(dyn.trialNumber).eye.tar.ringColor]         = deal([]);
-                [trial(dyn.trialNumber).eye.tar.ringColor2]        = deal([]);
+                [task.hnd.tar.ringColor]         = deal([]);
+                [task.hnd.tar.ringColor2]        = deal([]);
+                [task.eye.tar.ringColor]         = deal([]);
+                [task.eye.tar.ringColor2]        = deal([]);
             end
             
             if task.extra_reward % increase reward time if previous trial was successful (for hnd only?)
@@ -697,16 +649,11 @@ while true
                 case 1 % left
                     task.hnd.fix.color_dim      = task.hnd_left.color_dim_fix;
                     task.hnd.fix.color_bright   = task.hnd_left.color_bright_fix;
-                    %                     task.hnd.fi2.color_dim
-                    %                     =task.hnd_left.color_dim_fi2; %task specific
-                    %                     task.hnd.fi2.color_bright   =task.hnd_left.color_bright_fi2;
                     [task.hnd.tar.color_dim]    = deal(task.hnd_left.color_dim);
                     [task.hnd.tar.color_bright] = deal(task.hnd_left.color_bright);
                     
                 case 2 % right
                     task.hnd.fix.color_dim      = task.hnd_right.color_dim_fix;
-                    %                     task.hnd.fi2.color_dim      =task.hnd_right.color_dim_fi2;
-                    %                     task.hnd.fi2.color_bright   =task.hnd_right.color_bright_fi2;
                     task.hnd.fix.color_bright   = task.hnd_right.color_bright_fix;
                     [task.hnd.tar.color_dim]    = deal(task.hnd_right.color_dim);
                     [task.hnd.tar.color_bright] = deal(task.hnd_right.color_bright);
@@ -718,7 +665,6 @@ while true
                     [task.hnd.tar.color_bright] = deal([task.hnd_right.color_bright;task.hnd_left.color_bright]);
                     
             end
-            %if isfield(task.hnd_right,'color_cue') && isfield(task.hnd_left,'color_cue')
             switch task.reach_hand
                 case 0 % stay condition
                     [task.hnd.cue.color_dim]    = deal(task.hnd_stay.color_dim);
@@ -733,7 +679,16 @@ while true
                     [task.hnd.cue.color_dim]    = deal([task.hnd_right.color_cue;task.hnd_left.color_cue]);
                     [task.hnd.cue.color_bright] = deal([task.hnd_right.color_cue;task.hnd_left.color_cue]);
             end
-            %end
+            
+            task.eye.fix.pos=[task.eye.fix.x task.eye.fix.y task.eye.fix.size task.eye.fix.radius 1]; %% legacy for analysis
+            task.hnd.fix.pos=[task.hnd.fix.x task.hnd.fix.y task.hnd.fix.size task.hnd.fix.radius 1]; %% legacy for analysis
+%             task.eye.fi2.pos=[task.eye.fi2.x task.eye.fi2.y task.eye.fi2.size task.eye.fi2.radius 1]; %% legacy for analysis
+%             task.hnd.fi2.pos=[task.hnd.fi2.x task.hnd.fi2.y task.hnd.fi2.size task.hnd.fi2.radius 1]; %% legacy for analysis
+                
+            trial(dyn.trialNumber).eye.fix = task.eye.fix;
+            trial(dyn.trialNumber).hnd.fix = task.hnd.fix;
+            trial(dyn.trialNumber).eye.fi2 = task.eye.fi2;
+            trial(dyn.trialNumber).hnd.fi2 = task.hnd.fi2;
             
             %% Number of targets and cues assignment (especially for CHOICE AND EFFECTORS!)
             dyn.n_eye_tar=numel(task.eye.tar);
@@ -749,7 +704,7 @@ while true
             dyn.n_hnd_fix=numel(task.hnd.fix);
             dyn.n_hnd_fi2=numel(task.hnd.fi2);
             
-            if task.type<5 || task.type>=10
+            if task.type<5 || task.type>=10 %% basically this is only for Lukas match to sample task
                 if ~task.choice
                     dyn.n_eye_tar=1;
                     dyn.n_hnd_tar=1;
@@ -759,7 +714,7 @@ while true
                 dyn.n_eye_cue=1;
                 dyn.n_hnd_cue=1;
             end
-            
+                       
             switch task.effector
                 case 0 % eye
                     dyn.n_hnd_tar = 0;
@@ -802,48 +757,64 @@ while true
                     dyn.effector = 'hnd';
             end
             
-            %% each stimulus on the screen is defined as below: [x y size radius effector]
-            for n_obj=1:dyn.n_eye_tar % n_obj=1:max(dyn.n_eye_tar,2) % just to keep the same format as in previous versions, at least two targets are always defined
-                trial(dyn.trialNumber).eye.tar(n_obj).pos   = [task.eye.tar(n_obj).x task.eye.tar(n_obj).y task.eye.tar(n_obj).size  task.eye.tar(n_obj).radius 0];
-                trial(dyn.trialNumber).eye.tar(n_obj).shape = task.eye.tar(n_obj).shape;
+            %%% super annoying part, no reward modulation
+            if ~task.reward_modulation
+                trial(dyn.trialNumber).reward_size = 2;
+                for n_obj=1:dyn.n_eye_tar % assign values for each target
+                    task.eye.tar(n_obj).reward         = 2;
+                    task.eye.tar(n_obj).reward_time    = task.reward.time_neutral;
+                    task.eye.tar(n_obj).reward_prob    = task.reward.prob_neutral;
+                end
+                for n_obj=1:dyn.n_hnd_tar % assign values for each target
+                    task.hnd.tar(n_obj).reward         = 2;
+                    task.hnd.tar(n_obj).reward_time    = task.reward.time_neutral;
+                    task.hnd.tar(n_obj).reward_prob    = task.reward.prob_neutral;
+                end
+            end
+            
+            %% assign task to current trial (redundant? NO, becasue n_targets and n_cues are limited here!)
+            %% dim color set to bright fixation color for dissociated tasks...
+            %% target structure for fixation effector in dissociated tasks taken over from fix !
+            for n_obj=1:dyn.n_eye_tar
+                task.eye.tar(n_obj).pos=[task.eye.tar(n_obj).x task.eye.tar(n_obj).y task.eye.tar(n_obj).size task.eye.tar(n_obj).radius 1]; %% legacy for analysis
+                trial(dyn.trialNumber).eye.tar(n_obj) = task.eye.tar(n_obj);
                 if task.effector==4
+                    trial(dyn.trialNumber).eye.tar= task.eye.fix;
                     trial(dyn.trialNumber).eye.tar(n_obj).color_dim = task.eye.fix(1).color_bright;
                 end
             end
-            
-            for n_obj=1:dyn.n_eye_ta2 % KK
-                trial(dyn.trialNumber).eye.ta2(n_obj).pos   = [task.eye.ta2(n_obj).x task.eye.ta2(n_obj).y task.eye.ta2(n_obj).size  task.eye.ta2(n_obj).radius 0];
-                trial(dyn.trialNumber).eye.ta2(n_obj).shape = task.eye.ta2(n_obj).shape;
-                if task.effector==4
-                    trial(dyn.trialNumber).eye.ta2(n_obj).color_dim = task.eye.fix(1).color_bright;
-                end
-            end
-            for n_obj=1:dyn.n_hnd_tar % n_obj=1:max(dyn.n_hnd_tar,2) %
-                trial(dyn.trialNumber).hnd.tar(n_obj).pos   = [task.hnd.tar(n_obj).x task.hnd.tar(n_obj).y task.hnd.tar(n_obj).size  task.hnd.tar(n_obj).radius 1];
-                trial(dyn.trialNumber).hnd.tar(n_obj).shape = task.hnd.tar(n_obj).shape;
+            for n_obj=1:dyn.n_hnd_tar
+                task.hnd.tar(n_obj).pos=[task.hnd.tar(n_obj).x task.hnd.tar(n_obj).y task.hnd.tar(n_obj).size task.hnd.tar(n_obj).radius 2]; %% legacy for analysis
+                trial(dyn.trialNumber).hnd.tar(n_obj) = task.hnd.tar(n_obj);
                 if task.effector==3
+                    trial(dyn.trialNumber).hnd.tar = task.hnd.fix;
                     trial(dyn.trialNumber).hnd.tar(n_obj).color_dim = task.hnd.fix(1).color_bright;
                 end
             end
-            if task.type == 10
-                for n_obj=1:dyn.n_hnd_ta2 % n_obj=1:max(dyn.n_hnd_tar,2) %
-                    trial(dyn.trialNumber).hnd.ta2(n_obj).pos   = [task.hnd.ta2(n_obj).x task.hnd.ta2(n_obj).y task.hnd.ta2(n_obj).size  task.hnd.ta2(n_obj).radius 1];
-                    trial(dyn.trialNumber).hnd.ta2(n_obj).shape = task.hnd.ta2(n_obj).shape;
-                    if task.effector==3
-                        trial(dyn.trialNumber).hnd.ta2(n_obj).color_dim = task.hnd.fix(1).color_bright;
-                    end
+            for n_obj=1:dyn.n_eye_ta2
+                task.eye.ta2(n_obj).pos=[task.eye.ta2(n_obj).x task.eye.ta2(n_obj).y task.eye.ta2(n_obj).size task.eye.ta2(n_obj).radius 1]; %% legacy for analysis
+                trial(dyn.trialNumber).eye.ta2(n_obj) = task.eye.ta2(n_obj);
+                if task.effector==4
+                    trial(dyn.trialNumber).eye.ta2 = task.eye.fix;
+                    trial(dyn.trialNumber).eye.ta2(n_obj).color_dim = task.eye.fix(1).color_bright;
                 end
             end
-            for n_obj=1:dyn.n_eye_cue % n_obj=1:max(dyn.n_eye_cue,2) %
-                trial(dyn.trialNumber).eye.cue(n_obj).pos   = [task.eye.cue(n_obj).x task.eye.cue(n_obj).y task.eye.tar(n_obj).size  task.eye.tar(n_obj).radius 0];
-                trial(dyn.trialNumber).eye.cue(n_obj).shape = task.eye.cue(n_obj).shape;
+            for n_obj=1:dyn.n_hnd_ta2
+                task.hnd.ta2(n_obj).pos=[task.hnd.ta2(n_obj).x task.hnd.ta2(n_obj).y task.hnd.ta2(n_obj).size task.hnd.ta2(n_obj).radius 2]; %% legacy for analysis
+                trial(dyn.trialNumber).hnd.ta2(n_obj) = task.hnd.ta2(n_obj);
+                if task.effector==3
+                    trial(dyn.trialNumber).hnd.ta2 = task.hnd.fix;
+                    trial(dyn.trialNumber).hnd.ta2(n_obj).color_dim = task.hnd.fix(1).color_bright;
+                end
             end
-            for n_obj=1:dyn.n_hnd_cue % n_obj=1:max(dyn.n_hnd_cue,2) %
-                trial(dyn.trialNumber).hnd.cue(n_obj).pos   = [task.hnd.cue(n_obj).x task.hnd.cue(n_obj).y task.hnd.tar(n_obj).size  task.hnd.tar(n_obj).radius 1];
-                trial(dyn.trialNumber).hnd.cue(n_obj).shape = task.hnd.cue(n_obj).shape;
+            for n_obj=1:dyn.n_eye_cue
+                task.eye.cue(n_obj).pos=[task.eye.cue(n_obj).x task.eye.cue(n_obj).y task.eye.cue(n_obj).size task.eye.cue(n_obj).radius 1]; %% legacy for analysis
+                trial(dyn.trialNumber).eye.cue(n_obj) = task.eye.cue(n_obj);
             end
-            
-            
+            for n_obj=1:dyn.n_hnd_cue
+                task.hnd.cue(n_obj).pos=[task.hnd.cue(n_obj).x task.hnd.cue(n_obj).y task.hnd.cue(n_obj).size task.hnd.cue(n_obj).radius 2]; %% legacy for analysis
+                trial(dyn.trialNumber).hnd.cue(n_obj) = task.hnd.cue(n_obj);
+            end
             trial(dyn.trialNumber).task                 = task;
             
             %% CHECK CONDITIONS TO START THE TRIAL
@@ -881,11 +852,6 @@ while true
                     end
                 end
             end
-            if SETTINGS.VisFeedback_rest_hand && any(task.rest_hand) %KK
-                par_hnd = aux_FillPar(task.hnd.ini(1).shape, [task.hnd.ini(1).x,task.hnd.ini(1).y,task.hnd.ini(1).size,0,0], task.hnd.ini(1).color);
-                aux_PrepareStimuli(par_hnd);
-                Screen(SETTINGS.window,'Flip');
-            end
             
             % check if monkey is touching the sensors, wait until he does
             if any(task.rest_hand)
@@ -899,41 +865,38 @@ while true
                     holding_individual_sensors_correctly = [~((task.rest_hand-[sen1 sen2])>0)]; % see aux_CheckSensors
                     if ~all(holding_individual_sensors_correctly),
                         sensors_ini_correct_time=-Inf;
+                        n_ini=1;
+                    else
+                        n_ini=2;
+                    end
+                    if SETTINGS.VisFeedback_rest_hand
+                        par_temp=task.hnd.ini(n_ini);
+                        par_temp.radius=par_temp.size;
+                        
+                        displaybackground(SETTINGS,task,dyn)
+                        par_hnd = aux_FillPar(par_temp);
+                        aux_PrepareStimuli(par_hnd);
+                        Screen(SETTINGS.window,'Flip');
                     end
                     switch mat2str(double(holding_individual_sensors_correctly))
                         case '[0 1]'
                             dyn.duration=0.01;
                             if ~wait4sensors_iteration,
-                                fprintf('does not hold the rest sensor 1 - waiting!');
+                                fprintf('does not hold the rest sensor 1 - waiting!\n');
                             end
                             wait4sensors_iteration = wait4sensors_iteration + 1;
-                            if SETTINGS.VisFeedback_rest_hand %KK
-                                par_hnd = aux_FillPar(task.hnd.ini(1).shape, [task.hnd.ini(1).x,task.hnd.ini(1).y,task.hnd.ini(1).size,0,0], task.hnd.ini(1).color);
-                                aux_PrepareStimuli(par_hnd);
-                                Screen(SETTINGS.window,'Flip');
-                            end
                         case '[1 0]'
                             dyn.duration=0.01;
                             if ~wait4sensors_iteration,
-                                fprintf('does not hold the rest sensor 2 - waiting!');
+                                fprintf('does not hold the rest sensor 2 - waiting!\n');
                             end
                             wait4sensors_iteration = wait4sensors_iteration + 1;
-                            if SETTINGS.VisFeedback_rest_hand %KK
-                                par_hnd = aux_FillPar(task.hnd.ini(1).shape, [task.hnd.ini(1).x,task.hnd.ini(1).y,task.hnd.ini(1).size,0,0], task.hnd.ini(1).color);
-                                aux_PrepareStimuli(par_hnd);
-                                Screen(SETTINGS.window,'Flip');
-                            end
                         case '[0 0]'
                             dyn.duration=0.01;
                             if ~wait4sensors_iteration,
-                                fprintf('does not hold the rest both sensors - waiting!');
+                                fprintf('does not hold the rest both sensors - waiting!\n');
                             end
                             wait4sensors_iteration = wait4sensors_iteration + 1;
-                            if SETTINGS.VisFeedback_rest_hand %KK
-                                par_hnd = aux_FillPar(task.hnd.ini(1).shape, [task.hnd.ini(1).x,task.hnd.ini(1).y,task.hnd.ini(1).size,0,0], task.hnd.ini(1).color);
-                                aux_PrepareStimuli(par_hnd);
-                                Screen(SETTINGS.window,'Flip');
-                            end
                         case '[1 1]' % both sensors correct, proceed
                             dyn.duration=0.001;
                             if sensors_ini_correct_time==-Inf
@@ -941,28 +904,27 @@ while true
                                 wait4sensors_iteration = 0;
                             end
                             if GetSecs >= sensors_ini_correct_time+task.rest_sensors_ini_time || dyn.state==STATE.CLOSE;
+                                if task.timing.reward_time_sensors>0
+                                    dyn.duration = task.timing.reward_time_sensors;
+                                    [success,dyn,task]=aux_DispenseReward(task,dyn);
+                                end
                                 break;
-                            end
-                            if SETTINGS.VisFeedback_rest_hand %KK
-                                
-                                par_hnd = aux_FillPar(task.hnd.ini(2).shape, [task.hnd.ini(2).x,task.hnd.ini(2).y,task.hnd.ini(2).size,0,0], task.hnd.ini(2).color);
-                                aux_PrepareStimuli(par_hnd);
-                                Screen(SETTINGS.window,'Flip');
                             end
                             
                     end
-                    
-                    
                     if mod(wait4sensors_iteration,2*(1/dyn.duration)) == 2*(1/dyn.duration)-1 %start new trial after X time
-                        if SETTINGS.VisFeedback_rest_hand %KK
-                            if strcmp(mat2str(double(holding_individual_sensors_correctly)),'[1 1]')
-                                par_hnd = aux_FillPar(task.hnd.ini(2).shape, [task.hnd.ini(2).x,task.hnd.ini(2).y,task.hnd.ini(2).size,0,0], task.hnd.ini(2).color);
-                            else
-                                par_hnd = aux_FillPar(task.hnd.ini(1).shape, [task.hnd.ini(1).x,task.hnd.ini(1).y,task.hnd.ini(1).size,0,0], task.hnd.ini(1).color);
-                            end
-                            aux_PrepareStimuli(par_hnd);
+                        Screen('FillRect', SETTINGS.window, SETTINGS.BG_COLOR);
+                        displaybackground(SETTINGS,task,dyn)
+                        if strcmp(mat2str(double(holding_individual_sensors_correctly)),'[1 1]')
+                            n_ini = 2;
                         else
-                            Screen('FillRect', SETTINGS.window, SETTINGS.BG_COLOR);
+                            n_ini = 1;
+                        end
+                        if SETTINGS.VisFeedback_rest_hand
+                            par_temp=task.hnd.ini(n_ini);    
+                            par_temp.radius=par_temp.size;
+                            par_hnd = aux_FillPar(par_temp);
+                            aux_PrepareStimuli(par_hnd);
                         end
                         Screen(SETTINGS.window,'Flip');
                     end
@@ -1001,14 +963,18 @@ while true
             if dyn.n_hnd_fix==0;par_hnd = struct([]);end;
             
             for n_obj=1:dyn.n_eye_fix
-                par_eye(n_obj) = aux_FillPar(trial(dyn.trialNumber).eye.fix(n_obj).shape, trial(dyn.trialNumber).eye.fix(n_obj).pos, task.eye.fix(n_obj).color_dim);
+                par_temp=trial(dyn.trialNumber).eye.fix(n_obj);
+                par_temp.color=trial(dyn.trialNumber).eye.fix(n_obj).color_dim;
+                par_eye(n_obj) = aux_FillPar(par_temp);
             end
             for n_obj=1:dyn.n_hnd_fix
-                par_hnd(n_obj) = aux_FillPar(trial(dyn.trialNumber).hnd.fix(n_obj).shape, trial(dyn.trialNumber).hnd.fix(n_obj).pos, task.hnd.fix(n_obj).color_dim);
+                par_temp=trial(dyn.trialNumber).hnd.fix(n_obj);
+                par_temp.color=trial(dyn.trialNumber).hnd.fix(n_obj).color_dim;
+                par_hnd(n_obj) = aux_FillPar(par_temp);
             end
             
             temp_effector = task.effector;
-            if ismember(trial(dyn.trialNumber).effector,[2,3,4,6])
+            if ismember(task.effector,[2,3,4,6])
                 task.effector = 2;
             end
             dyn.duration            = get_state_duration(task,trial,dyn);
@@ -1027,34 +993,41 @@ while true
             if dyn.n_eye_fix==0;par_eye = struct([]);end;
             if dyn.n_hnd_fix==0;par_hnd = struct([]);end;
             for n_obj=1:dyn.n_eye_fix
-                par_eye(n_obj) = aux_FillPar(trial(dyn.trialNumber).eye.fix(n_obj).shape, trial(dyn.trialNumber).eye.fix(n_obj).pos, task.eye.fix(n_obj).color_bright);
+                par_temp=trial(dyn.trialNumber).eye.fix(n_obj);
+                par_temp.color=trial(dyn.trialNumber).eye.fix(n_obj).color_bright;
+                par_eye(n_obj) = aux_FillPar(par_temp);
             end
             for n_obj=1:dyn.n_hnd_fix
-                par_hnd(n_obj) = aux_FillPar(trial(dyn.trialNumber).hnd.fix(n_obj).shape, trial(dyn.trialNumber).hnd.fix(n_obj).pos, task.hnd.fix(n_obj).color_bright);
+                par_temp=trial(dyn.trialNumber).hnd.fix(n_obj);
+                par_temp.color=trial(dyn.trialNumber).hnd.fix(n_obj).color_bright;
+                par_hnd(n_obj) = aux_FillPar(par_temp);
             end
             
             dyn.duration            = get_state_duration(task,trial,dyn);
             [success,dyn,task]      = hold_state(task,par_eye,par_hnd,dyn,trial,IO);
-            if task.type > 1,
+            if task.type > 1 && task.type~=11 && task.type~=12, %% not clean solution to provide reward, i.e. have a target selected to chose from
                 dyn.target_selected = [NaN NaN];
             end
             
         case STATE.FI2_ACQ  % fixation acquisition
-           % Temp = dyn.target_selected;
             dyn.target_selected = [NaN NaN];
             dyn.fix_struct = 'fi2';
             if dyn.n_eye_fi2==0;par_eye = struct([]);end;
             if dyn.n_hnd_fi2==0;par_hnd = struct([]);end;
             
             for n_obj=1:dyn.n_eye_fi2
-                par_eye(n_obj) = aux_FillPar(trial(dyn.trialNumber).eye.fi2(n_obj).shape, trial(dyn.trialNumber).eye.fi2(n_obj).pos, task.eye.fi2(n_obj).color_dim);
+                par_temp=trial(dyn.trialNumber).eye.fi2(n_obj);
+                par_temp.color=trial(dyn.trialNumber).eye.fi2(n_obj).color_dim;
+                par_eye(n_obj) = aux_FillPar(par_temp);
             end
             for n_obj=1:dyn.n_hnd_fi2
-                par_hnd(n_obj) = aux_FillPar(trial(dyn.trialNumber).hnd.fi2(n_obj).shape, trial(dyn.trialNumber).hnd.fi2(n_obj).pos, task.hnd.fi2(n_obj).color_dim);
+                par_temp=trial(dyn.trialNumber).hnd.fi2(n_obj);
+                par_temp.color=trial(dyn.trialNumber).hnd.fi2(n_obj).color_dim;
+                par_hnd(n_obj) = aux_FillPar(par_temp);
             end
             
             temp_effector = task.effector;
-            if ismember(trial(dyn.trialNumber).effector,[2,3,4,6])
+            if ismember(task.effector,[2,3,4,6])
                 task.effector = 2;
             end
             dyn.duration            = get_state_duration(task,trial,dyn);
@@ -1062,19 +1035,21 @@ while true
             
             task.effector = temp_effector;
             trial(dyn.trialNumber).reach_hand = dyn.hand_selected;
-            if trial(dyn.trialNumber).effector==5
-                trial(dyn.trialNumber).reach_hand = task.reach_hand;
-            end
-
+            
+            
         case STATE.FI2_HOL %  fixation holding_with_change_of_color
             dyn.fix_struct = 'fi2';
             if dyn.n_eye_fi2==0;par_eye = struct([]);end;
             if dyn.n_hnd_fi2==0;par_hnd = struct([]);end;
             for n_obj=1:dyn.n_eye_fi2
-                par_eye(n_obj) = aux_FillPar(trial(dyn.trialNumber).eye.fi2(n_obj).shape, trial(dyn.trialNumber).eye.fi2(n_obj).pos, task.eye.fi2(n_obj).color_bright);
+                par_temp=trial(dyn.trialNumber).eye.fi2(n_obj);
+                par_temp.color=trial(dyn.trialNumber).eye.fi2(n_obj).color_bright;
+                par_eye(n_obj) = aux_FillPar(par_temp);
             end
             for n_obj=1:dyn.n_hnd_fi2
-                par_hnd(n_obj) = aux_FillPar(trial(dyn.trialNumber).hnd.fi2(n_obj).shape, trial(dyn.trialNumber).hnd.fi2(n_obj).pos, task.hnd.fi2(n_obj).color_bright);
+                par_temp=trial(dyn.trialNumber).hnd.fi2(n_obj);
+                par_temp.color=trial(dyn.trialNumber).hnd.fi2(n_obj).color_bright;
+                par_hnd(n_obj) = aux_FillPar(par_temp);
             end
             
             dyn.duration            = get_state_duration(task,trial,dyn);
@@ -1083,26 +1058,32 @@ while true
                 dyn.target_selected = [NaN NaN];
             end
             %dyn.target_selected = Temp;
-%             if task.type == 10
-%                 if success
-%                     dyn.duration = task.reward_time_fix2;
-%                     [success,dyn,task]=aux_DispenseReward(task,dyn);
-%                 elseif success == 0
-%                 
-%                     
-%                 end
-%             end
-        case STATE.FIX_PER %  fixation holding after cue state, and return to cue state!!
+            %                 if success
+            %                     dyn.duration = task.reward_time_fix2;
+            %                     [success,dyn,task]=aux_DispenseReward(task,dyn);
+            %                 elseif success == 0
+            %
+            %
+            %                 end
+        case STATE.FIX_PER %  fixation holding after cue state, and return to cue state!! IGNORE FOR NOW
             switch trial(dyn.trialNumber).effector
                 case {0,5}
-                    par_eye(1) = aux_FillPar(trial(dyn.trialNumber).eye.fix.shape, trial(dyn.trialNumber).eye.fix.pos, task.eye.fix.color_bright);
+                    par_temp = trial(dyn.trialNumber).eye.fix;
+                    par_temp.color = trial(dyn.trialNumber).eye.fix.color_bright;
+                    par_eye = aux_FillPar(par_temp);
                     par_hnd = struct([]);
                 case 1
-                    par_hnd(1) = aux_FillPar(trial(dyn.trialNumber).hnd.fix.shape, trial(dyn.trialNumber).hnd.fix.pos, task.hnd.fix.color_bright);
+                    par_temp = trial(dyn.trialNumber).hnd.fix;
+                    par_temp.color = trial(dyn.trialNumber).hnd.fix.color_bright;
+                    par_hnd = aux_FillPar(par_temp);
                     par_eye = struct([]);
                 case {2,3,4,6}
-                    par_eye(1) = aux_FillPar(trial(dyn.trialNumber).eye.fix.shape, trial(dyn.trialNumber).eye.fix.pos, task.eye.fix.color_bright);
-                    par_hnd(1) = aux_FillPar(trial(dyn.trialNumber).hnd.fix.shape, trial(dyn.trialNumber).hnd.fix.pos, task.hnd.fix.color_bright);
+                    par_temp = trial(dyn.trialNumber).eye.fix;
+                    par_temp.color = trial(dyn.trialNumber).eye.fix.color_bright;
+                    par_eye = aux_FillPar(par_temp);
+                    par_temp = trial(dyn.trialNumber).hnd.fix;
+                    par_temp.color = trial(dyn.trialNumber).hnd.fix.color_bright;
+                    par_hnd = aux_FillPar(par_temp);
             end
             
             dyn.duration            = get_state_duration(task,trial,dyn);
@@ -1127,42 +1108,30 @@ while true
             
             if all(isnan(dyn.target_selected)) % still no target has been selected (e.g. in task.type = 2)
                 for n_obj=1:dyn.n_eye_tar
-                    par_eye(n_obj) = aux_FillPar(trial(dyn.trialNumber).eye.tar(n_obj).shape, trial(dyn.trialNumber).eye.tar(n_obj).pos, task.eye.tar(n_obj).color_dim, ...
-                        trial(dyn.trialNumber).eye.tar(n_obj).ringColor, trial(dyn.trialNumber).eye.tar(n_obj).reward_prob,trial(dyn.trialNumber).eye.tar(n_obj).ringColor2);
+                    par_temp=trial(dyn.trialNumber).eye.tar(n_obj);
+                    par_temp.color=trial(dyn.trialNumber).eye.tar(n_obj).color_dim;
+                    par_eye(n_obj) = aux_FillPar(par_temp);
                 end
                 for n_obj=1:dyn.n_hnd_tar
-                    par_hnd(n_obj) = aux_FillPar(trial(dyn.trialNumber).hnd.tar(n_obj).shape, trial(dyn.trialNumber).hnd.tar(n_obj).pos, task.hnd.tar(n_obj).color_dim, ...
-                        trial(dyn.trialNumber).hnd.tar(n_obj).ringColor, trial(dyn.trialNumber).hnd.tar(n_obj).reward_prob,trial(dyn.trialNumber).hnd.tar(n_obj).ringColor2);
+                    par_temp=trial(dyn.trialNumber).hnd.tar(n_obj);
+                    par_temp.color=trial(dyn.trialNumber).hnd.tar(n_obj).color_dim;
+                    par_hnd(n_obj) = aux_FillPar(par_temp);
                 end
             else
                 if ~isnan(dyn.target_selected(1))
-                    par_eye = aux_FillPar(trial(dyn.trialNumber).eye.tar(dyn.target_selected(1)).shape, trial(dyn.trialNumber).eye.tar(dyn.target_selected(1)).pos, task.eye.tar(dyn.target_selected(1)).color_dim, ...
-                        trial(dyn.trialNumber).eye.tar(dyn.target_selected(1)).ringColor, trial(dyn.trialNumber).eye.tar(dyn.target_selected(1)).reward_prob,trial(dyn.trialNumber).eye.tar(dyn.target_selected(1)).ringColor2);
+                    par_temp=trial(dyn.trialNumber).eye.tar(dyn.target_selected(1));
+                    par_temp.color=trial(dyn.trialNumber).eye.tar(dyn.target_selected(1)).color_dim;
+                    par_eye = aux_FillPar(par_temp);
                 else
                     par_eye = struct([]);
                 end
                 if ~isnan(dyn.target_selected(2))
-                    par_hnd = aux_FillPar(trial(dyn.trialNumber).hnd.tar(dyn.target_selected(2)).shape, trial(dyn.trialNumber).hnd.tar(dyn.target_selected(2)).pos, task.hnd.tar(dyn.target_selected(2)).color_dim,...
-                        trial(dyn.trialNumber).hnd.tar(dyn.target_selected(2)).ringColor, trial(dyn.trialNumber).hnd.tar(dyn.target_selected(2)).reward_prob,trial(dyn.trialNumber).hnd.tar(dyn.target_selected(2)).ringColor2);
+                    par_temp=trial(dyn.trialNumber).hnd.tar(dyn.target_selected(2));
+                    par_temp.color=trial(dyn.trialNumber).hnd.tar(dyn.target_selected(2)).color_dim;
+                    par_hnd = aux_FillPar(par_temp);
                 else
                     par_hnd = struct([]);
                 end
-            end
-            
-            %overwriting target color for fixation in dissociated tasks
-            switch trial(dyn.trialNumber).effector
-                case 3 % bright hnd fixation spot for dissociated memory saccades
-                    clear par_hnd
-                    for n_obj=1:dyn.n_hnd_tar
-                        par_hnd(n_obj) = aux_FillPar(trial(dyn.trialNumber).hnd.tar(n_obj).shape, trial(dyn.trialNumber).hnd.tar(n_obj).pos, task.hnd.fix(1).color_bright, ...
-                            trial(dyn.trialNumber).hnd.tar(n_obj).ringColor, trial(dyn.trialNumber).hnd.tar(n_obj).reward_prob,trial(dyn.trialNumber).hnd.tar(n_obj).ringColor2);
-                    end
-                case 4 % bright eye fixation spot for dissociated memory reaches
-                    clear par_eye
-                    for n_obj=1:dyn.n_eye_tar
-                        par_eye(n_obj) = aux_FillPar(trial(dyn.trialNumber).eye.tar(n_obj).shape, trial(dyn.trialNumber).eye.tar(n_obj).pos, task.eye.fix(1).color_bright, ...
-                            trial(dyn.trialNumber).eye.tar(n_obj).ringColor, trial(dyn.trialNumber).eye.tar(n_obj).reward_prob,trial(dyn.trialNumber).eye.tar(n_obj).ringColor2);
-                    end
             end
             
             dyn.duration            = get_state_duration(task,trial,dyn);
@@ -1176,41 +1145,36 @@ while true
                 trial(dyn.trialNumber).reach_hand = dyn.hand_selected;
             end
             
-        case STATE.SEN_RET
+        case STATE.SEN_RET  %% IGNORE FOR NOW !!!!!!!!!!!!!!
             % check target selected -> defined by sensors....
-            par_eye = aux_FillPar(trial(dyn.trialNumber).eye.tar(dyn.target_selected(1)).shape, trial(dyn.trialNumber).eye.tar(dyn.target_selected(1)).pos, task.eye.tar(dyn.target_selected(1)).color_bright, trial(dyn.trialNumber).eye.tar(dyn.target_selected(1)).ringColor, trial(dyn.trialNumber).eye.tar(dyn.target_selected(1)).reward_prob,...
-                trial(dyn.trialNumber).eye.tar(dyn.target_selected(1)).ringColor2);
-            par_hnd = aux_FillPar(trial(dyn.trialNumber).hnd.tar(dyn.target_selected(2)).shape, trial(dyn.trialNumber).hnd.tar(dyn.target_selected(2)).pos, task.hnd.tar(dyn.target_selected(2)).color_dim, trial(dyn.trialNumber).hnd.tar(dyn.target_selected(2)).ringColor, trial(dyn.trialNumber).hnd.tar(dyn.target_selected(2)).reward_prob,...
-                trial(dyn.trialNumber).hnd.tar(dyn.target_selected(2)).ringColor2);
+            par_temp=trial(dyn.trialNumber).eye.tar(dyn.target_selected(1));
+            par_temp.color=trial(dyn.trialNumber).eye.tar(dyn.target_selected(1)).color_bright;
+            par_eye = aux_FillPar(par_temp);
+            par_temp=trial(dyn.trialNumber).hnd.tar(dyn.target_selected(2));
+            par_temp.color=trial(dyn.trialNumber).hnd.tar(dyn.target_selected(21)).color_bright;
+            par_hnd = aux_FillPar(par_temp);
             
             dyn.duration            = get_state_duration(task,trial,dyn);
             [success,dyn,task]      = acquisition_state(task,par_eye,par_hnd,dyn,trial,IO);
             
         case STATE.TAR_HOL %  target holding_with_change_of_color
+            
             if ~isnan(dyn.target_selected(1))
-                par_eye = aux_FillPar(trial(dyn.trialNumber).eye.tar(dyn.target_selected(1)).shape, trial(dyn.trialNumber).eye.tar(dyn.target_selected(1)).pos, task.eye.tar(dyn.target_selected(1)).color_bright, ...
-                    trial(dyn.trialNumber).eye.tar(dyn.target_selected(1)).ringColor, trial(dyn.trialNumber).eye.tar(dyn.target_selected(1)).reward_prob,trial(dyn.trialNumber).eye.tar(dyn.target_selected(1)).ringColor2);
-            elseif dyn.n_eye_tar>0
-                for n_obj=1:dyn.n_eye_tar
-                    par_eye(n_obj) = aux_FillPar(trial(dyn.trialNumber).eye.tar(n_obj).shape, trial(dyn.trialNumber).eye.tar(n_obj).pos, task.eye.fix(1).color_bright, ...
-                        trial(dyn.trialNumber).eye.tar(n_obj).ringColor, trial(dyn.trialNumber).eye.tar(n_obj).reward_prob,trial(dyn.trialNumber).eye.tar(n_obj).ringColor2);
-                end
+                par_temp=trial(dyn.trialNumber).eye.tar(dyn.target_selected(1));
+                par_temp.color=trial(dyn.trialNumber).eye.tar(dyn.target_selected(1)).color_bright;
+                par_eye = aux_FillPar(par_temp);
             else
                 par_eye = struct([]);
             end
             
             if ~isnan(dyn.target_selected(2))
-                par_hnd = aux_FillPar(trial(dyn.trialNumber).hnd.tar(dyn.target_selected(2)).shape, trial(dyn.trialNumber).hnd.tar(dyn.target_selected(2)).pos, task.hnd.tar(dyn.target_selected(2)).color_bright,...
-                    trial(dyn.trialNumber).hnd.tar(dyn.target_selected(2)).ringColor, trial(dyn.trialNumber).hnd.tar(dyn.target_selected(2)).reward_prob,trial(dyn.trialNumber).hnd.tar(dyn.target_selected(2)).ringColor2);
-            elseif dyn.n_hnd_tar>0
-                for n_obj=1:dyn.n_hnd_tar
-                    par_hnd(n_obj) = aux_FillPar(trial(dyn.trialNumber).hnd.tar(n_obj).shape, trial(dyn.trialNumber).hnd.tar(n_obj).pos, task.hnd.fix(1).color_bright, ...
-                        trial(dyn.trialNumber).hnd.tar(n_obj).ringColor, trial(dyn.trialNumber).hnd.tar(n_obj).reward_prob,trial(dyn.trialNumber).hnd.tar(n_obj).ringColor2);
-                end
+                par_temp=trial(dyn.trialNumber).hnd.tar(dyn.target_selected(2));
+                par_temp.color=trial(dyn.trialNumber).hnd.tar(dyn.target_selected(2)).color_bright;
+                par_hnd = aux_FillPar(par_temp);
             else
                 par_hnd = struct([]);
             end
-            
+            %% THIS WILL HAVE TO BE DELETED!
             %             % DO NOT DELETE THE COMMENTED CODE BELOW:
             %             % if we want to leave non-selected target on the screen (as in effort study of Dominiguez Vargas et al. 2012, ...),
             %             %             comment out "clear par_eye par_hnd % show and brighten selected only" above and uncomment the code below
@@ -1238,24 +1202,25 @@ while true
             dyn.duration            = get_state_duration(task,trial,dyn);
             [success,dyn,task]      = hold_state(task,par_eye,par_hnd,dyn,trial,IO);
             temp_target_selected = dyn.target_selected;
-%             if task.type == 10 %KK reward for training norman
-%                 if dyn.target_selected(dyn.tar_selected_ind) == 1 %correct & blue (2)
-%                                 dyn.duration= 0.001;
-%                 [success,dyn,task]=aux_DispenseReward(task,dyn)  ;
-%                 end
-%             end
+            
+            %             if task.type == 10 %KK reward for training norman
+            %                 if dyn.target_selected(dyn.tar_selected_ind) == 1 %correct & blue (2)
+            %                                 dyn.duration= 0.001;
+            %                 [success,dyn,task]=aux_DispenseReward(task,dyn)  ;
+            %                 end
+            %             end
         case STATE.TA2_ACQ  % target acquisition
             dyn.tar_struct = 'ta2';
-            
-           % if dyn.n_eye_ta2==0;par_eye = struct([]);end;
-           % if dyn.n_hnd_ta2==0;par_hnd = struct([]);end;
-            
-            if all(isnan(dyn.target_selected)) % still no target has been selected (e.g. in task.type = 2)
+            if all(isnan(dyn.target_selected)) % can this be the case?
                 for n_obj=1:dyn.n_eye_ta2
-                    par_eye(n_obj) = aux_FillPar(trial(dyn.trialNumber).eye.ta2(n_obj).shape, trial(dyn.trialNumber).eye.ta2(n_obj).pos, task.eye.ta2(n_obj).color_dim);
+                    par_temp=trial(dyn.trialNumber).eye.ta2(n_obj);
+                    par_temp.color=trial(dyn.trialNumber).eye.ta2(n_obj).color_dim;
+                    par_eye(n_obj) = aux_FillPar(par_temp);
                 end
                 for n_obj=1:dyn.n_hnd_ta2
-                    par_hnd(n_obj) = aux_FillPar(trial(dyn.trialNumber).hnd.ta2(n_obj).shape, trial(dyn.trialNumber).hnd.ta2(n_obj).pos, task.hnd.ta2(n_obj).color_dim);
+                    par_temp=trial(dyn.trialNumber).hnd.ta2(n_obj);
+                    par_temp.color=trial(dyn.trialNumber).hnd.ta2(n_obj).color_dim;
+                    par_hnd(n_obj) = aux_FillPar(par_temp);
                 end
             end
             dyn.duration            = get_state_duration(task,trial,dyn);
@@ -1268,25 +1233,32 @@ while true
             if trial(dyn.trialNumber).effector==5
                 trial(dyn.trialNumber).reach_hand = dyn.hand_selected;
             end
+            
         case STATE.TA2_HOL %  target holding_with_change_of_color
             dyn.tar_struct = 'ta2';
             
             if ~isnan(dyn.target_selected(1))
-                par_eye = aux_FillPar(trial(dyn.trialNumber).eye.ta2(dyn.target_selected(1)).shape, trial(dyn.trialNumber).eye.ta2(dyn.target_selected(1)).pos, task.eye.ta2(dyn.target_selected(1)).color_bright, ...
-                    trial(dyn.trialNumber).eye.ta2(dyn.target_selected(1)).ringColor, trial(dyn.trialNumber).eye.ta2(dyn.target_selected(1)).reward_prob,trial(dyn.trialNumber).eye.ta2(dyn.target_selected(1)).ringColor2);
+                par_temp=trial(dyn.trialNumber).eye.ta2(dyn.target_selected(1));
+                par_temp.color=trial(dyn.trialNumber).eye.ta2(dyn.target_selected(1)).color_bright;
+                par_eye = aux_FillPar(par_temp);
             elseif dyn.n_eye_tar>0
                 for n_obj=1:dyn.n_eye_tar
-                    par_eye(n_obj) = aux_FillPar(trial(dyn.trialNumber).eye.ta2(n_obj).shape, trial(dyn.trialNumber).eye.ta2(n_obj).pos, task.eye.ta2(1).color_bright, ...
-                        trial(dyn.trialNumber).eye.ta2(n_obj).ringColor, trial(dyn.trialNumber).eye.ta2(n_obj).reward_prob,trial(dyn.trialNumber).eye.ta2(n_obj).ringColor2);
+                    par_temp=trial(dyn.trialNumber).eye.ta2(n_obj);
+                    par_temp.color=trial(dyn.trialNumber).eye.fix(1).color_bright;
+                    par_eye(n_obj) = aux_FillPar(par_temp);
                 end
             else
                 par_eye = struct([]);
             end
             if ~isnan(dyn.target_selected(2))
-                par_hnd = aux_FillPar(trial(dyn.trialNumber).hnd.ta2(dyn.target_selected(2)).shape, trial(dyn.trialNumber).hnd.ta2(dyn.target_selected(2)).pos, task.hnd.ta2(dyn.target_selected(2)).color_bright);
+                par_temp=trial(dyn.trialNumber).hnd.ta2(dyn.target_selected(2));
+                par_temp.color=trial(dyn.trialNumber).hnd.ta2(dyn.target_selected(2)).color_bright;
+                par_hnd = aux_FillPar(par_temp);
             elseif dyn.n_hnd_ta2>0
                 for n_obj=1:dyn.n_hnd_ta2
-                    par_hnd(n_obj) = aux_FillPar(trial(dyn.trialNumber).hnd.ta2(n_obj).shape, trial(dyn.trialNumber).hnd.ta2(n_obj).pos, task.hnd.fix(1).color_bright);
+                    par_temp=trial(dyn.trialNumber).hnd.ta2(n_obj);
+                    par_temp.color=trial(dyn.trialNumber).hnd.fix(1).color_bright;
+                    par_hnd(n_obj) = aux_FillPar(par_temp);
                 end
             else
                 par_hnd = struct([]);
@@ -1306,38 +1278,44 @@ while true
                     if SETTINGS.useSound  && strcmp(SETTINGS.SoundType, 'Beep')
                         Beeper_PsychPortAudio(SETTINGS.audioPort,200, 0.5, 0.2);
                     elseif SETTINGS.useSound && strcmp(SETTINGS.SoundType, 'XBI_sounds')
+                        PsychPortAudio('Volume', SETTINGS.audioPort, 0.3);
                         Sounds('Reward') ;
                     end
                 elseif ~any(trial(dyn.trialNumber).task.correct_choice_target == dyn.target_selected(dyn.tar_selected_ind))
                     if SETTINGS.useSound && strcmp(SETTINGS.SoundType, 'Beep'),
                         Beeper_PsychPortAudio(SETTINGS.audioPort,120, 0.5, 0.2);
                     elseif  SETTINGS.useSound && strcmp(SETTINGS.SoundType, 'XBI_sounds'),
+                        PsychPortAudio('Volume', SETTINGS.audioPort, 0.1);
+                        
                         Sounds('Failure');
                     end
                 end
-            elseif trial(dyn.trialNumber).CueAuditiv == 0
+            elseif trial(dyn.trialNumber).CueAuditiv  == 2
+                  Beeper_PsychPortAudio(SETTINGS.audioPort,1000, 0.5, 0.2);
+                
             end
             
-
-
             dyn.duration            = get_state_duration(task,trial,dyn);
             [success,dyn,task]      = hold_state(task,par_eye,par_hnd,dyn,trial,IO);
             
         case STATE.MAT_ACQ_MSK  % masked target acquisition in match-to-sample
-            current_shape.mode='circle';
-            
             if dyn.n_eye_tar==0;par_eye = struct([]);end;
             if dyn.n_hnd_tar==0;par_hnd = struct([]);end;
             
             for n_target=1:dyn.n_eye_tar
-                par_eye(n_target) = aux_FillPar(current_shape, [trial(dyn.trialNumber).eye.tar(n_target).pos(1:2) task.eye.fix.size trial(dyn.trialNumber).eye.tar(n_target).pos(4:5)],...
-                    task.eye.tar(n_target).color_dim,[],1,[0 0 0]);
+                par_temp = trial(dyn.trialNumber).eye.tar(n_target);
+                par_temp.color = trial(dyn.trialNumber).eye.tar(n_target).color_dim;
+                par_temp.size  = trial(dyn.trialNumber).eye.fix.size;
+                par_temp.shape = trial(dyn.trialNumber).eye.fix.shape;
+                par_eye(n_target)= aux_FillPar(par_temp);
             end
             for n_target=1:dyn.n_hnd_tar
-                par_hnd(n_target) = aux_FillPar(current_shape, [trial(dyn.trialNumber).hnd.tar(n_target).pos(1:2) task.hnd.fix.size trial(dyn.trialNumber).hnd.tar(n_target).pos(4:5)],...
-                    task.hnd.tar(n_target).color_dim,[],1,[0 0 0]);
+                par_temp = trial(dyn.trialNumber).hnd.tar(n_target);
+                par_temp.color = trial(dyn.trialNumber).hnd.tar(n_target).color_dim;
+                par_temp.size  = trial(dyn.trialNumber).hnd.fix.size;
+                par_temp.shape = trial(dyn.trialNumber).hnd.fix.shape;
+                par_hnd(n_target)= aux_FillPar(par_temp);
             end
-            
             dyn.duration            = get_state_duration(task,trial,dyn);
             [success,dyn,task]      = acquisition_state(task,par_eye,par_hnd,dyn,trial,IO);
             dyn.time_spent_exploring = dyn.time_spent_exploring+dyn.time_spent_in_state;
@@ -1346,10 +1324,14 @@ while true
             if dyn.n_eye_tar==0;par_eye = struct([]);end;
             if dyn.n_hnd_tar==0;par_hnd = struct([]);end;
             for n_target=1:dyn.n_eye_tar
-                par_eye(n_target) = aux_FillPar(trial(dyn.trialNumber).eye.tar(n_target).shape, trial(dyn.trialNumber).eye.tar(n_target).pos, task.eye.tar(n_target).color_dim,[],1,[0 0 0]);
+                par_temp = trial(dyn.trialNumber).eye.tar(n_target);
+                par_temp.color = trial(dyn.trialNumber).eye.tar(n_target).color_dim;
+                par_eye(n_target)= aux_FillPar(par_temp);
             end
             for n_target=1:dyn.n_hnd_tar
-                par_hnd(n_target) = aux_FillPar(trial(dyn.trialNumber).hnd.tar(n_target).shape, trial(dyn.trialNumber).hnd.tar(n_target).pos, task.hnd.tar(n_target).color_dim,[],1,[0 0 0]);
+                par_temp = trial(dyn.trialNumber).hnd.tar(n_target);
+                par_temp.color = trial(dyn.trialNumber).hnd.tar(n_target).color_dim;
+                par_hnd(n_target)= aux_FillPar(par_temp);
             end
             
             dyn.duration            = get_state_duration(task,trial,dyn);
@@ -1359,19 +1341,27 @@ while true
         case STATE.MAT_HOL  % target hold in match-to-sample
             if ~isnan(dyn.target_selected(1))
                 for n_target=1:dyn.n_eye_tar
-                    par_eye(n_target) = aux_FillPar(trial(dyn.trialNumber).eye.tar(n_target).shape, trial(dyn.trialNumber).eye.tar(n_target).pos, task.eye.tar(n_target).color_dim,[],1,[0 0 0]);
+                    par_temp = trial(dyn.trialNumber).eye.tar(n_target);
+                    if n_target==dyn.target_selected(1)
+                        par_temp.color = trial(dyn.trialNumber).eye.tar(n_target).color_bright;
+                    else
+                        par_temp.color = trial(dyn.trialNumber).eye.tar(n_target).color_dim;
+                    end
+                    par_eye(n_target)= aux_FillPar(par_temp);
                 end
-                par_eye(dyn.target_selected(1))=aux_FillPar(trial(dyn.trialNumber).eye.tar(dyn.target_selected(1)).shape, trial(dyn.trialNumber).eye.tar(dyn.target_selected(1)).pos, task.eye.tar(dyn.target_selected(1)).color_bright,[],1,[0 0 0]);
             else
                 par_eye = struct([]);
             end
             if ~isnan(dyn.target_selected(2))
                 for n_target=1:dyn.n_hnd_tar
-                    par_hnd(n_target) = aux_FillPar(trial(dyn.trialNumber).hnd.tar(n_target).shape, trial(dyn.trialNumber).hnd.tar(n_target).pos, task.hnd.tar(n_target).color_dim,[],1,[0 0 0]);
+                    par_temp = trial(dyn.trialNumber).hnd.tar(n_target);
+                    if n_target==dyn.target_selected(2)
+                        par_temp.color = trial(dyn.trialNumber).hnd.tar(n_target).color_bright;
+                    else
+                        par_temp.color = trial(dyn.trialNumber).hnd.tar(n_target).color_dim;
+                    end
+                    par_hnd(n_target)= aux_FillPar(par_temp);
                 end
-                par_hnd(dyn.target_selected(2)) =aux_FillPar(trial(dyn.trialNumber).hnd.tar(dyn.target_selected(2)).shape, trial(dyn.trialNumber).hnd.tar(dyn.target_selected(2)).pos, task.hnd.tar(dyn.target_selected(2)).color_bright,[],1,[0 0 0]);
-            else
-                par_hnd = struct([]);
             end
             
             dyn.duration            = get_state_duration(task,trial,dyn);
@@ -1388,26 +1378,36 @@ while true
             end
             
         case STATE.MAT_HOL_MSK  % target hold in match-to-sample
-            current_shape.mode='circle';
-            
             if ~isnan(dyn.target_selected(1))
                 for n_target=1:dyn.n_eye_tar
-                    par_eye(n_target) = aux_FillPar(current_shape, [trial(dyn.trialNumber).eye.tar(n_target).pos(1:2) task.eye.fix.size trial(dyn.trialNumber).eye.tar(n_target).pos(4:5)],...
-                        task.eye.tar(n_target).color_dim,[],1,[0 0 0]);
+                    par_temp = trial(dyn.trialNumber).eye.tar(n_target);
+                    if n_target==dyn.target_selected(1)
+                        par_temp.color = trial(dyn.trialNumber).eye.tar(n_target).color_bright;
+                    else
+                        par_temp.color = trial(dyn.trialNumber).eye.tar(n_target).color_dim;
+                        par_temp.shape.mode='circle';
+                        par_temp.size=trial(dyn.trialNumber).eye.fix.size;
+                    end
+                    par_eye(n_target)= aux_FillPar(par_temp);
                 end
-                par_eye(dyn.target_selected(1))=aux_FillPar(trial(dyn.trialNumber).eye.tar(dyn.target_selected(1)).shape, trial(dyn.trialNumber).eye.tar(dyn.target_selected(1)).pos, task.eye.tar(dyn.target_selected(1)).color_bright,[],1,[0 0 0]);
             else
                 par_eye = struct([]);
             end
             if ~isnan(dyn.target_selected(2))
                 for n_target=1:dyn.n_hnd_tar
-                    par_hnd(n_target) = aux_FillPar(current_shape, [trial(dyn.trialNumber).hnd.tar(n_target).pos(1:2), task.hnd.fix.size, trial(dyn.trialNumber).hnd.tar(n_target).pos(4:5)], task.hnd.tar(n_target).color_dim,[],1,[0 0 0]);
+                    par_temp = trial(dyn.trialNumber).hnd.tar(n_target);
+                    if n_target==dyn.target_selected(2)
+                        par_temp.color = trial(dyn.trialNumber).hnd.tar(n_target).color_bright;
+                    else
+                        par_temp.color = trial(dyn.trialNumber).hnd.tar(n_target).color_dim;
+                        par_temp.shape.mode='circle';
+                        par_temp.size=trial(dyn.trialNumber).hnd.fix.size;
+                    end
+                    par_hnd(n_target)= aux_FillPar(par_temp);
                 end
-                par_hnd(dyn.target_selected(2)) = aux_FillPar(trial(dyn.trialNumber).hnd.tar(dyn.target_selected(2)).shape, trial(dyn.trialNumber).hnd.tar(dyn.target_selected(2)).pos, task.hnd.tar(dyn.target_selected(2)).color_bright,[],1,[0 0 0]);
             else
                 par_hnd = struct([]);
             end
-            
             dyn.duration             = get_state_duration(task,trial,dyn);
             dyn.time_spent_exploring = dyn.time_spent_exploring+dyn.time_spent_in_state;
             [success,dyn,task]       = hold_state(task,par_eye,par_hnd,dyn,trial,IO);
@@ -1426,18 +1426,24 @@ while true
             if dyn.n_hnd_fix+dyn.n_hnd_cue==0;par_hnd = struct([]);end;
             
             for n_obj=1:dyn.n_eye_fix
-                par_eye(n_obj) = aux_FillPar(trial(dyn.trialNumber).eye.fix(n_obj).shape, trial(dyn.trialNumber).eye.fix(n_obj).pos, task.eye.fix(n_obj).color_bright);
+                par_temp=trial(dyn.trialNumber).eye.fix(n_obj);
+                par_temp.color=trial(dyn.trialNumber).eye.fix(n_obj).color_bright;
+                par_eye(n_obj) = aux_FillPar(par_temp);
             end
             for n_obj=1:dyn.n_hnd_fix
-                par_hnd(n_obj) = aux_FillPar(trial(dyn.trialNumber).hnd.fix(n_obj).shape, trial(dyn.trialNumber).hnd.fix(n_obj).pos, task.hnd.fix(n_obj).color_bright);
+                par_temp=trial(dyn.trialNumber).hnd.fix(n_obj);
+                par_temp.color=trial(dyn.trialNumber).hnd.fix(n_obj).color_bright;
+                par_hnd(n_obj) = aux_FillPar(par_temp);
             end
             for n_obj=1:dyn.n_eye_cue
-                par_eye(n_obj+dyn.n_eye_fix) =aux_FillPar(trial(dyn.trialNumber).eye.cue(n_obj).shape, trial(dyn.trialNumber).eye.cue(n_obj).pos, task.eye.cue(n_obj).color_dim,...
-                    trial(dyn.trialNumber).eye.cue(n_obj).ringColor, trial(dyn.trialNumber).eye.tar(n_obj).reward_prob,trial(dyn.trialNumber).eye.cue(n_obj).ringColor2);
+                par_temp=trial(dyn.trialNumber).eye.cue(n_obj);
+                par_temp.color=trial(dyn.trialNumber).eye.cue(n_obj).color_dim;
+                par_eye(n_obj+dyn.n_eye_fix) = aux_FillPar(par_temp);
             end
             for n_obj=1:dyn.n_hnd_cue
-                par_hnd(n_obj+dyn.n_hnd_fix) =aux_FillPar(trial(dyn.trialNumber).hnd.cue(n_obj).shape, trial(dyn.trialNumber).hnd.cue(n_obj).pos, task.hnd.cue(n_obj).color_dim,...
-                    trial(dyn.trialNumber).hnd.cue(n_obj).ringColor, trial(dyn.trialNumber).hnd.tar(n_obj).reward_prob,trial(dyn.trialNumber).hnd.cue(n_obj).ringColor2);
+                par_temp=trial(dyn.trialNumber).hnd.cue(n_obj);
+                par_temp.color=trial(dyn.trialNumber).hnd.cue(n_obj).color_dim;
+                par_hnd(n_obj+dyn.n_hnd_fix) = aux_FillPar(par_temp);
             end
             
             dyn.duration            = get_state_duration(task,trial,dyn);
@@ -1448,25 +1454,30 @@ while true
             if dyn.n_hnd_fix+dyn.n_hnd_cue==0;par_hnd = struct([]);end;
             
             for n_obj=1:dyn.n_eye_fix
-                par_eye(n_obj) = aux_FillPar(trial(dyn.trialNumber).eye.fix(n_obj).shape, trial(dyn.trialNumber).eye.fix(n_obj).pos, task.eye.fix(n_obj).color_bright);
+                par_temp=trial(dyn.trialNumber).eye.fix(n_obj);
+                par_temp.color=trial(dyn.trialNumber).eye.fix(n_obj).color_bright;
+                par_eye(n_obj) = aux_FillPar(par_temp);
             end
             for n_obj=1:dyn.n_hnd_fix
-                par_hnd(n_obj) = aux_FillPar(trial(dyn.trialNumber).hnd.fix(n_obj).shape, trial(dyn.trialNumber).hnd.fix(n_obj).pos, task.hnd.fix(n_obj).color_bright);
+                par_temp=trial(dyn.trialNumber).hnd.fix(n_obj);
+                par_temp.color=trial(dyn.trialNumber).hnd.fix(n_obj).color_bright;
+                par_hnd(n_obj) = aux_FillPar(par_temp);
             end
             
             for n_obj=1:dyn.n_eye_cue
-                temp_shape=trial(dyn.trialNumber).eye.cue(n_obj).shape;
-                temp_shape.mode='bar_masked';
-                par_eye(n_obj+dyn.n_eye_fix) =aux_FillPar(temp_shape, trial(dyn.trialNumber).eye.cue(n_obj).pos, task.eye.cue(n_obj).color_dim,...
-                    trial(dyn.trialNumber).eye.cue(n_obj).ringColor, trial(dyn.trialNumber).eye.tar(n_obj).reward_prob,trial(dyn.trialNumber).eye.cue(n_obj).ringColor2);
+                par_temp=trial(dyn.trialNumber).eye.cue(n_obj);
+                par_temp.reward_prob=trial(dyn.trialNumber).eye.tar(n_obj).reward_prob; %% needed? (taking reward prob from tar)
+                par_temp.shape.mode='bar_masked';
+                par_temp.color=trial(dyn.trialNumber).eye.cue(n_obj).color_dim;
+                par_eye(n_obj+dyn.n_eye_fix) = aux_FillPar(par_temp);
             end
             for n_obj=1:dyn.n_hnd_cue
-                temp_shape=trial(dyn.trialNumber).hnd.cue(n_obj).shape;
-                temp_shape.mode='bar_masked';
-                par_hnd(n_obj+dyn.n_hnd_fix) =aux_FillPar(temp_shape, trial(dyn.trialNumber).hnd.cue(n_obj).pos, task.hnd.cue(n_obj).color_dim,...
-                    trial(dyn.trialNumber).hnd.cue(n_obj).ringColor, trial(dyn.trialNumber).hnd.tar(n_obj).reward_prob,trial(dyn.trialNumber).hnd.cue(n_obj).ringColor2);
+                par_temp=trial(dyn.trialNumber).hnd.cue(n_obj);
+                par_temp.reward_prob=trial(dyn.trialNumber).hnd.tar(n_obj).reward_prob; %% needed? (taking reward prob from tar)
+                par_temp.shape.mode='bar_masked';
+                par_temp.color=trial(dyn.trialNumber).hnd.cue(n_obj).color_dim;
+                par_hnd(n_obj+dyn.n_hnd_fix) = aux_FillPar(par_temp);
             end
-            
             dyn.duration            = get_state_duration(task,trial,dyn);
             [success,dyn,task]      = hold_state(task,par_eye,par_hnd,dyn,trial,IO);
             
@@ -1474,10 +1485,14 @@ while true
             if dyn.n_eye_fix==0;par_eye = struct([]);end;
             if dyn.n_hnd_fix==0;par_hnd = struct([]);end;
             for n_obj=1:dyn.n_eye_fix
-                par_eye(n_obj) = aux_FillPar(trial(dyn.trialNumber).eye.fix(n_obj).shape, trial(dyn.trialNumber).eye.fix(n_obj).pos, task.eye.fix(n_obj).color_bright);
+                par_temp=trial(dyn.trialNumber).eye.fix(n_obj);
+                par_temp.color=trial(dyn.trialNumber).eye.fix(n_obj).color_bright;
+                par_eye(n_obj) = aux_FillPar(par_temp);
             end
             for n_obj=1:dyn.n_hnd_fix
-                par_hnd(n_obj) = aux_FillPar(trial(dyn.trialNumber).hnd.fix(n_obj).shape, trial(dyn.trialNumber).hnd.fix(n_obj).pos, task.hnd.fix(n_obj).color_bright);
+                par_temp=trial(dyn.trialNumber).hnd.fix(n_obj);
+                par_temp.color=trial(dyn.trialNumber).hnd.fix(n_obj).color_bright;
+                par_hnd(n_obj) = aux_FillPar(par_temp);
             end
             
             dyn.duration            = get_state_duration(task,trial,dyn);
@@ -1487,46 +1502,58 @@ while true
             if dyn.n_eye_tar==0;par_eye = struct([]);end;
             if dyn.n_hnd_tar==0;par_hnd = struct([]);end;
             for n_obj=1:dyn.n_eye_tar
+                par_temp=trial(dyn.trialNumber).eye.tar(n_obj);
                 if trial(dyn.trialNumber).effector == 4 % bright eye fixation spot for dissociated memory reaches
-                    eye_tar_color = task.eye.fix(1).color_bright;
+                    eye_tar_color = trial(dyn.trialNumber).eye.fix(1).color_bright;
                 else
-                    eye_tar_color = task.eye.tar(n_obj).color_inv;
+                    eye_tar_color = trial(dyn.trialNumber).eye.tar(n_obj).color_inv;
                 end
-                par_eye(n_obj) = aux_FillPar(trial(dyn.trialNumber).eye.tar(n_obj).shape, trial(dyn.trialNumber).eye.tar(n_obj).pos, eye_tar_color, ...
-                    eye_tar_color, trial(dyn.trialNumber).eye.tar(n_obj).reward_prob,eye_tar_color);
+                par_temp.color=eye_tar_color;
+                par_temp.ringColor=eye_tar_color;
+                par_temp.ringColor2=eye_tar_color;
+                par_eye(n_obj) = aux_FillPar(par_temp);
             end
             for n_obj=1:dyn.n_hnd_tar
+                par_temp=trial(dyn.trialNumber).hnd.tar(n_obj);
                 if trial(dyn.trialNumber).effector == 3 % bright hnd fixation spot for dissociated memory saccades
-                    hnd_tar_color = task.hnd.fix(1).color_bright;
+                    hnd_tar_color = trial(dyn.trialNumber).hnd.fix(1).color_bright;
                 else
-                    hnd_tar_color = task.hnd.tar(n_obj).color_inv;
+                    hnd_tar_color = trial(dyn.trialNumber).hnd.tar(n_obj).color_inv;
                 end
-                par_hnd(n_obj) = aux_FillPar(trial(dyn.trialNumber).hnd.tar(n_obj).shape, trial(dyn.trialNumber).hnd.tar(n_obj).pos, hnd_tar_color, ...
-                    hnd_tar_color, trial(dyn.trialNumber).hnd.tar(n_obj).reward_prob,hnd_tar_color);
+                par_temp.color=hnd_tar_color;
+                par_temp.ringColor=hnd_tar_color;
+                par_temp.ringColor2=hnd_tar_color;
+                par_hnd(n_obj) = aux_FillPar(par_temp);
             end
             dyn.duration            = get_state_duration(task,trial,dyn);
             [success,dyn,task]      = acquisition_state(task,par_eye,par_hnd,dyn,trial,IO);
             
         case STATE.TAR_HOL_INV
             if ~isnan(dyn.target_selected(1))
+                par_temp=trial(dyn.trialNumber).eye.tar(dyn.target_selected(1));
                 if trial(dyn.trialNumber).effector == 4 % bright eye fixation spot for dissociated memory reaches
-                    eye_tar_color = task.eye.fix(1).color_bright;
+                    eye_tar_color = trial(dyn.trialNumber).eye.fix(1).color_bright;
                 else
-                    eye_tar_color = task.eye.tar(dyn.target_selected(1)).color_inv;
+                    eye_tar_color = trial(dyn.trialNumber).eye.tar(dyn.target_selected(1)).color_inv;
                 end
-                par_eye = aux_FillPar(trial(dyn.trialNumber).eye.tar(dyn.target_selected(1)).shape, trial(dyn.trialNumber).eye.tar(dyn.target_selected(1)).pos, eye_tar_color, ...
-                    eye_tar_color, trial(dyn.trialNumber).eye.tar(dyn.target_selected(1)).reward_prob,eye_tar_color);
+                par_temp.color=eye_tar_color;
+                par_temp.ringColor=eye_tar_color;
+                par_temp.ringColor2=eye_tar_color;
+                par_eye = aux_FillPar(par_temp);
             else
                 par_eye = struct([]);
             end
             if ~isnan(dyn.target_selected(2))
-                if trial(dyn.trialNumber).effector == 3 % bright eye fixation spot for dissociated memory reaches
-                    hnd_tar_color = task.hnd.fix(1).color_bright;
+                par_temp=trial(dyn.trialNumber).hnd.tar(dyn.target_selected(2));
+                if trial(dyn.trialNumber).effector == 3 % bright hnd fixation spot for dissociated memory saccades
+                    hnd_tar_color = trial(dyn.trialNumber).hnd.fix(1).color_bright;
                 else
-                    hnd_tar_color = task.hnd.tar(dyn.target_selected(2)).color_inv;
+                    hnd_tar_color = trial(dyn.trialNumber).hnd.tar(dyn.target_selected(2)).color_inv;
                 end
-                par_hnd = aux_FillPar(trial(dyn.trialNumber).hnd.tar(dyn.target_selected(2)).shape, trial(dyn.trialNumber).hnd.tar(dyn.target_selected(2)).pos, hnd_tar_color,...
-                    hnd_tar_color, trial(dyn.trialNumber).hnd.tar(dyn.target_selected(2)).reward_prob,hnd_tar_color);
+                par_temp.color=hnd_tar_color;
+                par_temp.ringColor=hnd_tar_color;
+                par_temp.ringColor2=hnd_tar_color;
+                par_hnd = aux_FillPar(par_temp);
             else
                 par_hnd = struct([]);
             end
@@ -1535,7 +1562,7 @@ while true
             [success,dyn,task]      = hold_state(task,par_eye,par_hnd,dyn,trial,IO);
             
         case STATE.ABORT % abort
-            dyn.abort_code = get_abort_code(dyn);
+            [dyn.abort_code dyn.abort_message]= get_abort_code(dyn);
             h = findobj('Tag','Targets');
             if ~isempty(h),
                 delete(h),
@@ -1558,6 +1585,7 @@ while true
             if  SETTINGS.useSound && SETTINGS.WrongTargetSound && trial(dyn.trialNumber).completed == 1 && strcmp(SETTINGS.SoundType, 'Beep')&& task.type ~= 10 ,
                 Beeper_PsychPortAudio(SETTINGS.audioPort,120, 0.5, 0.2);
             elseif  SETTINGS.useSound && SETTINGS.WrongTargetSound && trial(dyn.trialNumber).completed == 1 && strcmp(SETTINGS.SoundType, 'XBI_sounds')&& task.type ~= 10 ,
+                PsychPortAudio('Volume', SETTINGS.audioPort, 1);
                 Sounds('Failure'); %KK
             end
             if SETTINGS.useSound && SETTINGS.FixationBreakSound && (dyn.previousState==STATE.CUE_ON || dyn.previousState==STATE.MEM_PER)
@@ -1566,6 +1594,7 @@ while true
             end
             
             Screen('FillRect', SETTINGS.window, SETTINGS.BG_COLOR);
+            displaybackground(SETTINGS,task,dyn)
             Screen(SETTINGS.window,'Flip');
             send_to_TDT(IO,dyn.state);
             if SETTINGS.GUI,
@@ -1576,7 +1605,7 @@ while true
             success = 1;
             
         case STATE.SUCCESS % success
-            dyn.abort_code = get_abort_code(dyn);
+            [dyn.abort_code dyn.abort_message]= get_abort_code(dyn);
             send_to_TDT(IO,dyn.state);
             if SETTINGS.GUI,
                 aux_make_all_targets_invisible
@@ -1595,54 +1624,60 @@ while true
             %% Decide about reward...
             % Do not reward if reward probability is zero or "secondary" reward for "risky" targets is zero
             
-            if trial(dyn.trialNumber).effector < 2, % eye or hand
-                % use target_selected(1) or target_selected(2) according to current effector
-                if trial(dyn.trialNumber).target_selected(trial(dyn.trialNumber).effector+1) == 1,
-                    trial(dyn.trialNumber).reward_selected = trial(dyn.trialNumber).hnd.tar(1).reward;
-                    trial(dyn.trialNumber).reward_prob = trial(dyn.trialNumber).hnd.tar(1).reward_prob;
-                    reward_idx = 2 - (rand<=trial(dyn.trialNumber).reward_prob); % take first or secondary reward for specific target
-                    trial(dyn.trialNumber).reward_time = trial(dyn.trialNumber).hnd.tar(1).reward_time(reward_idx);
-                else
-                    trial(dyn.trialNumber).reward_selected = trial(dyn.trialNumber).hnd.tar(2).reward;
-                    trial(dyn.trialNumber).reward_prob = trial(dyn.trialNumber).hnd.tar(2).reward_prob;
-                    reward_idx = 2 - (rand<=trial(dyn.trialNumber).reward_prob); % take first or secondary reward for specific target
-                    trial(dyn.trialNumber).reward_time = trial(dyn.trialNumber).hnd.tar(2).reward_time(reward_idx);
-                end
-                
-            else % both eye and hand, decide based on which effector to determine reward
-                if trial(dyn.trialNumber).target_selected(task.reward_modulation_effector) == 1,
-                    trial(dyn.trialNumber).reward_selected = trial(dyn.trialNumber).hnd.tar(1).reward;
-                    trial(dyn.trialNumber).reward_prob = trial(dyn.trialNumber).hnd.tar(1).reward_prob;
-                    reward_idx = 2 - (rand<=trial(dyn.trialNumber).reward_prob); % take first or secondary reward for specific target
-                    trial(dyn.trialNumber).reward_time = trial(dyn.trialNumber).hnd.tar(1).reward_time(reward_idx);
-                else
-                    trial(dyn.trialNumber).reward_selected = trial(dyn.trialNumber).hnd.tar(2).reward;
-                    trial(dyn.trialNumber).reward_prob = trial(dyn.trialNumber).hnd.tar(2).reward_prob;
-                    reward_idx = 2 - (rand<=trial(dyn.trialNumber).reward_prob); % take first or secondary reward for specific target
-                    trial(dyn.trialNumber).reward_time = trial(dyn.trialNumber).hnd.tar(2).reward_time(reward_idx);
-                end
-            end
+            %             if trial(dyn.trialNumber).effector < 2, % eye or hand
+            %                 % use target_selected(1) or target_selected(2) according to current effector
+            %                 if trial(dyn.trialNumber).target_selected(trial(dyn.trialNumber).effector+1) == 1,
+            %                     trial(dyn.trialNumber).reward_selected = trial(dyn.trialNumber).hnd.tar(1).reward;
+            %                     trial(dyn.trialNumber).reward_prob = trial(dyn.trialNumber).hnd.tar(1).reward_prob;
+            %                     reward_idx = 2 - (rand<=trial(dyn.trialNumber).reward_prob); % take first or secondary reward for specific target
+            %                     trial(dyn.trialNumber).reward_time = trial(dyn.trialNumber).hnd.tar(1).reward_time(reward_idx);
+            %                 else
+            %                     trial(dyn.trialNumber).reward_selected = trial(dyn.trialNumber).hnd.tar(2).reward;
+            %                     trial(dyn.trialNumber).reward_prob = trial(dyn.trialNumber).hnd.tar(2).reward_prob;
+            %                     reward_idx = 2 - (rand<=trial(dyn.trialNumber).reward_prob); % take first or secondary reward for specific target
+            %                     trial(dyn.trialNumber).reward_time = trial(dyn.trialNumber).hnd.tar(2).reward_time(reward_idx);
+            %                 end
+            %
+            %             else % both eye and hand, decide based on which effector to determine reward
+            %                 if trial(dyn.trialNumber).target_selected(task.reward_modulation_effector) == 1,
+            %                     trial(dyn.trialNumber).reward_selected = trial(dyn.trialNumber).hnd.tar(1).reward;
+            %                     trial(dyn.trialNumber).reward_prob = trial(dyn.trialNumber).hnd.tar(1).reward_prob;
+            %                     reward_idx = 2 - (rand<=trial(dyn.trialNumber).reward_prob); % take first or secondary reward for specific target
+            %                     trial(dyn.trialNumber).reward_time = trial(dyn.trialNumber).hnd.tar(1).reward_time(reward_idx);
+            %                 else
+            %                     trial(dyn.trialNumber).reward_selected = trial(dyn.trialNumber).hnd.tar(2).reward;
+            %                     trial(dyn.trialNumber).reward_prob = trial(dyn.trialNumber).hnd.tar(2).reward_prob;
+            %                     reward_idx = 2 - (rand<=trial(dyn.trialNumber).reward_prob); % take first or secondary reward for specific target
+            %                     trial(dyn.trialNumber).reward_time = trial(dyn.trialNumber).hnd.tar(2).reward_time(reward_idx);
+            %                 end
+            %             end
+            
+            %% chose reward from target structeure... not ideal for fixation tasks
+            tar_selected=dyn.target_selected(dyn.tar_selected_ind);
+            trial(dyn.trialNumber).reward_selected = trial(dyn.trialNumber).(dyn.effector).tar(tar_selected).reward;
+            trial(dyn.trialNumber).reward_prob = trial(dyn.trialNumber).(dyn.effector).tar(tar_selected).reward_prob;
+            reward_idx = 2 - (rand<=trial(dyn.trialNumber).reward_prob); % take first or secondary reward for specific target
+            trial(dyn.trialNumber).reward_time = trial(dyn.trialNumber).(dyn.effector).tar(tar_selected).reward_time(reward_idx);
             
             dyn.trial_outcome = 1;
             dyn.trialNumberFinished = dyn.trialNumberFinished + 1;
             
             % play nice sound to monkey
-            if SETTINGS.useSound && SETTINGS.RewardSound && strcmp(SETTINGS.SoundType, 'Beep')&& task.type ~= 10
+            if SETTINGS.useSound && SETTINGS.RewardSound && strcmp(SETTINGS.SoundType, 'Beep') %&& task.type ~= 10 %&&  task.type ~= 12
                 Beeper_PsychPortAudio(SETTINGS.audioPort,200, 0.5, 0.2);
-            elseif SETTINGS.useSound && SETTINGS.RewardSound && strcmp(SETTINGS.SoundType, 'XBI_sounds')&& task.type ~= 10
+            elseif SETTINGS.useSound && SETTINGS.RewardSound && strcmp(SETTINGS.SoundType, 'XBI_sounds') % && task.type ~= 10
+                PsychPortAudio('Volume', SETTINGS.audioPort, 1);
                 Sounds('Reward') ;     %KK
             end
             
             Screen('FillRect', SETTINGS.window, SETTINGS.BG_COLOR);
+            displaybackground(SETTINGS,task,dyn)
             Screen(SETTINGS.window,'Flip');
             
         case STATE.REWARD % reward
             send_to_TDT(IO,dyn.state);
-                            dyn.c = 0;
-
-         
-            if task.type == 10 && ~all(isnan(dyn.target2_selected)) 
-                if trial(dyn.trialNumber).success 
+            if task.type == 10 && ~all(isnan(dyn.target2_selected))
+                if trial(dyn.trialNumber).success
                     Row_PayoffMatrix = 1;
                 elseif trial(dyn.trialNumber).success == 0
                     Row_PayoffMatrix = 2;
@@ -1652,32 +1687,46 @@ while true
                 end
                 trial(dyn.trialNumber).reward_time = task.PayoffMatrix(Row_PayoffMatrix,dyn.target2_selected(dyn.ta2_selected_ind));
             end
-
+            
             %% Feedback sounds for wagering
             if task.type == 10
-            if trial(dyn.trialNumber).success && dyn.target2_selected(dyn.ta2_selected_ind) == 2 %correct & blue (2)
-                Sounds('Reward') ;
-            elseif trial(dyn.trialNumber).success && dyn.target2_selected(dyn.ta2_selected_ind) == 1 %correct & yellow (1)
-                 Sounds('Failure');
-            elseif trial(dyn.trialNumber).success == 0 && dyn.target2_selected(dyn.ta2_selected_ind) == 1 %incorrect & yellow (1)
-                Sounds('Reward') ;
-            elseif trial(dyn.trialNumber).success  == 0 && dyn.target2_selected(dyn.ta2_selected_ind) == 2 %incorrect & blue (2)
-                 Sounds('Failure');
-            end
+                PsychPortAudio('Volume', SETTINGS.audioPort, 0.7);
+                
+                if trial(dyn.trialNumber).CueAuditiv == 0 % three wagers where the middle is not rewarded
+                    if trial(dyn.trialNumber).success && dyn.target2_selected(dyn.ta2_selected_ind) == 2 %correct & blue (2)
+                        Sounds('Reward') ;
+                    elseif trial(dyn.trialNumber).success && dyn.target2_selected(dyn.ta2_selected_ind) == 1 %correct & yellow (1)
+                        Sounds('Failure');
+                    elseif trial(dyn.trialNumber).success == 0 && dyn.target2_selected(dyn.ta2_selected_ind) == 1 %incorrect & yellow (1)
+                        Sounds('Reward') ;
+                    elseif trial(dyn.trialNumber).success  == 0 && dyn.target2_selected(dyn.ta2_selected_ind) == 2 %incorrect & blue (2)
+                        Sounds('Failure');
+                    end
+                    
+                else % two  wagers
+                    if trial(dyn.trialNumber).success && dyn.target2_selected(dyn.ta2_selected_ind) == 2 %correct & blue (2)
+                        Sounds('Reward') ;
+                    elseif trial(dyn.trialNumber).success && dyn.target2_selected(dyn.ta2_selected_ind) == 1 %correct & yellow (1)
+                        Sounds('Failure');
+                    elseif trial(dyn.trialNumber).success == 0 && dyn.target2_selected(dyn.ta2_selected_ind) == 1 %incorrect & yellow (1)
+                        Sounds('Reward') ;
+                    elseif trial(dyn.trialNumber).success  == 0 && dyn.target2_selected(dyn.ta2_selected_ind) == 2 %incorrect & blue (2)
+                        Sounds('Failure');
+                    end
+                end
+                
             end
             
-                         
-
             
             if trial(dyn.trialNumber).reward_time > 0
                 trial(dyn.trialNumber).rewarded = 1;
                 if SETTINGS.useParallel || SETTINGS.useSerial
-                  dyn.duration=trial(dyn.trialNumber).task.timing.wait_for_reward;
+                    dyn.duration=trial(dyn.trialNumber).task.timing.wait_for_reward;
                     [success,dyn,task]=wait_while_recording_state(task,dyn);
                     dyn.duration=trial(dyn.trialNumber).reward_time;
                     [success,dyn,task]=aux_DispenseReward(task,dyn);
                 end
-            elseif   trial(dyn.trialNumber).reward_time == 0  
+            elseif   trial(dyn.trialNumber).reward_time == 0
                 trial(dyn.trialNumber).rewarded = 0;
                 dyn.duration=trial(dyn.trialNumber).task.timing.wait_for_reward;
                 [success,dyn,task]=wait_while_recording_state(task,dyn);
@@ -1685,13 +1734,10 @@ while true
                 trial(dyn.trialNumber).rewarded = 0;
                 dyn.duration=-1*trial(dyn.trialNumber).reward_time +trial(dyn.trialNumber).task.timing.wait_for_reward;
                 [success,dyn,task]=wait_while_recording_state(task,dyn);
-                                                               
             end
             
             
         case STATE.ITI  % ITI
-                          %  disp(['start of ITI ', num2str(dyn.c + 1)])
-
             if ~isnan(dyn.microstim_start)
                 % update this in case it was randomized timing with alignment to the end of a state
                 trial(dyn.trialNumber).microstim_start  = dyn.microstim_start;
@@ -1748,9 +1794,9 @@ while true
             if trial(dyn.trialNumber).success && trial(dyn.trialNumber).choice,
                 switch trial(dyn.trialNumber).effector,
                     case {0,2,3} % eye, both
-                        selected_position_x = trial(dyn.trialNumber).eye.tar(dyn.target_selected(1)).pos(1)-trial(dyn.trialNumber).eye.fix.pos(1);
+                        selected_position_x = trial(dyn.trialNumber).eye.tar(dyn.target_selected(1)).x-trial(dyn.trialNumber).eye.fix.x;
                     case {1,4,6} % hand
-                        selected_position_x = trial(dyn.trialNumber).hnd.tar(dyn.target_selected(2)).pos(1)-trial(dyn.trialNumber).eye.fix.pos(1);
+                        selected_position_x = trial(dyn.trialNumber).hnd.tar(dyn.target_selected(2)).x-trial(dyn.trialNumber).eye.fix.x;
                 end
                 if trial(dyn.trialNumber).microstim
                     if selected_position_x < 0,
@@ -1766,7 +1812,7 @@ while true
                     end
                 end
                 
-                fprintf(' || control L/R %.2f microstim L/R %.2f || \n',dyn.choice_l/dyn.choice_r,dyn.choice_l_microstim/dyn.choice_r_microstim);
+                % fprintf(' || control L/R %.2f microstim L/R %.2f || \n',dyn.choice_l/dyn.choice_r,dyn.choice_l_microstim/dyn.choice_r_microstim);
             end
             
             %% ITI GUI
@@ -1778,7 +1824,9 @@ while true
                     time_state_change = time_axis([0; diff(trial(n).state)]~=0)';
                     figure(2); clf;
                     subplot(2,1,1);
-                    plot(time_axis,trial(n).x_eye,'g');
+                    plot(time_axis,trial(n).x_eye,'g'); hold on;
+                    plot(time_axis,trial(n).x_hnd,'Color',[0 0.5 0]);
+                    
                     set(gca,'Xlim',[0 SETTINGS.ITI_GUI_time_limit],'XLimMode','manual');
                     ig_add_multiple_vertical_lines(time_state_change,'Color','r');
                     
@@ -1797,7 +1845,8 @@ while true
                     title(sprintf('trial %d suc. %d choice %d microstim %d',[trial(n).n trial(n).success trial(n).choice trial(n).microstim]));
                     
                     subplot(2,1,2);
-                    plot(time_axis,trial(n).y_eye,'m');
+                    plot(time_axis,trial(n).y_eye,'m'); hold on;
+                    plot(time_axis,trial(n).y_hnd,'Color',[0.3 0 0.3]);
                     set(gca,'Xlim',[0 SETTINGS.ITI_GUI_time_limit],'XLimMode','manual');
                     ig_add_multiple_vertical_lines(time_state_change,'Color','r');
                     
@@ -1862,21 +1911,17 @@ while true
     trial(dyn.trialNumber).states = [trial(dyn.trialNumber).states dyn.state];
     trial(dyn.trialNumber).states_onset = [trial(dyn.trialNumber).states_onset dyn.states_onset];
     %% in task.type = 10, incorrect target selection goes to STATE.ABORT and afterwards it should go to STATE.REWARD
-    %% KKK
-     if dyn.state==STATE.ABORT && dyn.completed && task.type == 10
-         dyn.state=STATE.REWARD;
-     else
-%          disp(num2str(dyn.state))
+    
+    if dyn.state==STATE.ABORT && dyn.completed && task.type == 10     %% KKK
+        dyn.state=STATE.REWARD;
+    else
         dyn.state               = state_transition(task,success,dyn.state);
-     end
+    end
     
     if dyn.state==STATE.SUCCESS
         trial(dyn.trialNumber).completed = 1;
         dyn.completed = 1;
         dyn.trialNumberCompleted = dyn.trialNumberCompleted + 1;
-        if ~any(trial(dyn.trialNumber).task.correct_choice_target == dyn.target_selected(dyn.tar_selected_ind)) % for eye and hand targets
-            dyn.state=STATE.ABORT;
-        end
     end
     
     if dyn.state==STATE.INI_TRI && SETTINGS.interface_with_scanner && ((GetSecs-SETTINGS.time_start) > SETTINGS.run_volumes*SETTINGS.TR),
@@ -1904,6 +1949,7 @@ switch dyn.state
             case {2,3,4,6}
                 state_duration = max(task.timing.fix_time_to_acquire_eye,task.timing.fix_time_to_acquire_hnd);
         end
+        
     case STATE.FI2_ACQ
         switch trial(dyn.trialNumber).effector
             case {0, 5}
@@ -1914,15 +1960,11 @@ switch dyn.state
                 state_duration = max(task.timing.fix_time_to_acquire_eye,task.timing.fix_time_to_acquire_hnd);
         end
         
-        
     case STATE.FIX_HOL
         state_duration = task.timing.fix_time_hold + rand*task.timing.fix_time_hold_var;
         
-        
     case STATE.FI2_HOL
         state_duration = task.timing.fix_time_hold + rand*task.timing.fix_time_hold_var;
-        
-        
         
     case STATE.TAR_ACQ
         switch trial(dyn.trialNumber).effector
@@ -2018,8 +2060,6 @@ end
 %% state functions
 function new_state = state_transition(task,success,current_state)
 global STATE
- if current_state == 2
- end
 
 if ~success,
     new_state = STATE.ABORT;
@@ -2032,47 +2072,40 @@ elseif current_state == STATE.CLOSE,
 else
     
     switch task.type
-        
         case 1 % fixation
             task_states = [STATE.INI_TRI  STATE.FIX_ACQ  STATE.FIX_HOL  STATE.SUCCESS  STATE.REWARD  STATE.ITI];
-            
         case 2 % direct saccade/reach
             task_states = [STATE.INI_TRI  STATE.FIX_ACQ  STATE.FIX_HOL  STATE.TAR_ACQ  STATE.TAR_HOL  STATE.SUCCESS  STATE.REWARD  STATE.ITI];
-            
         case 2.5 % direct saccade/reach with "cue" distractor congruent with target
             task_states = [STATE.INI_TRI  STATE.FIX_ACQ  STATE.FIX_HOL  STATE.CUE_ON  STATE.MEM_PER  ...
                 STATE.TAR_ACQ  STATE.TAR_HOL  STATE.SUCCESS  STATE.REWARD  STATE.ITI];
         case 3 % memory response
             task_states = [STATE.INI_TRI  STATE.FIX_ACQ  STATE.FIX_HOL  STATE.CUE_ON  STATE.MEM_PER  STATE.TAR_ACQ_INV  STATE.TAR_HOL_INV ...
                 STATE.TAR_ACQ  STATE.TAR_HOL  STATE.SUCCESS  STATE.REWARD  STATE.ITI];
-            
         case 4 % delay response
             task_states = [STATE.INI_TRI  STATE.FIX_ACQ  STATE.FIX_HOL  STATE.CUE_ON  STATE.DEL_PER  ...
                 STATE.TAR_ACQ  STATE.TAR_HOL  STATE.SUCCESS  STATE.REWARD  STATE.ITI];
-            
         case 5 % Match-to-sample task
             task_states = [STATE.INI_TRI  STATE.FIX_ACQ  STATE.FIX_HOL  STATE.CUE_ON  STATE.MEM_PER  ...
                 STATE.MAT_ACQ  STATE.MAT_HOL  STATE.SUCCESS  STATE.REWARD  STATE.ITI];
-            
         case 6 % Match-to-sample task with masked targets
             task_states = [STATE.INI_TRI  STATE.FIX_ACQ  STATE.FIX_HOL  STATE.CUE_ON  STATE.MEM_PER  ...
                 STATE.MAT_ACQ_MSK  STATE.MAT_HOL_MSK  STATE.SUCCESS  STATE.REWARD  STATE.ITI];
-            
         case 7 % Poffenberger
             task_states = [STATE.INI_TRI  STATE.FIX_ACQ  STATE.FIX_HOL  STATE.TAR_ACQ STATE.SEN_RET STATE.DEL_PER STATE.SUCCESS  STATE.REWARD  STATE.ITI];
-            
         case 8 % Multiple cue flashes for RF checking
             task_states = [STATE.INI_TRI  STATE.FIX_ACQ  STATE.FIX_HOL  STATE.CUE_ON  STATE.FIX_PER STATE.SUCCESS  STATE.REWARD  STATE.ITI];
         case 9 % delayed Match-to-sample with backward masking
             task_states = [STATE.INI_TRI  STATE.FIX_ACQ  STATE.FIX_HOL  STATE.CUE_ON  STATE.MSK_HOL ...
                 STATE.TAR_ACQ  STATE.TAR_HOL  STATE.SUCCESS STATE.REWARD  STATE.ITI];
         case 10 % delayed Match-to-sample with backward masking with Wagering
-             task_states = [STATE.INI_TRI  STATE.FIX_ACQ  STATE.FIX_HOL  STATE.CUE_ON  STATE.MSK_HOL ...
-               STATE.TAR_ACQ  STATE.TAR_HOL STATE.CUE_ON_AUDITIV STATE.FI2_ACQ  STATE.FI2_HOL  STATE.TA2_ACQ  STATE.TA2_HOL  STATE.SUCCESS  STATE.REWARD  STATE.ITI];
-           
-           % task_states = [STATE.INI_TRI  STATE.FIX_ACQ  STATE.FIX_HOL  STATE.CUE_ON  STATE.MSK_HOL ...
-            %    STATE.TAR_ACQ  STATE.TAR_HOL STATE.CUE_ON_AUDITIV STATE.FI2_ACQ  STATE.FI2_HOL  STATE.SUCCESS  STATE.REWARD  STATE.ITI];
-            
+            task_states = [STATE.INI_TRI  STATE.FIX_ACQ  STATE.FIX_HOL  STATE.CUE_ON  STATE.MSK_HOL ...
+                STATE.TAR_ACQ  STATE.TAR_HOL STATE.CUE_ON_AUDITIV STATE.FI2_ACQ  STATE.FI2_HOL  STATE.TA2_ACQ  STATE.TA2_HOL  STATE.SUCCESS  STATE.REWARD  STATE.ITI];
+        case 11 % Fixation with cue (no target selection, maintain fixation)
+            task_states = [STATE.INI_TRI  STATE.FIX_ACQ  STATE.FIX_HOL  STATE.CUE_ON  STATE.DEL_PER  ...
+                STATE.SUCCESS  STATE.REWARD  STATE.ITI];
+        case 12 % Fixation with cue (no target selection, maintain fixation)
+            task_states = [STATE.INI_TRI  STATE.FIX_ACQ STATE.CUE_ON_AUDITIV   STATE.SUCCESS   STATE.REWARD  STATE.ITI];
     end
     
     if success==1
@@ -2085,7 +2118,7 @@ else
     
 end
 
-function abort_code = get_abort_code(dyn)
+function [abort_code abort_message] = get_abort_code(dyn)
 % Returns specific abort code based on combination of state in which abort occurred, and behavioral markers
 % This function is called from acquire_state and hold_state
 % dyn.time_spent_in_state - in case of abort, tells duration of state prior to abort
@@ -2095,6 +2128,7 @@ global STATE
 bm_eye = 1; bm_hnd = 2; bm_sen1 = 3; bm_sen2 = 4; bm_jaw = 5; bm_body = 6;
 beh_markers = dyn.beh_markers;
 abort_code = 'UNKNOWN ERROR CODE';
+abort_message = '';
 
 
 ABORT_JAW = 'ABORT_JAW';
@@ -2134,18 +2168,14 @@ ABORT_HND_TA2_HOLD_STATE = 'ABORT_HND_TA2_HOLD_STATE';
 ABORT_EYE_TAR_ACQ_INV_STATE = 'ABORT_EYE_TAR_ACQ_INV_STATE'; %
 ABORT_HND_TAR_ACQ_INV_STATE = 'ABORT_HND_TAR_ACQ_INV_STATE'; %
 
-
 ABORT_EYE_TAR_HOLD_INV_STATE = 'ABORT_EYE_TAR_HOLD_INV_STATE'; %
 ABORT_HND_TAR_HOLD_INV_STATE = 'ABORT_HND_TAR_HOLD_INV_STATE'; %
-
-
 
 ABORT_EYE_CUE_ON_STATE = 'ABORT_EYE_CUE_ON_STATE'; %% not just during CUE_ON, but also 200 ms after CUE offset
 ABORT_HND_CUE_ON_STATE = 'ABORT_HND_CUE_ON_STATE'; %% not just during CUE_ON, but also 200 ms after CUE offset
 
 ABORT_EYE_CUE_ON_AUDITIV_STATE = 'ABORT_EYE_CUE_ON_AUDITIV_STATE'; %% not just during CUE_ON, but also 200 ms after CUE offset
 ABORT_HND_CUE_ON_AUDITIV_STATE = 'ABORT_HND_CUE_ON_AUDITIV_STATE'; %% not just during CUE_ON, but also 200 ms after CUE offset
-
 
 ABORT_EYE_MEM_PER_STATE = 'ABORT_EYE_MEM_PER_STATE'; %% if time spent in state < 200 ms, error is 'ABORT_EYE_CUE_ON_STATE', otherwise error is 'ABORT_EYE_MEM_PER_STATE'
 ABORT_HND_MEM_PER_STATE = 'ABORT_HND_MEM_PER_STATE'; %% if time spent in state < 200 ms, error is 'ABORT_EYE_CUE_ON_STATE', otherwise error is 'ABORT_EYE_MEM_PER_STATE'
@@ -2156,9 +2186,9 @@ ABORT_HND_DEL_PER_STATE = 'ABORT_HND_DEL_PER_STATE';
 ABORT_EYE_MSK_HOLD_STATE = 'ABORT_EYE_MSK_HOLD_STATE';
 ABORT_HND_MSK_HOLD_STATE = 'ABORT_HND_MSK_HOLD_STATE';
 
-
 if dyn.state~=STATE.ABORT,
     abort_code = 'NO ABORT';
+    abort_message = ''; % 'Trial successful!'
 else
     if ~beh_markers(bm_jaw)
         abort_code = ABORT_JAW;
@@ -2173,13 +2203,16 @@ else
         abort_code = ABORT_DIRTY_SENSORS;
     elseif dyn.completed
         abort_code = ABORT_WRONG_TARGET_SELECTED;
+        abort_message = 'Wrong target selected!';
     else
         switch dyn.previousState % state in which abort occurred
             case STATE.FIX_ACQ
                 if ~beh_markers(bm_eye),
                     abort_code = ABORT_EYE_FIX_ACQ_STATE;
+                    abort_message = 'Eye fixation not acquired!';
                 elseif ~beh_markers(bm_hnd),
                     abort_code = ABORT_HND_FIX_ACQ_STATE;
+                    abort_message = 'Hand fixation not acquired!';
                 end
                 
             case STATE.FI2_ACQ
@@ -2192,8 +2225,10 @@ else
             case STATE.FIX_HOL
                 if ~beh_markers(bm_eye),
                     abort_code = ABORT_EYE_FIX_HOLD_STATE;
+                    abort_message = 'Broke eye fixation!';
                 elseif ~beh_markers(bm_hnd),
                     abort_code = ABORT_HND_FIX_HOLD_STATE;
+                    abort_message = 'Broke hand fixation!';
                 end
                 
             case STATE.FI2_HOL
@@ -2213,8 +2248,10 @@ else
             case STATE.TAR_ACQ
                 if ~beh_markers(bm_eye),
                     abort_code = ABORT_EYE_TAR_ACQ_STATE;
+                    abort_message = 'Broke target fixation!'; %meaningful for memory task only
                 elseif ~beh_markers(bm_hnd),
                     abort_code = ABORT_HND_TAR_ACQ_STATE;
+                    abort_message = 'Broke target fixation!'; %meaningful for memory task only
                 end
                 
             case STATE.TA2_ACQ
@@ -2227,8 +2264,10 @@ else
             case STATE.TAR_HOL
                 if ~beh_markers(bm_eye),
                     abort_code = ABORT_EYE_TAR_HOLD_STATE;
+                    abort_message = 'Broke target fixation!';
                 elseif ~beh_markers(bm_hnd),
                     abort_code = ABORT_HND_TAR_HOLD_STATE;
+                    abort_message = 'Broke target fixation!';
                 end
                 
             case STATE.TA2_HOL
@@ -2269,30 +2308,36 @@ else
             case STATE.TAR_ACQ_INV
                 if ~beh_markers(bm_eye),
                     abort_code = ABORT_EYE_TAR_ACQ_INV_STATE;
+                    abort_message = 'No eye target acquired!';
                 elseif ~beh_markers(bm_hnd),
                     abort_code = ABORT_HND_TAR_ACQ_INV_STATE;
+                    abort_message = 'No hand target acquired!';
                 end
                 
             case STATE.TAR_HOL_INV
                 if ~beh_markers(bm_eye),
                     abort_code = ABORT_EYE_TAR_HOLD_INV_STATE;
+                    abort_message = 'Broke target fixation!';
                 elseif ~beh_markers(bm_hnd),
                     abort_code = ABORT_HND_TAR_HOLD_INV_STATE;
+                    abort_message = 'Broke target fixation!';
                 end
                 
             case STATE.CUE_ON
                 if ~beh_markers(bm_eye),
                     abort_code = ABORT_EYE_CUE_ON_STATE;
+                    abort_message = 'Broke fixation!';
                 elseif ~beh_markers(bm_hnd),
                     abort_code = ABORT_HND_CUE_ON_STATE;
+                    abort_message = 'Broke fixation!';
                 end
+                
             case STATE.CUE_ON_AUDITIV
                 if ~beh_markers(bm_eye),
                     abort_code = ABORT_EYE_CUE_ON_AUDITIV_STATE;
                 elseif ~beh_markers(bm_hnd),
                     abort_code = ABORT_EYE_CUE_ON_AUDITIV_STATE;
                 end
-                
                 
             case STATE.MSK_HOL % KK:Mask for the M2S-task
                 if ~beh_markers(bm_eye),
@@ -2302,22 +2347,27 @@ else
                 end
                 
             case STATE.MEM_PER
-                
                 if ~beh_markers(bm_eye) && dyn.time_spent_in_state < 0.2,
                     abort_code = ABORT_EYE_CUE_ON_STATE;
+                    abort_message = 'Broke fixation!';
                 elseif ~beh_markers(bm_eye),
                     abort_code = ABORT_EYE_MEM_PER_STATE;
+                    abort_message = 'Broke fixation!';
                 elseif ~beh_markers(bm_hnd) && dyn.time_spent_in_state < 0.2,
                     abort_code = ABORT_HND_CUE_ON_STATE;
+                    abort_message = 'Broke fixation!';
                 elseif ~beh_markers(bm_hnd),
                     abort_code = ABORT_HND_MEM_PER_STATE;
+                    abort_message = 'Broke fixation!';
                 end
                 
             case STATE.DEL_PER
                 if ~beh_markers(bm_eye),
                     abort_code = ABORT_EYE_DEL_PER_STATE;
+                    abort_message = 'Broke fixation!';
                 elseif ~beh_markers(bm_hnd),
                     abort_code = ABORT_HND_DEL_PER_STATE;
+                    abort_message = 'Broke fixation!';
                 end
         end
     end
@@ -2396,6 +2446,7 @@ if SETTINGS.GUI
     drawnow;
 end
 
+displaybackground(SETTINGS,task,dyn)
 for obj = 1:n_obj_hnd
     aux_PrepareStimuli(par_hnd(obj));
 end
@@ -2431,7 +2482,7 @@ while true
     switch task.effector,
         case 0 % eye
             for obj = 1:n_obj_eye
-                if aux_IsWithinRadius(x_eye, y_eye, par_eye(obj).deg.x, par_eye(obj).deg.y, par_eye(obj).deg.radius),
+                if aux_IsWithinRadius(x_eye, y_eye, par_eye(obj)),
                     success = true;
                     if isnan(dyn.target_selected(1)), dyn.target_selected(1) = obj; end
                     
@@ -2441,7 +2492,7 @@ while true
             
         case {1,6} % hand
             for obj = 1:n_obj_hnd
-                if aux_IsWithinRadius(x_hnd, y_hnd, par_hnd(obj).deg.x, par_hnd(obj).deg.y, par_hnd(obj).deg.radius),
+                if aux_IsWithinRadius(x_hnd, y_hnd, par_hnd(obj))
                     success = true;
                     if isnan(dyn.target_selected(2)), dyn.target_selected(2) = obj; end
                 end
@@ -2450,7 +2501,7 @@ while true
             
         case 2 % both
             for obj = 1:n_obj_eye
-                if aux_IsWithinRadius(x_eye, y_eye, par_eye(obj).deg.x, par_eye(obj).deg.y, par_eye(obj).deg.radius),
+                if aux_IsWithinRadius(x_eye, y_eye, par_eye(obj))
                     eye_acq_current = true;
                     if isnan(dyn.target_selected(1)), dyn.target_selected(1) = obj; end
                     if ~eye_acq, % eye acquired for the first time
@@ -2459,7 +2510,7 @@ while true
                 end
             end
             for obj = 1:n_obj_hnd
-                if aux_IsWithinRadius(x_hnd, y_hnd, par_hnd(obj).deg.x, par_hnd(obj).deg.y, par_hnd(obj).deg.radius),
+                if aux_IsWithinRadius(x_hnd, y_hnd, par_hnd(obj))
                     hnd_acq_current = true;
                     if isnan(dyn.target_selected(2)), dyn.target_selected(2) = obj; end
                     if ~hnd_acq
@@ -2473,7 +2524,7 @@ while true
             
         case 3, %  saccade with central hold
             for obj = 1:n_obj_eye
-                if aux_IsWithinRadius(x_eye, y_eye, par_eye(obj).deg.x, par_eye(obj).deg.y, par_eye(obj).deg.radius),
+                if aux_IsWithinRadius(x_eye, y_eye, par_eye(obj))
                     success = true;
                     if isnan(dyn.target_selected(1)),
                         dyn.target_selected(1) = obj;
@@ -2485,7 +2536,7 @@ while true
             
         case 4, % reach with central fixation
             for obj = 1:n_obj_hnd
-                if aux_IsWithinRadius(x_hnd, y_hnd, par_hnd(obj).deg.x, par_hnd(obj).deg.y, par_hnd(obj).deg.radius),
+                if aux_IsWithinRadius(x_hnd, y_hnd, par_hnd(obj))
                     success = true;
                     if isnan(dyn.target_selected(2)),
                         dyn.target_selected(2)  = obj;
@@ -2557,7 +2608,7 @@ while true
     
     if task.effector == 3, % saccade, check the hand hold
         for obj = 1:n_obj_hnd
-            if ~aux_IsWithinRadius(x_hnd, y_hnd, par_hnd(obj).deg.x, par_hnd(obj).deg.y, par_hnd(obj).deg.radius),
+            if ~aux_IsWithinRadius(x_hnd, y_hnd, par_hnd(obj))
                 if ~tLeaveFixationHnd
                     tLeaveFixationHnd = GetSecs;    % if just got out of fixation, initiate timer
                 elseif GetSecs - tLeaveFixationHnd > task.timing.grace_time_hand
@@ -2567,7 +2618,8 @@ while true
                     dyn.aborted_effector = 1;
                     beh_markers(bm_hnd) = 0;
                 end
-            elseif aux_IsWithinRadius(x_hnd, y_hnd, par_hnd(obj).deg.x, par_hnd(obj).deg.y, par_hnd(obj).deg.radius),
+            elseif aux_IsWithinRadius(x_hnd, y_hnd, par_hnd(obj))
+                hnd_acq = 1;
                 tLeaveFixationHnd = 0;  % if inside, reset timer
             end
         end
@@ -2575,7 +2627,7 @@ while true
         
     elseif task.effector == 4 || task.effector == 5, % reach, check the eye hold
         for obj = 1:n_obj_eye
-            if ~aux_IsWithinRadius(x_eye, y_eye, par_eye(obj).deg.x, par_eye(obj).deg.y, par_eye(obj).deg.radius),
+            if ~aux_IsWithinRadius(x_eye, y_eye, par_eye(obj))
                 if SETTINGS.allowBlinksOnly && ~aux_IsDisplacedDown(x_eye, y_eye, par_eye(obj).deg.x, par_eye(obj).deg.y, par_eye(obj).deg.radius)
                     hold_success = false; %  abort trial
                     dyn.previousState = dyn.state;
@@ -2593,15 +2645,16 @@ while true
                         beh_markers(bm_eye) = 0;
                     end
                 end
-            elseif aux_IsWithinRadius(x_eye, y_eye, par_eye(obj).deg.x, par_eye(obj).deg.y, par_eye(obj).deg.radius),
+            elseif aux_IsWithinRadius(x_eye, y_eye, par_eye(obj))
                 tLeaveFixationEye = 0;  % if inside, reset timer
+                eye_acq = 1;
             end
         end
         if ~hold_success, break, end;
     end
     
     if success,
-        if  ~isnan(dyn.target_selected(dyn.tar_selected_ind)) && ...
+        if  dyn.state~=STATE.FIX_ACQ && ~isnan(dyn.target_selected(dyn.tar_selected_ind)) && ...
                 trial(dyn.trialNumber).task.(dyn.effector).(dyn.tar_struct)(dyn.target_selected(dyn.tar_selected_ind)).x ==  trial(dyn.trialNumber).task.(dyn.effector).(dyn.fix_struct).x && ...
                 trial(dyn.trialNumber).task.(dyn.effector).(dyn.tar_struct)(dyn.target_selected(dyn.tar_selected_ind)).y == trial(dyn.trialNumber).task.(dyn.effector).(dyn.fix_struct).y && ...
                 GetSecs - tEnterState < dyn.duration % if target_selected is fixation target and time_to_acquire_eye is not over yet
@@ -2707,6 +2760,7 @@ if SETTINGS.GUI
     drawnow; %%hmmmm...
 end
 
+displaybackground(SETTINGS,task,dyn)
 for obj = 1:n_obj_hnd
     aux_PrepareStimuli(par_hnd(obj));
 end
@@ -2766,7 +2820,7 @@ while true
             end
             
             for obj = start_obj_eye:n_obj_eye %obj = dyn.target_selected(1) %obj = 1:n_obj_eye Change 20140519
-                if ~aux_IsWithinRadius(x_eye, y_eye, par_eye(obj).deg.x, par_eye(obj).deg.y, par_eye(obj).deg.radius),
+                if ~aux_IsWithinRadius(x_eye, y_eye, par_eye(obj))
                     if SETTINGS.allowBlinksOnly && ~aux_IsDisplacedDown(x_eye, y_eye, par_eye(obj).deg.x, par_eye(obj).deg.y, par_eye(obj).deg.radius)
                         success = false; %  abort trial
                         dyn.previousState = dyn.state;
@@ -2790,14 +2844,14 @@ while true
                             beh_markers(bm_eye) = 0;
                         end
                     end
-                elseif aux_IsWithinRadius(x_eye, y_eye, par_eye(obj).deg.x, par_eye(obj).deg.y, par_eye(obj).deg.radius),
+                elseif aux_IsWithinRadius(x_eye, y_eye, par_eye(obj))
                     tLeaveFixationEye = 0;  % if inside, reset timer
                 end
             end
             
         case {1} % hand
             for obj = start_obj_hnd:n_obj_hnd %obj = dyn.target_selected(2) % obj = 1:n_obj_hnd Change 20140519
-                if ~aux_IsWithinRadius(x_hnd, y_hnd, par_hnd(obj).deg.x, par_hnd(obj).deg.y, par_hnd(obj).deg.radius),
+                if ~aux_IsWithinRadius(x_hnd, y_hnd, par_hnd(obj))
                     if ~tLeaveFixationHnd
                         tLeaveFixationHnd = GetSecs;    % if just got out of fixation, initiate timer
                     elseif GetSecs - tLeaveFixationHnd > task.timing.grace_time_hand
@@ -2806,14 +2860,14 @@ while true
                         dyn.aborted_effector = 1;
                         beh_markers(bm_hnd) = 0;
                     end
-                elseif aux_IsWithinRadius(x_hnd, y_hnd, par_hnd(obj).deg.x, par_hnd(obj).deg.y, par_hnd(obj).deg.radius),
+                elseif aux_IsWithinRadius(x_hnd, y_hnd, par_hnd(obj))
                     tLeaveFixationHnd = 0;  % if inside, reset timer
                 end
             end
             
         case {2,3,4,6} % both
             for obj = start_obj_eye:n_obj_eye
-                if ~aux_IsWithinRadius(x_eye, y_eye, par_eye(obj).deg.x, par_eye(obj).deg.y, par_eye(obj).deg.radius),
+                if ~aux_IsWithinRadius(x_eye, y_eye, par_eye(obj)),
                     if SETTINGS.allowBlinksOnly && ~aux_IsDisplacedDown(x_eye, y_eye, par_eye(obj).deg.x, par_eye(obj).deg.y, par_eye(obj).deg.radius)
                         success = false; %  abort trial
                         dyn.previousState = dyn.state;
@@ -2831,13 +2885,13 @@ while true
                             fprintf('eye aborted HT=%4d',round((tLeaveFixationEye-tEnterState)*1000));
                         end
                     end
-                elseif aux_IsWithinRadius(x_eye, y_eye, par_eye(obj).deg.x, par_eye(obj).deg.y, par_eye(obj).deg.radius),
+                elseif aux_IsWithinRadius(x_eye, y_eye, par_eye(obj))
                     tLeaveFixationEye = 0;  % if inside, reset timer
                 end
             end
             
             for obj = start_obj_hnd:n_obj_hnd
-                if ~aux_IsWithinRadius(x_hnd, y_hnd, par_hnd(obj).deg.x, par_hnd(obj).deg.y, par_hnd(obj).deg.radius),
+                if ~aux_IsWithinRadius(x_hnd, y_hnd, par_hnd(obj))
                     if ~tLeaveFixationHnd
                         tLeaveFixationHnd = GetSecs;    % if just got out of fixation, initiate timer
                     elseif GetSecs - tLeaveFixationHnd > task.timing.grace_time_hand
@@ -2847,7 +2901,7 @@ while true
                         beh_markers(bm_hnd) = 0;
                         fprintf('hnd aborted HT=%4d',round((tLeaveFixationHnd-tEnterState)*1000));
                     end
-                elseif aux_IsWithinRadius(x_hnd, y_hnd, par_hnd(obj).deg.x, par_hnd(obj).deg.y, par_hnd(obj).deg.radius),
+                elseif aux_IsWithinRadius(x_hnd, y_hnd, par_hnd(obj))
                     tLeaveFixationHnd = 0;  % if inside, reset timer
                 end
             end
@@ -2965,8 +3019,21 @@ dyn.beh_markers = beh_markers;
 
 function [success,dyn,task]  = ITI_state(task,dyn,IO)
 global SETTINGS
+
+if SETTINGS.TextFeedback
+    Screen('FillRect', SETTINGS.window, SETTINGS.BG_COLOR);
+    displaybackground(SETTINGS,task,dyn)
+    Screen('DrawText',  SETTINGS.window, dyn.abort_message, SETTINGS.screen_w_pix/2-numel(dyn.abort_message)*9,SETTINGS.screen_h_pix/2, [255 255 255] ,SETTINGS.BG_COLOR); % text position
+    Screen(SETTINGS.window,'Flip');
+    tempdyn=dyn;
+    tempdyn.duration=task.timing.text_feedback;
+    [~,~,task]=wait_while_recording_state(task,tempdyn);
+end
+
 Screen('FillRect', SETTINGS.window, SETTINGS.BG_COLOR);
+displaybackground(SETTINGS,task,dyn)
 Screen(SETTINGS.window,'Flip');
+
 send_to_TDT(IO,dyn.state);
 dyn.states_onset = GetSecs - SETTINGS.time_start;
 [success,dyn,task]=wait_while_recording_state(task,dyn);
@@ -3129,16 +3196,16 @@ while true
     if task.overriding.positions==1
         task.force_target_location=0;
     end
-%     if task.type == 10 && dyn.state == 21  
-%         if any(any(task.PayoffMatrix <0)) == 1
-%             if dyn.duration >= -1*min(min(task.PayoffMatrix))%%
-%          Screen('FillRect', SETTINGS.window, [ 255 255 255]) 
-%          Screen(SETTINGS.window,'Flip');
-%          Screen('FillRect', SETTINGS.window, SETTINGS.BG_COLOR);               % fill whole screen black
-%          Screen(SETTINGS.window,'Flip');  
-%             end
-%         end
-%     end
+    %     if task.type == 10 && dyn.state == 21
+    %         if any(any(task.PayoffMatrix <0)) == 1
+    %             if dyn.duration >= -1*min(min(task.PayoffMatrix))%%
+    %          Screen('FillRect', SETTINGS.window, [ 255 255 255])
+    %          Screen(SETTINGS.window,'Flip');
+    %          Screen('FillRect', SETTINGS.window, SETTINGS.BG_COLOR);               % fill whole screen black
+    %          Screen(SETTINGS.window,'Flip');
+    %             end
+    %         end
+    %     end
     WaitSecs('Untiltime',tSample+SETTINGS.timeStep); % maintain matlab sampling rate % TODO
     dyn.counterTimeSteps=dyn.counterTimeSteps+1;
     
@@ -3154,19 +3221,19 @@ function aux_draw_GUI_targets(dyn,trial,eff,pha,ang)
 %global STATE
 if ~dyn.(['n_' eff '_' pha])==0
     for obj=1:numel(trial(dyn.trialNumber).(eff).(pha))
-        if isempty(trial(dyn.trialNumber).(eff).(pha)(obj).pos) % necessary, because the structure is there due to the reward modulation part (even if targets are not used).
+        if isempty(trial(dyn.trialNumber).(eff).(pha)(obj).x) % necessary, because the structure is there due to the reward modulation part (even if targets are not used).
             continue;
         end
-        x=trial(dyn.trialNumber).(eff).(pha)(obj).pos(1);  %xpos in deg
-        y=trial(dyn.trialNumber).(eff).(pha)(obj).pos(2);  %ypos in deg
-        r1=trial(dyn.trialNumber).(eff).(pha)(obj).pos(3); %size in deg 
-        r2=trial(dyn.trialNumber).(eff).(pha)(obj).pos(4); %radius in deg
+        x=trial(dyn.trialNumber).(eff).(pha)(obj).x;  %xpos in deg
+        y=trial(dyn.trialNumber).(eff).(pha)(obj).y;  %ypos in deg
+        r1=trial(dyn.trialNumber).(eff).(pha)(obj).size; %size in deg
+        r2=trial(dyn.trialNumber).(eff).(pha)(obj).radius; %radius in deg
         
         x1=r1*cos(ang);
         y1=r1*sin(ang);
         x2=r2*cos(ang);
         y2=r2*sin(ang);
- 
+        
         if isstruct(trial(dyn.trialNumber).(eff).(pha)(obj).shape)
             shape=trial(dyn.trialNumber).(eff).(pha)(obj).shape.mode;
         else
@@ -3183,6 +3250,13 @@ if ~dyn.(['n_' eff '_' pha])==0
                 x1=[-1 -1 1 1 -1]*r1;
                 y1=[-1 1 1 -1 -1]*r1;
         end
+        if isfield(trial(dyn.trialNumber).(eff).(pha)(obj),'radiusShape')
+            switch  trial(dyn.trialNumber).(eff).(pha)(obj).radiusShape
+                case 'square'
+                    x2=[-1 -1 1 1 -1]*r2;
+                    y2=[-1 1 1 -1 -1]*r2;
+            end
+        end
         %% color!
         RGB_color=[255 0 0]/255;
         if strcmp(eff,'hnd')
@@ -3191,7 +3265,6 @@ if ~dyn.(['n_' eff '_' pha])==0
         if ismember(obj,dyn.correct_choice_target)
             plot(x,y,'*','color',[0 0 0],'Tag',[eff pha 'correct'],'Visible','off');
         end
-        %RGB_color=nanmean([task.(eff).fix.color_bright],1)/255;
         plot(x+x1,y+y1,'color',RGB_color,'Tag',[eff pha 'Size'],'Visible','off');
         plot(x+x2,y+y2,'color',RGB_color,'linestyle',':','Tag',[eff pha 'Radius'],'Visible','off');
     end
@@ -3260,7 +3333,7 @@ else
 end
 
 [x_eye y_eye] = aux_GetCalibratedEyePos(task);
-[x_hnd y_hnd touching] = aux_GetCalibratedHndPos(data);
+[x_hnd y_hnd touching] = aux_GetCalibratedHndPos(data, task);
 
 if SETTINGS.ai && strcmp(SETTINGS.Motion_detection_interface,'DAQ')
     sen3 = data(IO.jaw)  >= 5;
@@ -3306,7 +3379,7 @@ else
     y = NaN;
 end
 
-function [x,y, touching] = aux_GetCalibratedHndPos(data)
+function [x,y, touching] = aux_GetCalibratedHndPos(data, task)
 %% get hand position (from 0 to 1)
 global SETTINGS
 
@@ -3321,17 +3394,46 @@ if SETTINGS.touchscreen && SETTINGS.ai
         touching = true;
     end
     [x, y] = pix2deg_xy(x, y);
+    
+elseif SETTINGS.UseMouseAsTouch  % use mouse input instead of touchscreen
+    [a,b, button]=GetMouse(SETTINGS.window,1);
+    mouseposition=[a -b];
+    x_M=(mouseposition(1)-SETTINGS.screen_w_pix/2)*SETTINGS.screen_w_cm/SETTINGS.screen_w_pix;
+    y_M=(mouseposition(2)+SETTINGS.screen_h_pix*(SETTINGS.screen_uh_cm)/SETTINGS.screen_h_cm)*SETTINGS.screen_h_cm/SETTINGS.screen_h_pix;
+    %y_M=(mouseposition(2)-SETTINGS.screen_h_pix*(SETTINGS.screen_h_cm-SETTINGS.screen_uh_cm)/SETTINGS.screen_h_cm)*SETTINGS.screen_h_cm/SETTINGS.screen_h_pix;
+    if button(1)
+        x = atan(x_M/task.vd)*180/pi;
+        y = atan(y_M/task.vd)*180/pi;
+        touching = button(1);
+        ShowCursor(2, SETTINGS.window, 1); % 1 - crosshair, 2 - index finger, 3 - four arrows, 4 - up/down arrow, 5 - left/right arrow, 6 - sand clock, 7 - stop sign, 8 - default arrow (from Windows)
+    else
+        x = nan;
+        y = nan;
+        touching = 0;
+        %HideCursor(SETTINGS.window, 1);
+    end
+    
 else
     x = NaN;
     y = NaN;
     touching = 0;
 end
 
-function is_within = aux_IsWithinRadius(x,y,x0,y0,r)
+function is_within = aux_IsWithinRadius(x,y,par)
 %% check if (x,y) is within radius r centered on (x0,y0)
+x0=par.deg.x;
+y0=par.deg.y;
+r=par.deg.radius;
 is_within = 0;
-if sqrt(((x0 - x))^2 + (y0 - y)^2) < r
-    is_within = 1;
+switch par.radiusShape
+    case 'square'
+        if x > (x0 - r) && x < (x0 + r) && y > (y0 - r) && y < (y0 + r)
+            is_within = 1;
+        end
+    case 'circle'
+        if sqrt(((x0 - x))^2 + (y0 - y)^2) < r
+            is_within = 1;
+        end
 end
 
 function is_down = aux_IsDisplacedDown(x,y,x0,y0,r)
@@ -3341,7 +3443,7 @@ if abs(x0 - x) < r && y < y0
     is_down = 1;
 end
 
-function [is_moving] = aux_GetMonkeyMotion
+function is_moving = aux_GetMonkeyMotion
 % now only used for initiate trial...
 global IO SETTINGS
 if strcmp(SETTINGS.Motion_detection_interface,'DAQ')
@@ -3350,11 +3452,14 @@ if strcmp(SETTINGS.Motion_detection_interface,'DAQ')
     is_moving_body = data(IO.body) < 5;
     is_moving = [is_moving_jaw is_moving_body];
 else
-    sen = double(get_sensors_state(SETTINGS.pp,SETTINGS.sensor_pins));
     if numel(SETTINGS.sensor_pins) > 4 % scanner DPZ with additional pin for scanner trigger
+        sen = double(get_sensors_state(SETTINGS.pp,SETTINGS.sensor_pins));
         is_moving = [sen(3) ~sen(4)]; % sen(3) = 1 if jaw is moving, sen(3) = 0 if there is no jaw motion, sen(4) always 1 because no body motion detector connected
     else
-        is_moving = [~sen(3) ~sen(4)]; % setups
+        for n_samples = 1:10000
+            sen(n_samples,:) = double(get_sensors_state(SETTINGS.pp,SETTINGS.sensor_pins));
+        end
+        is_moving = [max(~sen(:,3)) max(~sen(:,4))]; % setups
     end
 end
 
@@ -3412,18 +3517,21 @@ else
     rect = repmat(pos,2,1) +  [-1 -1 1 1]'.*rad';
 end
 
-function par = aux_FillPar(shape,stim,stimColor,ringColor,rewardProb, ringColor2)
+function par = aux_FillPar(par_temp)
 % stim positioning info comes here in deg
+%% clean up here
+if ~isfield(par_temp,'ringColor')
+    par_temp.ringColor = [];
+end
+if ~isfield(par_temp,'ringColor2')
+    par_temp.ringColor2 = [0 0 0];
+end
+if ~isfield(par_temp,'rewardProb')
+    par_temp.rewardProb = 1;
+end
 
-if nargin < 4,
-    ringColor = [];
-end
-if nargin < 5,
-    rewardProb = 1;
-end
-if nargin < 6,
-    ringColor2 = [0 0 0];
-end
+stim=[par_temp.x par_temp.y par_temp.size par_temp.radius];
+%stim=par_temp.pos;
 
 % keep the values in deg for experimenter GUI plotting
 par.deg.x              = stim(1);
@@ -3448,15 +3556,19 @@ par.pix.size           = stim(3);
 par.stimRect       = aux_pr2rect([stim(1)  stim(2)]', stim(3));
 par.x              = stim(1);
 par.y              = stim(2);
-par.stimColor      = stimColor;
+par.stimColor      = par_temp.color;
 par.size           = stim(3);
-par.ringColor      = ringColor;
-par.ringColor2     = ringColor2; % complementary arc for gambles
+par.ringColor      = par_temp.ringColor;
+par.ringColor2     = par_temp.ringColor2; % complementary arc for gambles
 % par.radius         = stim(3);
 % par.radius         = stim(3)/(SETTINGS.screen_h_pix);%*0.9);
-par.arcAngle       = 360 - rewardProb*360;
-par.effector       = stim(5);
-par.shape          = shape;
+par.arcAngle       = 360 - par_temp.rewardProb*360;
+par.shape          = par_temp.shape;
+if isfield(par_temp, 'radiusShape')
+    par.radiusShape          = par_temp.radiusShape;
+else
+    par.radiusShape          = 'circle';
+end
 
 function aux_PrepareStimuli(par)
 
@@ -3466,6 +3578,8 @@ if isstruct(par.shape)
 else
     shape=par.shape;
 end
+
+
 switch shape
     case 'convex'
         pointList=CalculateConvexPointList([par.x par.y],par.size,par.shape.convexity,par.shape.convex_side);
@@ -3475,9 +3589,9 @@ switch shape
         
         number_of_rects                 = 15;
         %Screen('FillOval', SETTINGS.window, par.stimColor, par.stimRect);
-            img(:,:,1) = SETTINGS.BG_COLOR(1)*ones(20,100);  
-            img(:,:,2) = SETTINGS.BG_COLOR(2)*ones(20,100);  
-            img(:,:,3) = SETTINGS.BG_COLOR(3)*ones(20,100); 
+        img(:,:,1) = SETTINGS.BG_COLOR(1)*ones(20,100);
+        img(:,:,2) = SETTINGS.BG_COLOR(2)*ones(20,100);
+        img(:,:,3) = SETTINGS.BG_COLOR(3)*ones(20,100);
         texture = Screen('MakeTexture', SETTINGS.window, img);
         
         BarSizePix1= deg2pix_withOffset (par.shape.BarSize_L,par.offset_deg);
@@ -3525,15 +3639,45 @@ switch shape
         
         Screen('FillOval', SETTINGS.window, par.stimColor, par.stimRect);
         if isempty(par.ringColor)
-           img = zeros(20,100);  
+            img = zeros(20,100);
         else
-            img(:,:,1) = par.ringColor(1)*ones(20,100); % img = ones(20,100); 
-            img(:,:,2) = par.ringColor(2)*ones(20,100); % img = ones(20,100); 
-            img(:,:,3) = par.ringColor(3)*ones(20,100); % img = ones(20,100); 
+            img(:,:,1) = par.ringColor(1)*ones(20,100); % img = ones(20,100);
+            img(:,:,2) = par.ringColor(2)*ones(20,100); % img = ones(20,100);
+            img(:,:,3) = par.ringColor(3)*ones(20,100); % img = ones(20,100);
         end
         texture = Screen('MakeTexture', SETTINGS.window, img, par.shape.rotation);
         Screen('DrawTextures',SETTINGS.window, texture,[], stimRect_Bar, par.shape.rotation);
-       % Screen('FrameOval', SETTINGS.window, SETTINGS.BG_COLOR, par.stimRect,7,7);
+        % Screen('FrameOval', SETTINGS.window, SETTINGS.BG_COLOR, par.stimRect,7,7);
+        
+        
+    case 'arrows'
+        penWidth=4;
+        symbol_distance=par.size;
+        switch par.shape.option
+            
+            case 'LL'
+                points=trianglePoints([par.x-symbol_distance par.y],par.size, 180);
+                Screen('DrawLine',SETTINGS.window,par.stimColor,points(1,1),points(1,2),points(2,1),points(2,2),penWidth);
+                Screen('DrawLine',SETTINGS.window,par.stimColor,points(3,1),points(3,2),points(2,1),points(2,2),penWidth);
+                points=trianglePoints([par.x+symbol_distance par.y],par.size, 180);
+                Screen('DrawLine',SETTINGS.window,par.stimColor,points(1,1),points(1,2),points(2,1),points(2,2),penWidth);
+                Screen('DrawLine',SETTINGS.window,par.stimColor,points(3,1),points(3,2),points(2,1),points(2,2),penWidth);
+            case 'RR'
+                points=trianglePoints([par.x-symbol_distance par.y],par.size, 0);
+                Screen('DrawLine',SETTINGS.window,par.stimColor,points(1,1),points(1,2),points(2,1),points(2,2),penWidth);
+                Screen('DrawLine',SETTINGS.window,par.stimColor,points(3,1),points(3,2),points(2,1),points(2,2),penWidth);
+                points=trianglePoints([par.x+symbol_distance par.y],par.size, 0);
+                Screen('DrawLine',SETTINGS.window,par.stimColor,points(1,1),points(1,2),points(2,1),points(2,2),penWidth);
+                Screen('DrawLine',SETTINGS.window,par.stimColor,points(3,1),points(3,2),points(2,1),points(2,2),penWidth);
+            case 'LR'
+                points=trianglePoints([par.x+symbol_distance par.y],par.size, 0);
+                Screen('DrawLine',SETTINGS.window,par.stimColor,points(1,1),points(1,2),points(2,1),points(2,2),penWidth);
+                Screen('DrawLine',SETTINGS.window,par.stimColor,points(3,1),points(3,2),points(2,1),points(2,2),penWidth);
+                points=trianglePoints([par.x-symbol_distance par.y],par.size, 180);
+                Screen('DrawLine',SETTINGS.window,par.stimColor,points(1,1),points(1,2),points(2,1),points(2,2),penWidth);
+                Screen('DrawLine',SETTINGS.window,par.stimColor,points(3,1),points(3,2),points(2,1),points(2,2),penWidth);
+        end
+        
     case 'circle'
         if size(par.stimColor,1)==2 %% hand selection targets, 20140603
             Screen('FillArc',SETTINGS.window,par.stimColor(1,:),par.stimRect,0,360)
@@ -3567,6 +3711,23 @@ if par.arcAngle > 0,
     % cover part of the ring with black arc
     Screen('FrameArc', SETTINGS.window, par.ringColor2,par.stimRect,par.arcAngle,par.arcAngle,7,7);
     Screen('FrameArc', SETTINGS.window, [128 128 128],par.stimRect + [0;0;1;1],par.arcAngle,par.arcAngle,1,1);
+end
+
+function displaybackground(SETTINGS,task,dyn)
+if strcmp(SETTINGS.background_image,'rectangles')
+    rect=[];
+    for t=1:numel(task.(dyn.effector).tar)
+        x_rad = task.(dyn.effector).tar(t).x*pi/180;
+        y_rad = task.(dyn.effector).tar(t).y*pi/180;
+        offset_deg = atan(sqrt(tan(x_rad)^2 + tan(y_rad)^2));
+        r= deg2pix_withOffset (task.(dyn.effector).tar(t).size,offset_deg)*2+2; %+2 because of the frame (1 pixel each direction
+        baseRect = [0 0 r r];
+        [x_px, y_px] = deg2pix_xy (task.(dyn.effector).tar(t).x, task.(dyn.effector).tar(t).y);
+        centeredRect = CenterRectOnPointd(baseRect, x_px, y_px);
+        rect = [rect centeredRect'];
+    end
+    
+    Screen ('FrameRect', SETTINGS.window, [255 255 255], rect, 1);
 end
 
 function pointList=CalculateConvexPointList(center,a_ellipse,convexity,convex_sides)
@@ -3606,6 +3767,15 @@ switch convex_sides
 end
 pointList=pointList+repmat(center,size(pointList,1),1);
 
+function pointList = trianglePoints(center,rad,dir)
+% generates point list (<3 x [x y]> PTB coords) of an isoscele triangle
+% facing direction dir (deg; 0 is right) and contained in radius rad.
+theta = ( repmat(dir,1,3) + [-120 0 120] )*pi/180;
+rad   = repmat(rad,1,3);
+x     = rad .* cos(theta);
+y     = -rad .* sin(theta); % negative because of PTB coordinate system
+pointList = round([x(:) y(:)]) + repmat(center(:)',3,1); % offset for screen center
+
 function pointList=CalculateTrianglePointList(center,side_length)
 s=side_length*2;
 h=sqrt(3)/2*s;
@@ -3639,14 +3809,13 @@ global SETTINGS
 if nargin < 3,
     pulse_duration = 0.005;
 end
-
 if strcmp(SETTINGS.microstim_interface,'DAQ') % microstim as analog output
     % fprintf(' microstim pulse ');
     putsample(IO.ao,5);
     tPulseDelivery = GetSecs;
     WaitSecs(pulse_duration);
     putsample(IO.ao,0);
-else % microstim as digital output through parallel port
+elseif strcmp(SETTINGS.microstim_interface,'Parallel') % microstim as digital output through parallel port
     dyn.pp_reward_value=dyn.pp_reward_value+SETTINGS.pp.value_out_microstim;
     io32(SETTINGS.pp.ioObj,SETTINGS.pp.address_out_reward,dyn.pp_reward_value); % send microstim trigger/pulse
     tPulseDelivery = GetSecs;
@@ -3822,11 +3991,11 @@ if exist('trial','var')
 end
 rmdir([folder filesep subfolder],'s');
 % saving to the server as well !
-if ~isdir([SETTINGS.dag_drive folder(3:end)]) % ~isdir([SETTINGS.dag_drive filesep 'dag' folder(3:end)])
-    mkdir([SETTINGS.dag_drive folder(3:end-8)],folder(end-7:end))% mkdir([SETTINGS.dag_drive filesep 'dag'  folder(3:end-8)],folder(end-7:end)
+if ~isdir([SETTINGS.dag_drive folder(3:end)])
+    mkdir([SETTINGS.dag_drive folder(3:end-8)],folder(end-7:end))
 end
 if exist('trial','var')
-    save([SETTINGS.dag_drive folder(3:end) filesep subfolder],'SETTINGS','task','trial','sequence_indexes'); % save([SETTINGS.dag_drive filesep 'dag'  folder(3:end) filesep subfolder],'SETTINGS','task','trial','sequence_indexes');
+    save([SETTINGS.dag_drive folder(3:end) filesep subfolder],'SETTINGS','task','trial','sequence_indexes');
 end
 
 function autosave_changed_monkeypsych
