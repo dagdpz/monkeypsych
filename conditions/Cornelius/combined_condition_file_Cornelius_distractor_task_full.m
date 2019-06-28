@@ -81,7 +81,6 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
         experiment=esperimentazione{n_exp};
         task.calibration                    = 0;
         SETTINGS.GUI_in_acquisition         = 0;
-        PEST_ON                             = 0;
         task.rest_hand                      = [0 0];
         
         %% Order of fields here defines the order of parameters to be sent to TDT as the trial_classifiers
@@ -105,7 +104,6 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
         force_conditions_mode               = 'success'; %'target selected'; %'success' 'target selected'
         task.shuffle_conditions             = 1;
         
-        SETTINGS.take_angles_con            = 1;
         pool_of_angles                      = [0,20,340, 180,160,200]; %[0,30,330, 180,150,210] [0,20,340, 180,160,200] % [right-mid right-up right-bottom left-mid left-up left-bottom]
         All.excentricities                  = [20];
         
@@ -139,7 +137,6 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
                 SETTINGS.check_motion_jaw           = 0;
                 SETTINGS.check_motion_body          = 0;                
                 
-                SETTINGS.take_angles_con            = 1;
                 pool_of_angles                      = [0];
                 All.excentricities                  = [0];
                 All.angle_cases                     = [1];
@@ -167,7 +164,6 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
                 SETTINGS.check_motion_jaw           = 0;
                 SETTINGS.check_motion_body          = 0;
                 
-                SETTINGS.take_angles_con            = 1;
                 pool_of_angles                      = [0];
                 All.excentricities                  = [0];
                 All.angle_cases                     = [1];
@@ -493,11 +489,11 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
         ordered_sequence_indexes = 1:size(sequence_matrix,2);
     else
         sequence_matrix          = [sequence_matrix_exp{:}];
-        idx_exact_x=ismember(all_fieldnames,'exact_excentricity_con_x');
-        idx_exact_y=ismember(all_fieldnames,'exact_excentricity_con_y');
-        conditions_to_remove=(sequence_matrix(idx_exact_y,:)==0 & sequence_matrix(idx_exact_x,:)==0);
-        sequence_matrix(:,conditions_to_remove)=[];
-        ordered_sequence_indexes = 1:(numel([ordered_sequence_indexes_exp{:}])-sum(conditions_to_remove));
+%         idx_exact_x=ismember(all_fieldnames,'exact_excentricity_con_x');
+%         idx_exact_y=ismember(all_fieldnames,'exact_excentricity_con_y');
+%         conditions_to_remove=(sequence_matrix(idx_exact_y,:)==0 & sequence_matrix(idx_exact_x,:)==0);
+%         sequence_matrix(:,conditions_to_remove)=[];
+        ordered_sequence_indexes = 1:(numel([ordered_sequence_indexes_exp{:}]));
     end
 end
 
@@ -686,10 +682,6 @@ end
 
 %% RADIUS and SIZES
 
-if task.type==5 || task.type==6
-    task.eye=rmfield(task.eye,'tar');
-    task.hnd=rmfield(task.hnd,'tar');
-end
 
 switch Current_con.size_con
     case 0 %'calibration'
@@ -744,14 +736,9 @@ end
 
 %% TARGET POSITIONS
 
-if SETTINGS.take_angles_con
     current_angle=pool_of_angles(Current_con.angle_cases); %
     tar_dis_x   = Current_con.excentricities*cos(current_angle*2*pi/360);
     tar_dis_y   = Current_con.excentricities*sin(current_angle*2*pi/360);
-else
-    tar_dis_x   = Current_con.exact_excentricity_con_x;
-    tar_dis_y   = Current_con.exact_excentricity_con_y;
-end
 
 tar_dis_1x = + tar_dis_x;
 tar_dis_1y = + tar_dis_y;

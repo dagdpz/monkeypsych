@@ -1,62 +1,60 @@
 %% Initiate conditions
 global SETTINGS
 %
+
 if ~exist('dyn','var') || dyn.trialNumber == 1
+    
+ 
+    
     % esperimentazione        = {'calibration'};
-    % esperimentazione     = {'Direct_Sac'};
-    % esperimentazione      = {'Delay_Sac'};
-    % esperimentazione        = {'Delay diss_saccade'};par_eye
-    % esperimentazione        = {'Delay free_gaze'};
-    % esperimentazione        = {'Delay free_gaze','rest','Delay free_gaze','rest'};
-    esperimentazione        = {'rest'};
+    %  esperimentazione     = {'Fixation'};
+     esperimentazione        = {'Delay free_gaze'};
+    %  esperimentazione     = {'Direct_reach'};  
+    % esperimentazione     = {'Direct_free_gaze_reach'};
+
     si_counter=0;
     for n_exp = 1:numel(esperimentazione)
         experiment=esperimentazione{n_exp};
         shuffle_conditions                  = 2;
-        force_conditions                    = 3;
+        force_conditions                    = 3; % normal task 3, and 1 to repeat if he does mistake
         task.calibration                    = 0;
         SETTINGS.GUI_in_acquisition         = 0;
         SETTINGS.check_motion_jaw           = 0;
         SETTINGS.check_motion_body          = 0;
         SETTINGS.RewardSound                = 1;
-        %         fix_eye_y                           = -2.5;
-        %         fix_hnd_y                           = -6.5;
-        %         pool_of_angles                      = [40,0,320,220,180,140]; %[20,0,340,200,180,160];
+%         fix_eye_y                           = -2.5;
+%         fix_hnd_y                           = -6.5;
+%         pool_of_angles                      = [40,0,320,220,180,140]; %[20,0,340,200,180,160];
         
-        fix_eye_y                           = -8;
-        fix_hnd_y                           = -12;
+        fix_eye_y                           = 0;
+        fix_hnd_y                           = -4;
         pool_of_angles                      = [40,0,320,220,180,140]; %[20,0,340,200,180,160];
-        %         fix_eye_y                           = -2;
-        %         fix_hnd_y                           = -5;
-        %         pool_of_angles                      = [20,0,340,160,180,200];
+%         fix_eye_y                           = -2;
+%         fix_hnd_y                           = -5;
+%         pool_of_angles                      = [20,0,340,160,180,200];
         
         
         task.reward.time_neutral            = [0.25 0.25]; % 0.6s -> 0.2ml per hit
         task.rest_hand                      = [0 0]; % which hands on the sensor to start the trial
         task.check_screen_touching          = 1;
-        %% IMPORTANT TO CHECK!!!
-        %         if strcmp(experiment,'calibration') || strcmp(experiment,'Baseline stim project direct saccades') || strcmp(experiment,'Baseline stim project memory saccades')
-        %             SETTINGS.take_angles_con        = 1;
-        %         else
-        %             SETTINGS.take_angles_con        = 0;
-        %         end
+       
         
         %% Order of fields here defines the order of parameters to be sent to TDT as the trial_classifiers
         All = struct('angle_cases',0,'instructed_choice_con',0,'type_con',0,'effector_con',0,'reach_hand_con',0,'excentricities',0,'stim_con',0,'timing_con',0,'size_con',0,...
             'tar_dis_con',0,'mat_dis_con',0,'cue_pos_con',0,'shape_con',0,'offset_con',0,'invert_con',0,'exact_excentricity_con_x',NaN,'exact_excentricity_con_y',NaN,'reward_con',1,'reward_sound_con',1,'rest_hands_con',1,'var_x',0,'var_y',0);
         
+        
+        
         switch experiment
             
             case 'calibration'
                 SETTINGS.GUI_in_acquisition         = 1;
-                SETTINGS.take_angles_con            = 1;
                 
                 N_repetitions                       = 100;
                 
                 task.calibration                    = 1;
                 %task.reward.time_neutral            = [0.1 0.1];
                 reward_time                         =  0.1;
-                task.rest_hand                      = [0 0];
                 All.rest_hands_con                  = 0;
                 
                 All.offset_con                      = 0;
@@ -72,75 +70,100 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
                 
                 All.excentricities              = 12;
                 All.angle_cases                 = [1,2,3,4,5,6];
-                
-                PEST_ON                             = 0;
                 SETTINGS.GUI_in_acquisition         = 1;
                 
-            case 'rest'
-                SETTINGS.take_angles_con            = 1;
-                N_repetitions                       = 100; %47 36 %100
-                task.rest_hand                      = [0 0];
                 
+            case 'Fixation'
+                
+                N_repetitions                       = 70; % N trials for each condition
+                
+                reward_time                         =  0.17;
+                
+                All.rest_hands_con                  = 1;
                 All.offset_con                      = 0;
-                All.reach_hand_con                  = 2;
-                All.type_con                        = 1;
-                All.effector_con                    = 0;
-                All.timing_con                      = 3; % rest
-                All.size_con                        = 3; % rest
-                All.instructed_choice_con           = 0;
+                All.reach_hand_con                  = [1 2]; %either hand 1 left bamd 2 right
+                All.type_con                        = 1;  % fixation
+                All.effector_con                    = 2;  % 1 only hand, 2 eye and hand
+                All.timing_con                      = 1; % Fixation
+                All.size_con                        = 1;  % Fixation
+                All.instructed_choice_con           = [0];
                 All.var_x                           = 0;
                 All.var_y                           = 0;
-                All.reward_con                      = 0;
-                All.reward_sound_con                = 0;
-                All.rest_hands_con                  = 0;
                 
-                All.excentricities              = 2;
-                All.angle_cases                 = 1;
+                    All.excentricities              = [0];
+                    All.angle_cases                 = [1,2,3];
+                All.stim_con                        = 0;
+                               
+            case 'Direct_reach'
+                
+                SETTINGS.check_motion_jaw           = 0; 
+                N_repetitions                       = 25; % N trials for each condition
+                
+                reward_time                         =  0.18; % 10V reward system, setup 3
+                
+                All.rest_hands_con                  = 1;  % 1 mit sensor, 0 ohne sensors
+                All.offset_con                      = 0;
+                All.reach_hand_con                  = [1 2]; % 1 left hand; 2 left hand; 3 either hand
+                All.type_con                        = 2;  % direct reach/saccade
+                All.effector_con                    = 1;  % 0 eye; 1 hand; 6 free gaze reach with central fixation
+                All.timing_con                      = 3; % direct reach
+                All.size_con                        = 1;  % Fixation/direct_reach
+                All.instructed_choice_con           = [0];
+                All.var_x                           = 0;
+                All.var_y                           = 0;
+                
+                    All.excentricities              = [15];%[15]
+                    All.angle_cases                 = [1,2,3,4,5,6]; %[20,0,340,200,180,160]
+                All.stim_con                        = 0;
                 
                 
-            case 'Delay_Sac'
-                SETTINGS.take_angles_con            = 1;
+                 case 'Direct_free_gaze_reach'
                 
                 N_repetitions                       = 10; % N trials for each condition
                 
+                reward_time                         =  0.17; % 10V reward system, setup 3
+                
+                All.rest_hands_con                  = 1;
                 All.offset_con                      = 0;
-                All.reach_hand_con                  = [0];
-                All.type_con                        = 4; % 2 direct  % 3 memory  % 4 delay
-                All.effector_con                    = 0; % 0 only eye  % 1 only hand  % 3 dissociated saccade %4 dissociated reach  %6 free gaze reach
-                All.timing_con                      = 2; %timing
-                All.size_con                        = 2; % target size
-                All.instructed_choice_con           = [0];%[0 1]
+                All.reach_hand_con                  = [1 2]; % 1 left hand; 2 left hand; 3 either hand
+                All.type_con                        = 2;  % direct reach/saccade
+                All.effector_con                    = 6;  % 3 4 6 
+                All.timing_con                      = 3; % direct reach
+                All.size_con                        = 1;  % Fixation/direct_reach
+                All.instructed_choice_con           = [0 1];% instructed, 1 choice, [0 1] both
                 All.var_x                           = 0;
                 All.var_y                           = 0;
                 
-                All.excentricities              = [15];
-                All.angle_cases                 = [1,2,3,4,5,6];
-                
+                    All.excentricities              = [10];%[15]
+                    All.angle_cases                 = [2,5]; %[20,0,340,200,180,160]
                 All.stim_con                        = 0;
                 
+                
+                
+                
             case 'Delay free_gaze'
-                SETTINGS.VisFeedback_rest_hand = 1;
-                task.hnd.ini(1).x = 0;
-                task.hnd.ini(2).x = task.hnd.ini(1).x;
-                task.hnd.ini(1).y = -12;
-                task.hnd.ini(2).y = task.hnd.ini(1).y;
-                task.hnd.ini(1).shape = 'square_frame';
-                task.hnd.ini(2).shape = 'square';
+%                 SETTINGS.VisFeedback_rest_hand = 1;
+%                 task.hnd.ini(1).x = 0;
+%                 task.hnd.ini(2).x = task.hnd.ini(1).x;
+%                 task.hnd.ini(1).y = -12;
+%                 task.hnd.ini(2).y = task.hnd.ini(1).y;
+%                 task.hnd.ini(1).shape = 'square_frame';
+%                 task.hnd.ini(2).shape = 'square';
+%                 
+%                 task.hnd.ini(1).size = 1;
+%                 task.hnd.ini(2).size = task.hnd.ini(1).size;
+%                 task.hnd.ini(1).color = [60 60 60];
+%                 task.hnd.ini(2).color = task.hnd.ini(1).color;
                 
-                task.hnd.ini(1).size = 1;
-                task.hnd.ini(2).size = task.hnd.ini(1).size;
-                task.hnd.ini(1).color = [60 60 60];
-                task.hnd.ini(2).color = task.hnd.ini(1).color;
-                
-                SETTINGS.take_angles_con            = 1;
-                SETTINGS.check_motion_jaw           = 0;
+                SETTINGS.check_motion_jaw           = 0; % 1 on, 0 off;
                 
                 N_repetitions                       = 10;%5
                 
                 
                 %task.reward.time_neutral            = [0.24 0.24]; % 0.2s -> 0.2ml per hit
-                reward_time                         =  0.24;
-                task.rest_hand                      = [1 1]; % which hands on the sensor to start the trial
+                reward_time                         =  0.17;
+               
+                All.rest_hands_con                  = 1;
                 
                 % All.offset_con                      = [-15 0 15];
                 All.offset_con                      = 0;
@@ -149,62 +172,16 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
                 All.effector_con                    = 6; %6
                 
                 
-                All.timing_con                      = 31;
-                All.size_con                        = 2;
+                All.timing_con                      = 2;
+                All.size_con                        = 1;
                 All.instructed_choice_con           = [0 1]; %  0 instr  1 choice
                 All.var_x                           = 0;
                 All.var_y                           = 0;
                 
-                All.excentricities              = [15]; % 16
-                All.angle_cases                 = [1,2,3,4,5,6]; %1,2,3,4,5,6
+                    All.excentricities              = [16]; % 16
+                    All.angle_cases                 = [1,2,3,4,5,6]; %1,2,3,4,5,6
                 All.stim_con                        = 0;
-                
-                
-            case 'Direct_Sac'
-                SETTINGS.take_angles_con            = 1;
-                
-                N_repetitions                       = 10; % N trials for each condition
-                
-                %task.reward.time_neutral            = [0.2 0.2]; % 0.6s -> 0.2ml per hit
-                reward_time                         =  0.2;
-                task.rest_hand                      = [0 0];
-                
-                All.offset_con                      = 0;
-                All.reach_hand_con                  = [0];
-                All.type_con                        = 2;
-                All.effector_con                    = 0; % 3 4 6
-                All.timing_con                      = 1; %timing
-                All.size_con                        = 1; % target size
-                All.instructed_choice_con           = [0];
-                All.var_x                           = 0;
-                All.var_y                           = 0;
-                
-                
-                All.excentricities              = [12];
-                All.angle_cases                 = [1,2,3];
-                All.stim_con                        = 0;
-                
-                
-            case 'Delay diss_saccade'
-                SETTINGS.take_angles_con            = 1;
-                N_repetitions                       = 10;
-                %task.reward.time_neutral            = [0.2 0.2]; % 0.6s -> 0.2ml per hit
-                reward_time                         =  0.2;
-                task.rest_hand                      = [1 1];
-                
-                All.offset_con                      = 0;
-                All.reach_hand_con                  = [1 2];
-                All.type_con                        = 4;
-                All.effector_con                    = 3;
-                All.timing_con                      = 31;  % 31 or 33
-                All.size_con                        = 20;
-                All.instructed_choice_con           = [0 1];
-                All.var_x                           = 0;
-                All.var_y                           = 0;
-                
-                All.excentricities              = [15]; % 16
-                All.angle_cases                 = [1,2,3,4,5,6];
-                All.stim_con                        = 0;
+                                
         end
         
         all_fieldnames=fieldnames(All);
@@ -216,11 +193,7 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
         end
         
         sequence_matrix_exp_temp          = repmat(combvec(sequence_cell{:}),1,N_repetitions);
-        
-        
-        idx_var_x=find(ismember(all_fieldnames,'var_x'));
-        idx_var_y=find(ismember(all_fieldnames,'var_y'));
-        
+                        
         sequence_matrix_exp{n_exp}          = sequence_matrix_exp_temp;
         ordered_sequence_indexes_exp{n_exp} = (1:N_total_conditions*N_repetitions) + si_counter;
         si_counter                          = numel(ordered_sequence_indexes_exp{n_exp}) +si_counter;
@@ -232,10 +205,11 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
     idx_exact_y=ismember(all_fieldnames,'exact_excentricity_con_y');
     conditions_to_remove=(sequence_matrix(idx_exact_y,:)==0 & sequence_matrix(idx_exact_x,:)==0);
     sequence_matrix(:,conditions_to_remove)=[];
+    
+    
+    
     ordered_sequence_indexes = 1:(numel([ordered_sequence_indexes_exp{:}])-sum(conditions_to_remove));
 end
-
-
 
 
 %% Shuffling conditions
@@ -293,43 +267,12 @@ if exist('dyn','var') && dyn.trialNumber > 1,
     end
 else
     custom_trial_condition = sequence_indexes(1);
-    
-    
-    
-    
-    %     %% bar plot for conditions
-    %
-    % conditions_to_plot=1:6;
-    %
-    % sequence_matrix_inverted=sequence_matrix';
-    % unique_sequence=unique(sequence_matrix_inverted(:,conditions_to_plot),'rows');
-    % current_con_index=find(ismember(unique_sequence,sequence_matrix_inverted(sequence_indexes(1),conditions_to_plot),'rows'));
-    % experiment_fieldnames=all_fieldnames(conditions_to_plot);
-    %
-    % cond=1:6;
-    %
-    % idx_con=ismember(cond,current_con_index);
-    % if dyn.trialNumber==1
-    %     hist_cond=[0 0 0 0 0 0];
-    % else
-    %     hist_cond=hist_cond+idx_con;
-    % end
-    %
-    % figure
-    % bar(1:6, hist_cond)
-    % % for n=1:numel(experiment_fieldnames)
-    % %     FN=experiment_fieldnames{n};
-    % %    All_experiment.(FN) = unique(unique_sequence(:,n));
-    % % end
-    
-    
-    
-    
 end
 
 %dyn.trial_classifier(1)=numel(All.tar_pos_con);
 for field_index=1:numel(all_fieldnames)
     Current_con.(all_fieldnames{field_index})=sequence_matrix(field_index,custom_trial_condition);
+    %dyn.trial_classifier(field_index+1) = Current_con.(all_fieldnames{field_index});
     dyn.trial_classifier(field_index) = abs(round(Current_con.(all_fieldnames{field_index})));
 end
 
@@ -357,14 +300,15 @@ elseif Current_con.reward_con==1
     task.reward.time_neutral            = [reward_time reward_time];
 end
 if Current_con.reward_sound_con==0
-    SETTINGS.RewardSound                = 0;
+        SETTINGS.RewardSound                = 0;
 elseif Current_con.reward_sound_con==1
-    SETTINGS.RewardSound                = 1;
+        SETTINGS.RewardSound                = 1;
 end
-if Current_con.rest_hands_con==0
-    task.rest_hand                      = [0 0];
+
+if Current_con.rest_hands_con==0        
+        task.rest_hand                      = [0 0];
 elseif Current_con.rest_hands_con==1
-    task.rest_hand                      = [1 1];
+        task.rest_hand                      = [1 1];
 end
 
 
@@ -399,120 +343,90 @@ switch Current_con.timing_con
         task.timing.tar_time_hold               = 0.5;
         task.timing.tar_time_hold_var           = 0;
         
-    case 1 %'direct'
-        task.rest_sensors_ini_time              = 0.5; % s, time to hold sensor(s) in initialize_trial before trial starts
+   case 1 % Fixation
+%         task.rest_sensors_ini_time              = 0.5; % s, time to hold sensor(s) in initialize_trial before trial starts
         task.timing.wait_for_reward             = 0.3;
         task.timing.ITI_success                 = 2; % 3 inter trial interval
-        task.timing.ITI_success_var             = 0;
-        task.timing.ITI_fail                    = 3; % 3 inter trial interval
-        task.timing.ITI_fail_var                = 0;
-        task.timing.grace_time_eye              = 0;
-        task.timing.grace_time_hand             = 0;
-        task.timing.fix_time_to_acquire_hnd     = 1.5;
-        task.timing.tar_time_to_acquire_hnd     = 0.7;
-        task.timing.tar_inv_time_to_acquire_hnd = 2;
-        task.timing.fix_time_to_acquire_eye     = 0.7;
-        task.timing.tar_time_to_acquire_eye     = 0.5;
-        task.timing.tar_inv_time_to_acquire_eye = 0.5; %3
-        task.timing.fix_time_hold               = 0.8; % 0.5
-        task.timing.fix_time_hold_var           = 0.5; % 0
-        task.timing.cue_time_hold               = 0.300; % 0.28
-        task.timing.cue_time_hold_var           = 0; % 0
-        task.timing.mem_time_hold               = 1;
-        task.timing.mem_time_hold_var           = 0;
-        task.timing.del_time_hold               = 0.7; % 1
-        task.timing.del_time_hold_var           = 0.5; % 0
-        task.timing.tar_inv_time_hold           = 0.2;
-        task.timing.tar_inv_time_hold_var       = 0.0;
-        task.timing.tar_time_hold               = 0.5;
-        task.timing.tar_time_hold_var           = 0.0;
-        
-    case 2 %'delay'
-        task.rest_sensors_ini_time              = 0.5; % s, time to hold sensor(s) in initialize_trial before trial starts
-        task.timing.wait_for_reward             = 0.3;
-        task.timing.ITI_success                 = 3; % 2 inter trial interval
-        task.timing.ITI_success_var             = 0;
-        task.timing.ITI_fail                    = 4; % 3 inter trial interval
-        task.timing.ITI_fail_var                = 0;
-        task.timing.grace_time_eye              = 0;
-        task.timing.grace_time_hand             = 0;
-        task.timing.fix_time_to_acquire_hnd     = 1.5;
-        task.timing.tar_time_to_acquire_hnd     = 0.7;
-        task.timing.tar_inv_time_to_acquire_hnd = 2;
-        task.timing.fix_time_to_acquire_eye     = 1.5;
-        task.timing.tar_time_to_acquire_eye     = 0.8;
-        task.timing.tar_inv_time_to_acquire_eye = 0.5; %3
-        task.timing.fix_time_hold               = 0.4; % 0.5
-        task.timing.fix_time_hold_var           = 0; % 0
-        task.timing.cue_time_hold               = 0.300; % 0.28
-        task.timing.cue_time_hold_var           = 0.1; % 0
-        task.timing.mem_time_hold               = 1;
-        task.timing.mem_time_hold_var           = 0;
-        task.timing.del_time_hold               = 0.5; % 1
-        task.timing.del_time_hold_var           = 0.2; % 0
-        task.timing.tar_inv_time_hold           = 0.2;
-        task.timing.tar_inv_time_hold_var       = 0.0;
-        task.timing.tar_time_hold               = 0.100;
-        task.timing.tar_time_hold_var           = 0.0;
-        
-    case 3 %'rest'
-        task.rest_sensors_ini_time              = 0.5; % s, time to hold sensor(s) in initialize_trial before trial starts
-        task.timing.wait_for_reward             = 0.3;
-        task.timing.ITI_success                 = 1; % 2 inter trial interval
         task.timing.ITI_success_var             = 0;
         task.timing.ITI_fail                    = 1; % 3 inter trial interval
         task.timing.ITI_fail_var                = 0;
-        task.timing.fix_time_to_acquire_eye     = 1.5;
-        task.timing.fix_time_hold               = 10; % 300
+        task.timing.fix_time_to_acquire_hnd     = 2;%1.5
+        task.timing.fix_time_hold               = 0.35; %hand fixation time 
         task.timing.fix_time_hold_var           = 0; % 0
+        task.timing.grace_time_eye              = 0;
+        task.timing.grace_time_hand             = 0;
+        task.timing.fix_time_to_acquire_eye     = 2;%0.5
+   
         
-    case 31 %'memory ephys'  'Delay'
+    case 2 %'memory ephys'  'Delay'
         
         task.rest_sensors_ini_time              = 0.5; % s, time to hold sensor(s) in initialize_trial before trial starts
         task.timing.wait_for_reward             = 0.3;
-        task.timing.ITI_success                 = 2; % 3 inter trial interval
+        task.timing.ITI_success                 = 3; % 3 inter trial interval
         task.timing.ITI_success_var             = 0;
         task.timing.ITI_fail                    = 3; % 3 inter trial interval
         task.timing.ITI_fail_var                = 0;
         task.timing.grace_time_eye              = 0;
         task.timing.grace_time_hand             = 0;
         task.timing.fix_time_to_acquire_hnd     = 1.5;%1.5
-        task.timing.tar_time_to_acquire_hnd     = 0.8; %0.8
+        task.timing.tar_time_to_acquire_hnd     = 1; %0.8
         task.timing.tar_inv_time_to_acquire_hnd = 2;
         task.timing.fix_time_to_acquire_eye     = 1;%0.5
         task.timing.tar_time_to_acquire_eye     = 1;%0.5
         task.timing.tar_inv_time_to_acquire_eye = 0.5; %3
-        task.timing.fix_time_hold               = 0.5; % 0.5
-        task.timing.fix_time_hold_var           = 0.1; % 0.5
+        task.timing.fix_time_hold               = 0.5; % 0.7
+        task.timing.fix_time_hold_var           = 0.5; % 0.5
         task.timing.cue_time_hold               = 0.3; % 0.28
         task.timing.cue_time_hold_var           = 0; % 0
         task.timing.mem_time_hold               = 1;
         task.timing.mem_time_hold_var           = 0;
-        task.timing.del_time_hold               = 0.5; % 1
-        task.timing.del_time_hold_var           = 0.1; % 0.5
+        task.timing.del_time_hold               = 0.7; % 0.7
+        task.timing.del_time_hold_var           = 0.35; % 0.5
         task.timing.tar_inv_time_hold           = 0.2;
         task.timing.tar_inv_time_hold_var       = 0.0;
         task.timing.tar_time_hold               = 0.25;
         task.timing.tar_time_hold_var           = 0.0;
+        
+          case 3 %direct_reach/saccade
+        
+        task.rest_sensors_ini_time              = 0.5; % s, time to hold sensor(s) in initialize_trial before trial starts
+        task.timing.wait_for_reward             = 0.3;
+        task.timing.ITI_success                 = 3; % 3 inter trial interval
+        task.timing.ITI_success_var             = 0;
+        task.timing.ITI_fail                    = 4; % 3 inter trial interval
+        task.timing.ITI_fail_var                = 0;
+        task.timing.fix_time_to_acquire_hnd     = 1.5;%1.5
+        task.timing.fix_time_to_acquire_eye     = 1.5;%1.5
+        task.timing.fix_time_hold               = 0.75; %fixation time         
+        task.timing.fix_time_hold_var           = 0.25; % 0
+        task.timing.tar_time_to_acquire_hnd     = 1; %0.8
+        task.timing.tar_time_to_acquire_eye     = 0.8;%0.5
+        task.timing.tar_time_hold               = 0.15;
+        task.timing.tar_time_hold_var           = 0.0;
+        task.timing.grace_time_eye              = 0;
+        task.timing.grace_time_hand             = 0;
+    
 end
 
 %% RADIUS & SIZES
 switch Current_con.size_con
+    
     case 0 %'calibration'
         task.eye.fix.size       = 1;
         task.eye.fix.radius     = 55;
         task.eye.tar(1).size    = 1;
         task.eye.tar(1).radius  = 55;
         
-        task.hnd.fix.radius     = 4;
-        task.hnd.fix.size       = 4;
+        task.hnd.fix.radius     = 8;
+        task.hnd.fix.size       = 6;
         task.hnd.tar(1).size    = 4;
         task.hnd.tar(1).radius  = 4;
-    case 1 %'direct'
-        task.eye.fix.size       = 2;
+        
+  case 1 %'fixation and direct reach'
+        task.eye.fix.size       = 1;
         task.eye.fix.radius     = 7;
-        task.eye.tar(1).size    = 2;
-        task.eye.tar(1).radius  = 10;
+        task.eye.tar(1).size    = 0;
+        task.eye.tar(1).radius  = 300;
         
         task.hnd.fix.radius     = 4;
         task.hnd.fix.size       = 4;
@@ -525,21 +439,14 @@ switch Current_con.size_con
         task.eye.tar(1).size    = 3;
         task.eye.tar(1).radius  = 7;
         
-        task.hnd.fix.radius     = 8; %8
-        task.hnd.fix.size       = 4; %4
+        task.hnd.fix.radius     = 6;
+        task.hnd.fix.size       = 6;
         task.hnd.tar(1).size    = 4;
-        task.hnd.tar(1).radius  = 8;
+        task.hnd.tar(1).radius  = 7;
         
-    case 3 %'rest'
-        task.eye.fix.size       = 0;
-        task.eye.fix.radius     = 300;
-        task.eye.tar(1).size    = 0;
-        task.eye.tar(1).radius  = 300;
+   
         
-        task.hnd.fix.radius     = 0;
-        task.hnd.fix.size       = 0;
-        task.hnd.tar(1).size    = 0;
-        task.hnd.tar(1).radius  = 0;
+    
         
 end
 
@@ -608,10 +515,15 @@ else
     task.eye.tar(2).x = fix_eye_x  + tar_dis_2x;
     task.eye.tar(2).y = fix_eye_y  + tar_dis_2y;
     
-    task.hnd.tar(1).x = fix_hnd_x  + tar_dis_1x;
-    task.hnd.tar(1).y = fix_hnd_y  + tar_dis_1y;
-    task.hnd.tar(2).x = fix_hnd_x  + tar_dis_2x;
-    task.hnd.tar(2).y = fix_hnd_y  + tar_dis_2y;
+%       task.hnd.tar(1).x = fix_hnd_x  + 1; %%%For fixation task !
+%      task.hnd.tar(1).y = fix_hnd_y  + 1;
+%      task.hnd.tar(2).x = fix_hnd_x  + 1;
+%      task.hnd.tar(2).y = fix_hnd_y  + 1;
+    
+   task.hnd.tar(1).x = fix_hnd_x  + tar_dis_1x; %%%For direct task !
+   task.hnd.tar(1).y = fix_hnd_y  + tar_dis_1y;
+   task.hnd.tar(2).x = fix_hnd_x  + tar_dis_2x;
+   task.hnd.tar(2).y = fix_hnd_y  + tar_dis_2y;
 end
 
 %% COLORS
@@ -626,25 +538,35 @@ task.hnd_right.color_dim        = [0 128 0]; %[0 128 0]
 task.hnd_right.color_bright     = [0 255 0]; %[0 255 0]
 task.hnd_right.color_cue_dim    = [0 128 0];
 task.hnd_right.color_cue_bright = [0 255 0];
-task.hnd_left.color_dim         = [39 109 216]; %
-task.hnd_left.color_bright      = [119 230 253];
+task.hnd_left.color_dim         = [39 109 216]; % [39 109 216]
+task.hnd_left.color_bright      = [119 230 253]; % [119 230 253]
 task.hnd_left.color_cue_dim     = [39 109 216];
 task.hnd_left.color_cue_bright  = [119 230 253];
-task.hnd_stay.color_dim         = [128 129 0];
-task.hnd_stay.color_bright      = [255 255 0];
+task.hnd_stay.color_dim         = [39 109 216];
+task.hnd_stay.color_bright      = [119 230 253];
+
+%fixation
+task.hnd_left.color_dim_fix         = [39 109 216];%[39 109 216] %grey 60 60 60
+task.hnd_left.color_bright_fix      = [119 230 253];%[119 230 253] % grey 110 110 110
+task.hnd_right.color_dim_fix        = [0 128 0];
+task.hnd_right.color_bright_fix     = [0 255 0];%[0 255 0]
+
+%grey_dim [60 60 60]
+%grey_bright [110 110 110]
+
+
 
 %% CUE assignment (Positions and colors !)
 task.eye.cue                                        = task.eye.tar;
 task.hnd.cue                                        = task.hnd.tar;
-%
-% switch Current_con.cue_pos_con
-%     case 1
-%         task.cue_pos                                = {[-ex_cue,fix_height],[ex_cue,fix_height]};
-%     case 2
-%         task.cue_pos                                = {[ex_cue,fix_height],[-ex_cue,fix_height]};
-% end
+
 
 if task.effector==0 || task.effector==1 || task.effector==2
+    %         task.eye.cue(1).color_dim       = [80 50 50];
+    %         task.eye.cue(1).color_bright    = [80 50 50];
+    %         task.eye.cue(2).color_dim       = [80 50 50];
+    %         task.eye.cue(2).color_bright    = [80 50 50];
+    
     task.eye.cue(1).color_dim                       = [128 0 0];
     task.eye.cue(1).color_bright                    = [255 0 0];
     task.eye.cue(2).color_dim                       = [128 0 0];

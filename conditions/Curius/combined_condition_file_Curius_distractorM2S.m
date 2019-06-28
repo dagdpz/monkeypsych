@@ -41,7 +41,6 @@ esperimentazione = {'choice target-distractor direct saccades horizontal'};
         experiment=esperimentazione{n_exp};
         task.calibration                    = 0;
         SETTINGS.GUI_in_acquisition         = 0;
-        PEST_ON                             = 0;
         task.rest_hand                      = [1 1]; %left right
         
         %% Order of fields here defines the order of parameters to be sent to TDT as the trial_classifiers
@@ -93,7 +92,6 @@ esperimentazione = {'choice target-distractor direct saccades horizontal'};
      
      % Where does the stimulus appear?
         All.excentricities                  = [10];
-        SETTINGS.take_angles_con            = 1;
         pool_of_angles                      = [0 180]; %[0,30,330, 180,150,210] [0,20,340, 180,160,200] % [right-mid right-up right-bottom left-mid left-up left-bottom]       
         All.angle_cases                     = [1,2]; %[1,2,3,4,5,6];
         angle_cases_singleOption            = All.angle_cases;
@@ -115,7 +113,6 @@ esperimentazione = {'choice target-distractor direct saccades horizontal'};
                 SETTINGS.check_motion_jaw           = 0;
                 SETTINGS.check_motion_body          = 0;                
                 
-                SETTINGS.take_angles_con            = 1;
                 pool_of_angles                      = [0];
                 All.excentricities                  = [0];
                 All.angle_cases                     = [1];
@@ -143,7 +140,6 @@ esperimentazione = {'choice target-distractor direct saccades horizontal'};
                 SETTINGS.check_motion_jaw           = 0;
                 SETTINGS.check_motion_body          = 0;
                 
-                SETTINGS.take_angles_con            = 1;
                 pool_of_angles                      = [0];
                 All.excentricities                  = [0];
                 All.angle_cases                     = [1];
@@ -478,14 +474,9 @@ task.hnd.cue  = task.hnd.tar(1);
 
 %% TARGET POSITIONS
 
-if SETTINGS.take_angles_con
-    current_angle=pool_of_angles(Current_con.angle_cases); %
-    tar_dis_x   = Current_con.excentricities*cos(current_angle*2*pi/360);
-    tar_dis_y   = Current_con.excentricities*sin(current_angle*2*pi/360);
-else
-    tar_dis_x   = Current_con.exact_excentricity_con_x;
-    tar_dis_y   = Current_con.exact_excentricity_con_y;
-end
+current_angle=pool_of_angles(Current_con.angle_cases); %
+tar_dis_x   = Current_con.excentricities*cos(current_angle*2*pi/360);
+tar_dis_y   = Current_con.excentricities*sin(current_angle*2*pi/360);
 
 tar_dis_1x = + tar_dis_x;
 tar_dis_1y = + tar_dis_y -5;
