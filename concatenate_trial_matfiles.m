@@ -1,5 +1,5 @@
-function concatinate_trial_matfiles(monkey,main_folder)
-%concatinate_trial_matfiles('Cor','D:\Data\Cornelius\20160219')
+function concatenate_trial_matfiles(monkey,main_folder)
+%concatenate_trial_matfiles('Cor','D:\Data\Cornelius\20160219')
 subfolder_dir=dir([main_folder filesep '*' monkey '*']);
 subfolder_isdir=[subfolder_dir.isdir];
 
