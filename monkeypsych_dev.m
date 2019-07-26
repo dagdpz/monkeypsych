@@ -1922,6 +1922,9 @@ while true
         trial(dyn.trialNumber).completed = 1;
         dyn.completed = 1;
         dyn.trialNumberCompleted = dyn.trialNumberCompleted + 1;
+        if ~any(trial(dyn.trialNumber).task.correct_choice_target == dyn.target_selected(dyn.tar_selected_ind)) % for eye and hand targets
+            dyn.state=STATE.ABORT;
+        end
     end
     
     if dyn.state==STATE.INI_TRI && SETTINGS.interface_with_scanner && ((GetSecs-SETTINGS.time_start) > SETTINGS.run_volumes*SETTINGS.TR),
