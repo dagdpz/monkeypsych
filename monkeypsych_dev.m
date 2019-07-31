@@ -3030,7 +3030,7 @@ if SETTINGS.TextFeedback
     Screen(SETTINGS.window,'Flip');
     tempdyn=dyn;
     tempdyn.duration=task.timing.text_feedback;
-    [~,~,task]=wait_while_recording_state(task,tempdyn);
+    [success,dyn,task]=wait_while_recording_state(task,tempdyn);
 end
 
 Screen('FillRect', SETTINGS.window, SETTINGS.BG_COLOR);
