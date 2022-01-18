@@ -78,7 +78,7 @@ if ~exist('dyn','var') || dyn.trialNumber == 1
                 
             case 'rest'
                 SETTINGS.take_angles_con            = 1;
-                N_repetitions                       = 100; %47 36 %100
+                N_repetitions                       = 47; %47 36 %100
                 task.rest_hand                      = [0 0];
                 
                 All.offset_con                      = 0;

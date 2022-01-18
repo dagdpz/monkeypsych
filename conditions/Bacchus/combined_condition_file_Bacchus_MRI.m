@@ -1,10 +1,10 @@
 if ~exist('dyn','var') || dyn.trialNumber == 1
     
 % Set task here    
-  % esperimentazione        = {'calibration'};
-  esperimentazione        = {'fixation' 'memory saccades'};
+ % esperimentazione        = {'calibration'};
+%   esperimentazione        = {'fixation' 'memory saccades'};
  % esperimentazione        = {'memory saccades'};
-  %    esperimentazione        = {'fixation'};
+  esperimentazione        = {'fixation'};
   
     
     
@@ -263,7 +263,7 @@ switch Current_con.timing_con
         
     case 1 %'fixation'       
           
-        task.timing.fix_time_hold               = 19.95; % 19.95 minimum duration of fixation trials
+        task.timing.fix_time_hold               = 7; % 19.95 minimum duration of fixation trials
         task.timing.fix_time_hold_var           = 2.5;
         
          

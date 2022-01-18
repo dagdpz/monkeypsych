@@ -1,6 +1,6 @@
 function get_setup_dev
 global SETTINGS
-SETTINGS.setup          = 1;         % see switch SETTINGS.setup below
+SETTINGS.setup          = 2;         % see switch SETTINGS.setup below
 
 %% General switches
 SETTINGS.GUI                        = 1;          % user GUI
@@ -335,13 +335,13 @@ switch SETTINGS.setup,
         SETTINGS.screen_w_pix = 1920;
         SETTINGS.screen_h_pix = 1080;
         SETTINGS.screen_w_cm = 59.5;
-        SETTINGS.screen_h_cm = 33;
+        SETTINGS.screen_h_cm = 33.5; %33
         SETTINGS.ai = 1;
         SETTINGS.ao = 1;
         SETTINGS.use_digital_to_TDT = 1;
         SETTINGS.check_motion_jaw = 1;
         SETTINGS.check_motion_body = 0;
-        SETTINGS.touchscreen = 1;
+        SETTINGS.touchscreen = 0;
         SETTINGS.interface_with_scanner = 0;
         SETTINGS.daq_digital_output_port_to_TDT = 1;
         
@@ -360,7 +360,7 @@ switch SETTINGS.setup,
         SETTINGS.touchscreen_calibration.y_offset       = 545;  % 20160331 Adan
         SETTINGS.touchscreen_calibration.x_gain         = 192;  % 20160331 Adan
         SETTINGS.touchscreen_calibration.x_offset       = 965;  % 20160331 Adan
-        SETTINGS.touchscreen_calibration.x_threshold    = -4.5; % lowest Voltage still different from not touched
+        SETTINGS.touchscreen_calibration.x_threshold    = -4.5; % lowest Voltage still different from not touched -4.5
         SETTINGS.touchscreen_calibration.y_threshold    = -4.5; % lowest Voltage still different from not touched
         
         SETTINGS.BASE_PATH = 'D:';
@@ -376,8 +376,8 @@ switch SETTINGS.setup,
         SETTINGS.whichScreen = 1;
         SETTINGS.screen_w_pix = 1920;
         SETTINGS.screen_h_pix = 1080;
-        SETTINGS.screen_w_cm = 59.5;
-        SETTINGS.screen_h_cm = 33;
+        SETTINGS.screen_w_cm = 59.5;%59.5
+        SETTINGS.screen_h_cm = 33; %33
         SETTINGS.ai = 1;
         SETTINGS.ao = 1;
         SETTINGS.use_digital_to_TDT = 1;

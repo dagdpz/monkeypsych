@@ -3,7 +3,7 @@ global SETTINGS
 %% VERSION LOG
 % version 1: first working version, Linus data from 20120317 to 20120417
 % version 2: reward probability added, Linus data from 20120418 to **
-% version 3: current version from 20160113, for usie with custom condition
+% version 3: current version from 20160113, for use with custom condition
 % files
 % task.software                       = 'C:\Projekte\fMRI-Touch\monkeypsych_3.0\monkeypsych_dev.m';
 % task.version                        = 3;
@@ -157,7 +157,7 @@ task.timing.tar_time_hold_var           = 0;
 task.timing.ta2_time_hold               = 0;
 task.timing.ta2_time_hold_var           = 0;
 task.timing.wait_for_reward             = 0; %%??
-task.timing.reward_time_sensors         = 0; %% new Pinocchio thing
+task.timing.reward_time_sensors         = 0; %% new Pinocchio to learn sensors
 
 task.timing.ITI_success                 = 0;
 task.timing.ITI_success_var             = 0;
@@ -176,28 +176,28 @@ switch monkey
         task.screen_uh_cm           = 12; % % defines position of screen center point over y axis (should be half of screen heigth in cm)
         
         
-        SETTINGS.useMouse                   = 1;         % 0: use mouse instead of eye position
-        SETTINGS.useVPacq                   = 0;         % 1: allow ViewPoint toolbox
+        SETTINGS.useMouse                   = 0;         % 0: use mouse instead of eye position
+        SETTINGS.useVPacq                   = 1;         % 1: allow ViewPoint toolbox
         SETTINGS.UseMouseAsTouch = 1;
         %% Peter
         task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Peter\UMG_abstract_cue_reaches_saccades.m';
-        %% magnus
-        task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Magnus\eye_hand_and_rest_blocks_Mag.m';
-        task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Magnus\combined_condition_file_eye_hand_Mag.m';
-        %% cornelius
-        task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Cornelius\M2S_exploration_in_black.m';
-        task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Cornelius\M2S_exploration_in_black_8_positions.m';
-        task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Cornelius\M2S_2targets_exploration_in_black.m';
-        task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Cornelius\Memory_ephys.m';
-        task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Cornelius\standard_tasks.m';
-        task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Cornelius\combined_condition_file_Cornelius_distractor_task_full.m';
-        task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Cornelius\combined_condition_file_perceptual_Instructed_free_distractor.m';
-        %% pinocchio
-        task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Pinocchio\fixation_file_pinocchio';
-        task.custom_conditions      = '\Sources\MATLAB\monkeypsych_3.0\conditions\Pinocchio\combined_condition_file_pinocchio';
-        %% Bacchus
-        task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Bacchus\fixation_file_Bacchus';
-        task.custom_conditions      = '\Sources\MATLAB\monkeypsych_3.0\conditions\Bacchus\combined_condition_file_Bacchus_MRI';
+%         %% magnus
+%         task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Magnus\eye_hand_and_rest_blocks_Mag.m';
+%         task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Magnus\combined_condition_file_eye_hand_Mag.m';
+%         %% cornelius
+%         task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Cornelius\M2S_exploration_in_black.m';
+%         task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Cornelius\M2S_exploration_in_black_8_positions.m';
+%         task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Cornelius\M2S_2targets_exploration_in_black.m';
+%         task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Cornelius\Memory_ephys.m';
+%         task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Cornelius\standard_tasks.m';
+%         task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Cornelius\combined_condition_file_Cornelius_distractor_task_full.m';
+%         task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Cornelius\combined_condition_file_perceptual_Instructed_free_distractor.m';
+%         %% pinocchio
+%         task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Pinocchio\fixation_file_pinocchio';
+%         task.custom_conditions      = '\Sources\MATLAB\monkeypsych_3.0\conditions\Pinocchio\combined_condition_file_pinocchio';
+%         %% Bacchus
+%         task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Bacchus\fixation_file_Bacchus';
+%         task.custom_conditions      = '\Sources\MATLAB\monkeypsych_3.0\conditions\Bacchus\combined_condition_file_Bacchus_MRI';
         
         
         %% Linus
@@ -205,15 +205,15 @@ switch monkey
         %         task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\combined_condition_file_stim';
         %         %         task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\combined_condition_file_phys';
         %% Curius
-        
-        task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Curius\combined_condition_file_Curius_distractorM2S'; %% fixation spot above cue?
-        task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Curius\combined_condition_file_Curius_distractor_task_full.m';
-        task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Curius\standard_tasks';
-        task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Curius\combined_condition_file_Curius_distractor_task.m';
-        
-        
-        task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Bacchus\fixation_file_Bacchus';
-        
+%         
+%         task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Curius\combined_condition_file_Curius_distractorM2S'; %% fixation spot above cue?
+%         task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Curius\combined_condition_file_Curius_distractor_task_full.m';
+%         task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Curius\standard_tasks';
+%         task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Curius\combined_condition_file_Curius_distractor_task.m';
+%         
+%         
+%         task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Bacchus\fixation_file_Bacchus';
+%         
 %         task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Curius\standard_tasks';
 %         task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Curius\combined_condition_file_perceptual_Instructed_free_distractor';
 %         task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Curius\combined_condition_file_Curius_setup_sacc';
@@ -238,11 +238,11 @@ switch monkey
         % task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Norman\combined_condition_file_Norman_distractorM2S_Samplestays';
         %  task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Norman\combined_condition_file_M2S_Wagering';
         
-        
-        task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Magnus\eye_hand_and_rest_blocks_Mag.m';
-        task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Norman\combined_condition_file_M2S_Wagering';
-        task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Pinocchio\fixation_file_pinocchio';
-        task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Bexter\fixation_file_bexter.m';
+%         
+%         task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Magnus\eye_hand_and_rest_blocks_Mag.m';
+%         task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Norman\combined_condition_file_M2S_Wagering';
+%         task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Pinocchio\fixation_file_pinocchio';
+%         task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Bexter\fixation_file_bexter.m';
         
         task.vd                     = 36; %32 chair 2 %30; chair 1 % cm
         task.screen_uh_cm           = 6; %32 chair 2 %30; chair 1 % cm
@@ -440,29 +440,30 @@ switch monkey
         task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\HumanM2S\calibration_task';
         %task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\HumanM2S\M2S_exploration';
         task.vd                     = 30; %32 30 %chair 2 %chair 1 % cm
-        task.screen_uh_cm           = 16; %32 chair 2 %30; chair 1 % cm
+        task.screen_uh_cm           = 20; %32 chair 2 %30; chair 1 % cm
         
     case 'Linus'
         monkey_name                 = 'Lin';
-        pathname                    = '\Data\Linus';
-        task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\combined_condition_file_eye_hand';
-        task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\combined_condition_file_stim';
-        %         task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\combined_condition_file_phys';
-        task.vd                     = 29.5;
-        task.screen_uh_cm           = 6;
+        pathname                    = 'D:\Data\Linus';
+        % task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Linus\combined_condition_file_Linus';
+        task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Linus\combined_condition_file_Linus_binoriv_fixation';
+        % task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\combined_condition_file_eye_hand';
+        % task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\combined_condition_file_phys';
+        task.vd                     = 42;%47
+        task.screen_uh_cm           = 12;
         
         
-        switch SETTINGS.setup
-            case 1
-                task.vd                     = 29.5;
-                task.screen_uh_cm           = 6;
-            case 2
-                task.vd                     = 29.5;
-                task.screen_uh_cm           = 6;
-            case 3
-                task.vd                     = 29.5;
-                task.screen_uh_cm           = 6;
-        end
+%         switch SETTINGS.setup
+%             case 1
+%                 task.vd                     = 29.5;
+%                 task.screen_uh_cm           = 10;
+%             case 2
+%                 task.vd                     = 29.5;
+%                 task.screen_uh_cm           = 12;
+%             case 3
+%                 task.vd                     = 29.5;
+%                 task.screen_uh_cm           = 6;
+%         end
         
         %         task.custom_conditions        = '\Sources\MATLAB\monkeypsych_2.0\conditions\combined_condition_file_flaffy';
         %         task.custom_conditions        = '\Sources\MATLAB\monkeypsych_2.0\conditions\combined_condition_file_lin_training';
@@ -495,26 +496,27 @@ switch monkey
     case 'Bacchus'
         monkey_name                 = 'Bac';
         pathname                    = 'D:\Data\Bacchus';
-        %task.custom_conditions      = '\Sources\MATLAB\monkeypsych_3.0\conditions\Bacchus\combined_condition_file_Bacchus_MRI';
-        task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Bacchus\fixation_file_Bacchus';
-        task.vd                     = 33; %55
-        task.screen_uh_cm           = 16;
+       % task.custom_conditions      = 'D\Sources\MATLAB\monkeypsych_3.0\conditions\Bacchus\combined_condition_file_Bacchus_MRI';
+       task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Bacchus\combined_condition_file_bacchus';
+%         task.custom_conditions      = 'Y:\Personal\Mathieu\transfer\Setup_3\monkeypsych_3.0\conditions\Pinocchio\fixation_file_pinocchio.m';
+        task.vd                     = 33; %55 %33
+        task.screen_uh_cm           = 12;
         
-        switch SETTINGS.setup
-            case 0  % scanner UMG monkeys
-            case 1
-                task.vd                     = 52.5; %55
-                task.screen_uh_cm           = 16;
-            case 2
-                task.vd                     = 52.5; %55
-                task.screen_uh_cm           = 16;
-            case 3
-                task.vd                     = 33; %55
-                task.screen_uh_cm           = 16;
-            case 4 % scanner DPZ monkeys
-                task.vd                     = 60;
-                task.screen_uh_cm           = 20;
-        end
+%         switch SETTINGS.setup
+%             case 0  % scanner UMG monkeys
+%             case 1
+%                 task.vd                     = 52.5; %55
+%                 task.screen_uh_cm           = 16;
+%             case 2
+%                 task.vd                     = 52.5; %55
+%                 task.screen_uh_cm           = 16;
+%             case 3
+%                 task.vd                     = 33; %55
+%                 task.screen_uh_cm           = 16;
+%             case 4 % scanner DPZ monkeys
+%                 task.vd                     = 60;
+%                 task.screen_uh_cm           = 20;
+%         end
         %     case 'Bacchus_MRI'
         %         monkey_name                 = 'Bac';
         %         pathname                    = '\Data\Bacchus';
@@ -533,9 +535,19 @@ switch monkey
         monkey_name                 = 'Pin';
         pathname                    = 'D:\Data\Pinocchio';
         %         task.custom_conditions      = '\Sources\MATLAB\monkeypsych_3.0\conditions\Pinocchio\combined_condition_file_pinocchio';
-        task.custom_conditions      = '\Sources\MATLAB\monkeypsych_3.0\conditions\Pinocchio\fixation_file_pinocchio';
-        task.vd                     = 36; %32 chair 2 %30; chair 1 % cm
-        task.screen_uh_cm           = 6; %32 chair 2 %30; chair 1 % cm
+        task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Pinocchio\fixation_file_pinocchio.m';
+        task.vd                     = 28; %32 chair 2 %30; chair 1 % cm
+        task.screen_uh_cm           = 7; %32 chair 2 %30; chair 1 % cm
         SETTINGS.SoundType                  = 'XBI_sounds';
+        
+    case 'Debug'
+        monkey_name                 = 'Deb';
+        pathname                    = 'D:\Data\Debug';
+        % task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Linus\combined_condition_file_Linus';
+        task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Linus\combined_condition_file_Linus_binoriv_fixation';
+        % task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\combined_condition_file_eye_hand';
+        % task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\combined_condition_file_phys';
+        task.vd                     = 42;%47
+        task.screen_uh_cm           = 12;
         
 end
