@@ -432,7 +432,6 @@ switch monkey
         %         task.vd                     = 65;
         %         task.screen_uh_cm           = 20;
         
-    case 'TestTDT'
         
     case 'HumanM2S'
         monkey_name                 = 'DW1';
@@ -549,5 +548,16 @@ switch monkey
         % task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\combined_condition_file_phys';
         task.vd                     = 42;%47
         task.screen_uh_cm           = 12;
+        
+    case 'Debug_IKDAG'
+        monkey_name                 = 'Deb';
+        pathname                    = 'D:\Data\Debug';
+        % task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Linus\combined_condition_file_Linus';
+        task.custom_conditions      = 'E:\Dropbox\Sources\Repos\monkeypsych\conditions\Linus\combined_condition_file_Linus_binoriv_fixation';
+        % task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\combined_condition_file_eye_hand';
+        % task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\combined_condition_file_phys';
+        task.vd                     = 42;%47
+        task.screen_uh_cm           = 12;
+        
         
 end
