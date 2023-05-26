@@ -1,5 +1,5 @@
-function monkeypsych_dev(monkey)
-% main function 
+function monkeypsych(monkey)
+% main function
 % see https://github.com/dagdpz/monkeypsych
 
 close all;
@@ -20,14 +20,17 @@ global IO
 % dyn - timing and acquisition info, changing from state to state
 % par - stimuli info, per stimulus, changing from state to state
 
-version_filename = dir([mfilename('fullpath') '.m']);
+MP_PATH = mfilename('fullpath');
+SETTINGS.MP_PATH = MP_PATH(1:end-length(mfilename)-1);
+version_filename = dir([MP_PATH '.m']);
 SETTINGS.matlab_version=datevec(version('-date'));
-SETTINGS.version = ['monkeypsych_dev_' datestr(version_filename.datenum,'yyyymmdd') '_' datestr(version_filename.datenum,'HHMM')];
+SETTINGS.version = ['monkeypsych_' datestr(version_filename.datenum,'yyyymmdd') '_' datestr(version_filename.datenum,'HHMM')];
 
 %% Setup and monkey specific settings
-get_setup_dev; %Global SETTINGS pertaining to setup-specific DAQ and display params
+get_setup; %Global SETTINGS pertaining to setup-specific DAQ and display params
+
 set(0,'DefaultFigurePosition',SETTINGS.DefaultFigurePosition);
-[task monkey_name DATA_PATH]  = get_monkey_dev(monkey);
+[task, monkey_name, DATA_PATH]  = get_monkey(monkey);
 SETTINGS.vd         = task.vd;
 sequence_indexes    = 0;
 
@@ -158,7 +161,7 @@ if  SETTINGS.use_digital_to_TDT
     end
 end
 
-%% Feedback sound - test            Sounds('Reward')                 Sounds('Failure')
+%% Feedback sound - test            mp_Sounds('Reward')                 mp_Sounds('Failure')
 if  SETTINGS.useSound && strcmp(SETTINGS.SoundType, 'Beep')
     InitializePsychSound(1);
     sampleRate = 8192;
@@ -262,7 +265,7 @@ task.overriding.reach_hand  = 0;
 task.overriding.reward      = 0;
 task.overriding.improvers   = 0;
 
-%% state machine (NOT defined in get_monkey_dev)
+%% state machine (NOT defined in get_monkey)
 
 STATE.INI_TRI                       = 1; % initialize trial
 STATE.FIX_ACQ                       = 2; % fixation acquisition
@@ -663,9 +666,9 @@ while true
             
             task.eye.fix.pos=[task.eye.fix.x task.eye.fix.y task.eye.fix.size task.eye.fix.radius 1]; %% legacy for analysis
             task.hnd.fix.pos=[task.hnd.fix.x task.hnd.fix.y task.hnd.fix.size task.hnd.fix.radius 1]; %% legacy for analysis
-%             task.eye.fi2.pos=[task.eye.fi2.x task.eye.fi2.y task.eye.fi2.size task.eye.fi2.radius 1]; %% legacy for analysis
-%             task.hnd.fi2.pos=[task.hnd.fi2.x task.hnd.fi2.y task.hnd.fi2.size task.hnd.fi2.radius 1]; %% legacy for analysis
-                
+            %             task.eye.fi2.pos=[task.eye.fi2.x task.eye.fi2.y task.eye.fi2.size task.eye.fi2.radius 1]; %% legacy for analysis
+            %             task.hnd.fi2.pos=[task.hnd.fi2.x task.hnd.fi2.y task.hnd.fi2.size task.hnd.fi2.radius 1]; %% legacy for analysis
+            
             trial(dyn.trialNumber).eye.fix = task.eye.fix;
             trial(dyn.trialNumber).hnd.fix = task.hnd.fix;
             trial(dyn.trialNumber).eye.fi2 = task.eye.fi2;
@@ -701,7 +704,7 @@ while true
                 dyn.n_eye_cue=0;
                 dyn.n_hnd_cue=0;
             end
-                       
+            
             switch task.effector
                 case 0 % eye
                     dyn.n_hnd_tar = 0;
@@ -839,6 +842,11 @@ while true
                     end
                 end
             end
+            if SETTINGS.VisFeedback_rest_hand && any(task.rest_hand) %KK
+                par_hnd = aux_FillPar(task.hnd.ini(1).shape, [task.hnd.ini(1).x,task.hnd.ini(1).y,task.hnd.ini(1).size,0,0], task.hnd.ini(1).color);
+                aux_PrepareStimuli(par_hnd);
+                Screen(SETTINGS.window,'Flip');
+            end
             
             % check if monkey is touching the sensors, wait until he does
             if any(task.rest_hand)
@@ -908,7 +916,7 @@ while true
                             n_ini = 1;
                         end
                         if SETTINGS.VisFeedback_rest_hand
-                            par_temp=task.hnd.ini(n_ini);    
+                            par_temp=task.hnd.ini(n_ini);
                             par_temp.radius=par_temp.size;
                             par_hnd = aux_FillPar(par_temp);
                             aux_PrepareStimuli(par_hnd);
@@ -1189,13 +1197,7 @@ while true
             dyn.duration            = get_state_duration(task,trial,dyn);
             [success,dyn,task]      = hold_state(task,par_eye,par_hnd,dyn,trial,IO);
             temp_target_selected = dyn.target_selected;
-            
-            %             if task.type == 10 %KK reward for training norman
-            %                 if dyn.target_selected(dyn.tar_selected_ind) == 1 %correct & blue (2)
-            %                                 dyn.duration= 0.001;
-            %                 [success,dyn,task]=aux_DispenseReward(task,dyn)  ;
-            %                 end
-            %             end
+
         case STATE.TA2_ACQ  % target acquisition
             dyn.tar_struct = 'ta2';
             if all(isnan(dyn.target_selected)) % can this be the case?
@@ -1256,7 +1258,7 @@ while true
             dyn.target_selected = temp_target_selected ;
         case {STATE.CUE_ON_AUDITIV}
             % either a reward/error tone /none tone is displayed
-            % visuel: same as in target-hold period
+            % visual: same as in target-hold period
             % hand movement:none
             
             par_hnd = struct([]);par_eye = struct([]);
@@ -1266,7 +1268,7 @@ while true
                         Beeper_PsychPortAudio(SETTINGS.audioPort,200, 0.5, 0.2);
                     elseif SETTINGS.useSound && strcmp(SETTINGS.SoundType, 'XBI_sounds')
                         PsychPortAudio('Volume', SETTINGS.audioPort, 0.3);
-                        Sounds('Reward') ;
+                        mp_Sounds('Reward') ;
                     end
                 elseif ~any(trial(dyn.trialNumber).task.correct_choice_target == dyn.target_selected(dyn.tar_selected_ind))
                     if SETTINGS.useSound && strcmp(SETTINGS.SoundType, 'Beep'),
@@ -1274,11 +1276,11 @@ while true
                     elseif  SETTINGS.useSound && strcmp(SETTINGS.SoundType, 'XBI_sounds'),
                         PsychPortAudio('Volume', SETTINGS.audioPort, 0.1);
                         
-                        Sounds('Failure');
+                        mp_Sounds('Failure');
                     end
                 end
             elseif trial(dyn.trialNumber).CueAuditiv  == 2
-                  Beeper_PsychPortAudio(SETTINGS.audioPort,1000, 0.5, 0.2);
+                Beeper_PsychPortAudio(SETTINGS.audioPort,1000, 0.5, 0.2);
                 
             end
             
@@ -1573,7 +1575,7 @@ while true
                 Beeper_PsychPortAudio(SETTINGS.audioPort,120, 0.5, 0.2);
             elseif  SETTINGS.useSound && SETTINGS.WrongTargetSound && trial(dyn.trialNumber).completed == 1 && strcmp(SETTINGS.SoundType, 'XBI_sounds')&& task.type ~= 10 ,
                 PsychPortAudio('Volume', SETTINGS.audioPort, 1);
-                Sounds('Failure'); %KK
+                mp_Sounds('Failure'); %KK
             end
             if SETTINGS.useSound && SETTINGS.FixationBreakSound && (dyn.previousState==STATE.CUE_ON || dyn.previousState==STATE.MEM_PER)
                 Beeper_PsychPortAudio(SETTINGS.audioPort,1600, 0.5, 0.2);
@@ -1581,23 +1583,23 @@ while true
             end
             
             % temp hack 20191212 for Bacchus training
-%             if strcmp(dyn.abort_code,'ABORT_HND_TAR_ACQ_STATE')
-%                 
-%                 
-%                 for n_obj=1:dyn.n_hnd_tar
-%                     par_temp=trial(dyn.trialNumber).hnd.tar(n_obj);
-%                     par_temp.color=trial(dyn.trialNumber).hnd.tar(n_obj).color_dim;
-%                     par_hnd(n_obj) = aux_FillPar(par_temp);
-%                 end
-%                 
-%                 n_obj_hnd = length(par_hnd);
-%                 for obj = 1:n_obj_hnd
-%                         aux_PrepareStimuli(par_hnd(obj));
-%                 end
-%                 Screen(SETTINGS.window,'Flip');
-%                 WaitSecs(2);
-%             end
-%             % end of hack
+            %             if strcmp(dyn.abort_code,'ABORT_HND_TAR_ACQ_STATE')
+            %
+            %
+            %                 for n_obj=1:dyn.n_hnd_tar
+            %                     par_temp=trial(dyn.trialNumber).hnd.tar(n_obj);
+            %                     par_temp.color=trial(dyn.trialNumber).hnd.tar(n_obj).color_dim;
+            %                     par_hnd(n_obj) = aux_FillPar(par_temp);
+            %                 end
+            %
+            %                 n_obj_hnd = length(par_hnd);
+            %                 for obj = 1:n_obj_hnd
+            %                         aux_PrepareStimuli(par_hnd(obj));
+            %                 end
+            %                 Screen(SETTINGS.window,'Flip');
+            %                 WaitSecs(2);
+            %             end
+            %             % end of hack
             
             Screen('FillRect', SETTINGS.window, SETTINGS.BG_COLOR);
             displaybackground(SETTINGS,task,dyn)
@@ -1673,7 +1675,7 @@ while true
                 Beeper_PsychPortAudio(SETTINGS.audioPort,200, 0.5, 0.2);
             elseif SETTINGS.useSound && SETTINGS.RewardSound && strcmp(SETTINGS.SoundType, 'XBI_sounds') % && task.type ~= 10
                 PsychPortAudio('Volume', SETTINGS.audioPort, 1);
-                Sounds('Reward') ;     %KK
+                mp_Sounds('Reward') ;     %KK
             end
             
             Screen('FillRect', SETTINGS.window, SETTINGS.BG_COLOR);
@@ -1700,24 +1702,24 @@ while true
                 
                 if trial(dyn.trialNumber).CueAuditiv == 0 % three wagers where the middle is not rewarded
                     if trial(dyn.trialNumber).success && dyn.target2_selected(dyn.ta2_selected_ind) == 2 %correct & blue (2)
-                        Sounds('Reward') ;
+                        mp_Sounds('Reward') ;
                     elseif trial(dyn.trialNumber).success && dyn.target2_selected(dyn.ta2_selected_ind) == 1 %correct & yellow (1)
-                        Sounds('Failure');
+                        mp_Sounds('Failure');
                     elseif trial(dyn.trialNumber).success == 0 && dyn.target2_selected(dyn.ta2_selected_ind) == 1 %incorrect & yellow (1)
-                        Sounds('Reward') ;
+                        mp_Sounds('Reward') ;
                     elseif trial(dyn.trialNumber).success  == 0 && dyn.target2_selected(dyn.ta2_selected_ind) == 2 %incorrect & blue (2)
-                        Sounds('Failure');
+                        mp_Sounds('Failure');
                     end
                     
                 else % two  wagers
                     if trial(dyn.trialNumber).success && dyn.target2_selected(dyn.ta2_selected_ind) == 2 %correct & blue (2)
-                        Sounds('Reward') ;
+                        mp_Sounds('Reward') ;
                     elseif trial(dyn.trialNumber).success && dyn.target2_selected(dyn.ta2_selected_ind) == 1 %correct & yellow (1)
-                        Sounds('Failure');
+                        mp_Sounds('Failure');
                     elseif trial(dyn.trialNumber).success == 0 && dyn.target2_selected(dyn.ta2_selected_ind) == 1 %incorrect & yellow (1)
-                        Sounds('Reward') ;
+                        mp_Sounds('Reward') ;
                     elseif trial(dyn.trialNumber).success  == 0 && dyn.target2_selected(dyn.ta2_selected_ind) == 2 %incorrect & blue (2)
-                        Sounds('Failure');
+                        mp_Sounds('Failure');
                     end
                 end
                 
@@ -1928,6 +1930,9 @@ while true
         trial(dyn.trialNumber).completed = 1;
         dyn.completed = 1;
         dyn.trialNumberCompleted = dyn.trialNumberCompleted + 1;
+        if ~any(trial(dyn.trialNumber).task.correct_choice_target == dyn.target_selected(dyn.tar_selected_ind)) % for eye and hand targets
+            dyn.state=STATE.ABORT;
+        end
     end
     
     if dyn.state==STATE.INI_TRI && SETTINGS.interface_with_scanner && ((GetSecs-SETTINGS.time_start) > SETTINGS.run_volumes*SETTINGS.TR),
@@ -2568,6 +2573,7 @@ while true
     if SETTINGS.GUI && (tSample > tPreviousEyeHandUpdate + SETTINGS.figure_drawing_interval),
         tPreviousEyeHandUpdate = tSample;
         aux_DrawEyeHandPos(x_eye, y_eye, x_hnd, y_hnd, dyn, task);
+        grid on
     end
     dyn.counterLine = dyn.counterLine+1;
     dyn.memoryBuffer(dyn.counterLine,:) = [tSample-SETTINGS.time_start,dyn.trialNumber,dyn.state,x_hnd,y_hnd,x_eye,y_eye,sen1,sen2,sen3,sen4];
@@ -2697,6 +2703,15 @@ while true
         fprintf(' aborted_effector %d  RT=%4d',dyn.aborted_effector, round((GetSecs-tEnterState)*1000));
         break
     end
+    
+    %Pinocchio training
+    %     if aux_IsWithinRadius(x_eye, y_eye, par_hnd(obj))
+    %         success = false;
+    %         dyn.previousState = dyn.state;
+    %         fprintf(' Looked at the hand target, aborting');
+    %         break
+    %     end
+    %Pinocchio training
     
     WaitSecs('Untiltime',tSample+SETTINGS.timeStep); % maintain matlab sampling rate
     dyn.counterTimeSteps=dyn.counterTimeSteps+1;
@@ -3734,6 +3749,52 @@ if strcmp(SETTINGS.background_image,'rectangles')
     end
     
     Screen ('FrameRect', SETTINGS.window, [255 255 255], rect, 1);
+elseif strcmp(SETTINGS.background_image, 'gratings')
+    
+    % this part of the function draws gratings in the background for the
+    % project of Luba and Ryo
+    
+    if dyn.state == 2 || dyn.state == 3 || dyn.state == 4 || dyn.state == 5
+        %cycles = 1.5;
+        cycles = 2.25; % used since 09.02.2022 to put fix spots on the gratings
+        %         cycles = 2.57;
+        period = 1;
+        grating_d_deg = 5;
+        
+        [xc, yc] = deg2pix_xy(0,0); % in the center with vertical offset
+        
+        % make stimulus image
+        xysize = SETTINGS.screenSize(4)/4;
+        %         xysize = SETTINGS.screenSize(4)/3.5;
+        %[grating_d_pix, ~] = deg2pix_xy(grating_d_deg, grating_d_deg);
+        xylim = 2*pi*cycles;
+        [x,y] = meshgrid(-xylim:2*xylim/(xysize-1):xylim, ...
+            -xylim:2*xylim/(xysize-1):xylim);
+        
+        img = zeros(xysize, xysize, 3);
+        circle = x.^2 + y.^2 <= xylim^2; % circular boundry
+        
+        destrect = [-xysize/2+xc, -xysize/2+yc, +xysize/2+xc, +xysize/2+yc];
+        %         img(:,:,1) = (sin(x)+1)/2*255 .* circle; % red channel
+        %         % img(:,:,2) = (sin(y)+1)/2*task.eye.fix.color_dim(2) .* circle; % green channel
+        %         img(:,:,3) = 0+(sin(y)+1)/2*255 .* circle; % blue channel (comment green and uncomment blue if googles are red/blue)
+        
+        %         img(:,:,1) = (sin(x)+1)/2*task.eye.fix.color_dim(1)/4 .* circle; % red channel
+        %         % img(:,:,2) = (sin(y)+1)/2*task.eye.fix.color_dim(2) .* circle; % green channel
+        %         img(:,:,3) = 0+(sin(y)+1)/2*task.eye.fix.color_dim(3)/4 .* circle; % blue channel (comment green and uncomment blue if googles are red/blue)
+        
+        img(:,:,1) = (sin(x-4.7)+1)/2*task.eye.fix.color_dim(1)*10 .* circle; % red channel
+        % img(:,:,2) = (sin(y)+1)/2*task.eye.fix.color_dim(2) .* circle; % green channel
+        img(:,:,3) = 0+(sin(y-4.7)+1)/2*task.eye.fix.color_dim(3)*10 .* circle; % blue channel (comment green and uncomment blue if googles are red/blue)
+        
+        %img(:,:,4) = 150; % set alpha-channel
+        
+        t = Screen('MakeTexture', SETTINGS.window, img);
+        %Screen('BlendFunction', SETTINGS.window, 'GL_SRC_ALPHA', 'GL_ONE_MINUS_SRC_ALPHA');
+        Screen('DrawTexture', SETTINGS.window, t, [], destrect);
+        %Screen('FillOval',SETTINGS.window,[100 0 0 255],[xc-4 yc-4 xc+4 yc+4]); %fixation pt. red
+    end
+    
 end
 
 function pointList=CalculateConvexPointList(center,a_ellipse,convexity,convex_sides)

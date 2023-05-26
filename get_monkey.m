@@ -1,4 +1,4 @@
-function [task, monkey_name, pathname] =  get_monkey_dev(monkey)
+function [task, monkey_name, pathname] =  get_monkey(monkey)
 global SETTINGS
 %% VERSION LOG
 % version 1: first working version, Linus data from 20120317 to 20120417

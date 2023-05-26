@@ -1,17 +1,33 @@
-function get_setup_dev
+function get_setup(setup_code)
+% List of setup codes
+% -10   % Tübingen
+% -3    % "DAG psychophysics"
+% -2    % scanner UMG humans with mirror
+% -1    % "DAG psychophysics"
+% 0     % scanner UMG monkeys
+% 1     % setup 1
+% 2     % setup 2
+% 3     % setup 3
+% 4     % scanner DPZ monkeys
+% 50    % Office ?
+% 51    % Scanner UMG Humans Touchscreen
+% 100   % Lukas computer
+% 130   % IKDAG
+
+%%
 global SETTINGS
-SETTINGS.setup          = 130;         % see switch SETTINGS.setup below
+SETTINGS.setup          = setup_code;         % see switch SETTINGS.setup below
 
 %% General settings (default, can be overwritten by setup-specific settings)
-SETTINGS.GUI                        = 1;          % user GUI
+SETTINGS.GUI                        = 1;        % user GUI
 SETTINGS.ITI_GUI                    = 1;
 SETTINGS.useParallel                = 1;
 SETTINGS.useSerial                  = 0;
 SETTINGS.useSound                   = 1;
 SETTINGS.useMouse                   = 0;        % 0 use mouse instead of eye position
-SETTINGS.useVPacq                   = 1;        %0     % 1 enable ViewPoint eye position acquisition
+SETTINGS.useVPacq                   = 1;        % 0/1 enable ViewPoint eye position acquisition
 SETTINGS.useViewAPI                 = 0;        % enable SMI eye position acquisition
-SETTINGS.UseMouseAsTouch            = 0; %% not defined in s1,s2,s3
+SETTINGS.UseMouseAsTouch            = 0;        % not defined in s1,s2,s3
 SETTINGS.vpx_calibration            = 0;
 SETTINGS.automatic_offset_update    = 0;
 SETTINGS.AllowManualSkipping        = 0;
@@ -30,7 +46,7 @@ SETTINGS.WrongTargetSound           = 1;
 SETTINGS.allowBlinksOnly            = 1; %%KK
 
 
-%% Others
+%% Other
 SETTINGS.BG_COLOR               = [0 0 0];   % screen background color
 SETTINGS.ITI_GUI_time_limit     = 5; % in seconds, fixed limit of trial time displayed in ITI GUI
 SETTINGS.pp.value_out_reward    = 255; % trigger all output pins for reward
@@ -269,7 +285,7 @@ switch SETTINGS.setup,
         Screen('Preference','Verbosity',1);
         Screen('Preference', 'SkipSyncTests', 1);
         
-    case 1 %Monkey setup 1
+    case 1 % Monkey setup 1
         % Screen settings
         SETTINGS.whichScreen                            = 2;
         SETTINGS.screen_w_pix                           = 1920;
@@ -620,68 +636,6 @@ switch SETTINGS.setup,
         SETTINGS.DAQSingleEnded = 0;
         SETTINGS.dag_drive = 'D:';
         
-        
-    case 1.5 % testingMonkey setup 1
-        
-        % Screen settings
-        SETTINGS.whichScreen                            = 2;
-        SETTINGS.screen_w_pix                           = 1920;
-        SETTINGS.screen_h_pix                           = 1080;
-        SETTINGS.screen_w_cm                            = 59.5;
-        SETTINGS.screen_h_cm                            = 33;
-        SETTINGS.GUI_coordinates                        = [ 903  -656 800 800*SETTINGS.screen_h_pix/SETTINGS.screen_w_pix];
-        SETTINGS.ITI_GUI_coordinates                    = [ 1710        -654         845         449];
-        SETTINGS.DefaultFigurePosition                  = [190 -600 700 700*SETTINGS.screen_h_pix/SETTINGS.screen_w_pix];
-        
-        % Touchscreen
-        SETTINGS.touchscreen = 0;
-        SETTINGS.touchscreen_calibration.y_gain         = -133; % Danial 20160204
-        SETTINGS.touchscreen_calibration.y_offset       = 567;  % Danial 20160204
-        SETTINGS.touchscreen_calibration.x_gain         = 171;  % Danial 20160204
-        SETTINGS.touchscreen_calibration.x_offset       = 958;  % Danial 20160204
-        SETTINGS.touchscreen_calibration.x_threshold    = -5.2; % lowest Voltage still different from not touched
-        SETTINGS.touchscreen_calibration.y_threshold    = -3.8; % lowest Voltage still different from not touched
-        
-        % I/O
-        SETTINGS.ai = 1;
-        SETTINGS.ao = 1;
-        SETTINGS.AI_channels                            = [0 1 2 3]; % touch_x touch_y jaw_motion body_motion
-        SETTINGS.sensor_pins                            = [11 13 10 12]; % [sensor-left sensor-right jaw-motion body-motion]
-        SETTINGS.pp.value_out_reward                    = 1; % 1 - parallel port output pin 2 for reward
-        SETTINGS.DAQ_card                               = 'nidaq';
-        SETTINGS.serial_port                            = 'com1';
-        SETTINGS.DAQSingleEnded                         = 1;
-        SETTINGS.interface_with_scanner                 = 0;
-        SETTINGS.Motion_detection_interface             = 'DAQ';%'Parallel'; %'DAQ'; % e.g. MD
-        
-        SETTINGS.check_motion_jaw = 0;
-        SETTINGS.check_motion_body = 0;
-        
-        
-        % Original (broken) parallel port (behavioral client):
-        SETTINGS.pp.address_inp                         = hex2dec('379'); % e.g. sensors
-        SETTINGS.pp.address_out_reward                  = hex2dec('378'); % e.g. reward
-        SETTINGS.pp.address_out_TDT                     = hex2dec('378'); % e.g. TDT
-        
-        % Parallel port (external card): CCB0 - output, CCC0 - input
-        %         SETTINGS.pp.address_inp                         = hex2dec('CCC0'); % e.g. sensors
-        %         SETTINGS.pp.address_out_reward                  = hex2dec('CCB0'); % e.g. reward
-        %         SETTINGS.pp.address_out_TDT                     = hex2dec('CCC'); % e.g. TDT - not tested!
-        
-        % microstim settings
-        SETTINGS.microstim_interface                    = 'Parallel'; %'Parallel' or 'DAQ';
-        SETTINGS.pp.value_out_microstim                 = 16; %16 - parallel port output pin 6 for microstim trigger
-        
-        % TDT related settings
-        SETTINGS.daq_digital_output_port_to_TDT         = 0;
-        SETTINGS.use_digital_to_TDT                     = 1;
-        SETTINGS.TDT_interface                          = 'DAQ'; % e.g. TDT
-        
-        % data paths
-        SETTINGS.BASE_PATH                              = 'D:';
-        %SETTINGS.dag_drive                              = [filesep filesep 'fs02' filesep 'akn$' filesep 'DAG'];
-        %SETTINGS.dag_drive                              = [filesep filesep 'fs02' filesep 'dag$'];
-        SETTINGS.dag_drive                              = 'Y:'; %temporary
         
     case 130 % IKDAG
         SETTINGS.whichScreen = 1;

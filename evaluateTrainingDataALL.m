@@ -5,17 +5,17 @@ function [dailyStats] = evaluateTrainingDataALL(monkeyName,dataDirIn)
 %   2012-04-04: changed to read .mat files for the latest version of the "monkeypsych_reach"
 %               output: [Date trials IT hits percent_of_all_trials
 %               percent_of_IT] O.D., A.V.
-%   2012-02-23: changed to read new data format from monkey_psych in 
+%   2012-02-23: changed to read new data format from monkey_psych in
 %               setup 2
 %   2012-01-05: cover specified date range or all dates.
 %
 %   evaluateTrainingData reads .mat files saved by test_monkey. Mat files
 %   must be name like 'Lin2011-12-08_01.mat' and must contain an array
-%   'trialInfoXX' (nTrials x [nTrial RT timeHold success]) where XX is the 
+%   'trialInfoXX' (nTrials x [nTrial RT timeHold success]) where XX is the
 %   number of the run, and a strcut array TASK.
 %
 % INPUT
-%   monkeyName: 
+%   monkeyName:
 %   dataDir:    Path to the data directory NOT including monkey name.
 %               E.g. 'D:\Data'.
 %   startDate:  (optional)
@@ -25,30 +25,16 @@ function [dailyStats] = evaluateTrainingDataALL(monkeyName,dataDirIn)
 %               selected. (optional)
 %
 % OUTPUT
-%   dailyStats: training_day x 6 array with columns representing [year, 
+%   dailyStats: training_day x 6 array with columns representing [year,
 %               month, day, trials, hits, hit_rate]
 %   dailyTASK:  day x 1 struct array containing TASK struct (as specified
 %               in get_monkey_settings) for each training_day. [NOT
 %               WORKING]
-% 
+%
 % d = dir; for i=3:length(dir); movefile(d(i).name,[d(i).name(1:3) d(i).name(6:end)]); end
 
 %% Parameters
 
-
-%[number]=number_of_folders(dataDirIn,starting_folder,ending_folder);
-%startDate=starting_folder;
-%endDate=ending_folder;
-%f_name=num2str(starting_folder);
-%last_two=f_name(end-1:end); 
-% for j=1:number
-% 
-% if nargin<1
-%     monkeyName = 'Cornelius';
-% end
-%     dataDir ='C:\Users\M.Koester\Desktop\LindaNieuw';
-%    dataDir =['Y:\Cornelius\' f_name filesep];
-%dataDir =[dataDirIn f_name filesep];
 
 
 
@@ -81,10 +67,10 @@ c = 0;
 for i = 3:length(D)
     if strcmp(D(i).name(end-2:end),'mat')   % if .mat file found
         c = c+1;
-%         runsAvailable(c,1)  = str2double(D(i).name(4:7));   % year
-%         runsAvailable(c,2)  = str2double(D(i).name(9:10));  % month
-%         runsAvailable(c,3)  = str2double(D(i).name(12:13)); % day
-%         runsAvailable(c,4)  = str2double(D(i).name(15:16)); % run
+        %         runsAvailable(c,1)  = str2double(D(i).name(4:7));   % year
+        %         runsAvailable(c,2)  = str2double(D(i).name(9:10));  % month
+        %         runsAvailable(c,3)  = str2double(D(i).name(12:13)); % day
+        %         runsAvailable(c,4)  = str2double(D(i).name(15:16)); % run
         runsAvailable(c) = str2double(D(i).name(15:16));
         fnames{c}=D(i).name;
     end
@@ -99,7 +85,7 @@ end
 %             datesAvailable(:,1) == y1 & datesAvailable(:,2) == m1 & datesAvailable(:,3) >= d1);
 % isBefore=  (datesAvailable(:,1) < y2 | ...
 %             datesAvailable(:,1) == y2 & datesAvailable(:,2) < m2 | ...
-%             datesAvailable(:,1) == y2 & datesAvailable(:,2) == m2 & datesAvailable(:,3) <= d2);        
+%             datesAvailable(:,1) == y2 & datesAvailable(:,2) == m2 & datesAvailable(:,3) <= d2);
 % withinRange = isAfter & isBefore;
 % datesAvailable(~withinRange,:) = [];
 
@@ -115,38 +101,38 @@ end
 %     d = datesAvailable(i,3);
 %runs = runsAvailable(runsAvailable(:,1)==y & runsAvailable(:,2)==m & runsAvailable(:,3)==d,4);
 
-    for r = 1:length(~isnan(runsAvailable));   
-        
-        %sm20170103: start
-        %sm20170103: the above testdoes not what it thinks it does:
-        %~isnan([1, 2, 3, 3, NaN, NaN]) =   1     1     1     1     0     0
-        %length(~isnan([1, 2, 3, 3, NaN, NaN])) = 6
-        if isnan(runsAvailable(r))
-            display(['Nominally availabe run ', num2str(r), ' has issues, skipping this...']);
-            continue
-        end
-        %sm20170103: end
-        
-%       fname = [monkeyName(1:3) num2str(y) '-' num2str(m,'%02d') '-' num2str(d,'%02d') '_' num2str(r,'%02d') '.mat'];
-
-        fid=load([dataDirIn filesep fnames{r}]);
-        data=fid.trial;
-        
-        aborted_state=[data.aborted_state];
-        %             indx=find(aborted_state==-1|aborted_state==19|aborted_state>2&aborted_state<6);
-        %indx=aborted_state==-1|aborted_state>=3;
-        %aborted_state=aborted_state(indx);
-        nTrials(r) = max([data.n]);   % current 9 column format
-        nHits(r)   = sum([data.success]);
-        %aborted_abs=abs(aborted_state./aborted_state);
-        nInitiated(r) =sum(aborted_state==-1|aborted_state>=3);
-        end
-
- %   end
-    % dailyStats: (day x [year month day nTrials hitRate])
-    dailyStats = [sum(nTrials) sum(nInitiated) sum(nHits) round(sum(nHits)/sum(nTrials)*100) round(sum(nHits)/sum(nInitiated)*100)];
-    [~, dailyWeekDay(1:3)] = weekday(datenum(str2double(dataDirIn(end-7:end-4)),str2double(dataDirIn(end-3:end-2)),str2double(dataDirIn(end-1:end))));
+for r = 1:length(~isnan(runsAvailable));
     
+    %sm20170103: start
+    %sm20170103: the above testdoes not what it thinks it does:
+    %~isnan([1, 2, 3, 3, NaN, NaN]) =   1     1     1     1     0     0
+    %length(~isnan([1, 2, 3, 3, NaN, NaN])) = 6
+    if isnan(runsAvailable(r))
+        display(['Nominally availabe run ', num2str(r), ' has issues, skipping this...']);
+        continue
+    end
+    %sm20170103: end
+    
+    %       fname = [monkeyName(1:3) num2str(y) '-' num2str(m,'%02d') '-' num2str(d,'%02d') '_' num2str(r,'%02d') '.mat'];
+    
+    fid=load([dataDirIn filesep fnames{r}]);
+    data=fid.trial;
+    
+    aborted_state=[data.aborted_state];
+    %             indx=find(aborted_state==-1|aborted_state==19|aborted_state>2&aborted_state<6);
+    %indx=aborted_state==-1|aborted_state>=3;
+    %aborted_state=aborted_state(indx);
+    nTrials(r) = max([data.n]);   % current 9 column format
+    nHits(r)   = sum([data.success]);
+    %aborted_abs=abs(aborted_state./aborted_state);
+    nInitiated(r) =sum(aborted_state==-1|aborted_state>=3);
+end
+
+%   end
+% dailyStats: (day x [year month day nTrials hitRate])
+dailyStats = [sum(nTrials) sum(nInitiated) sum(nHits) round(sum(nHits)/sum(nTrials)*100) round(sum(nHits)/sum(nInitiated)*100)];
+[~, dailyWeekDay(1:3)] = weekday(datenum(str2double(dataDirIn(end-7:end-4)),str2double(dataDirIn(end-3:end-2)),str2double(dataDirIn(end-1:end))));
+
 %end
 
 % f_name=num2str(starting_date);
@@ -165,12 +151,21 @@ fprintf('\t---------------------------------------------------------------------
 FDate=str2double(dataDirIn(end-7:end));
 
 %for i = 1:size(dailyStats,1)
-    fprintf('\t %d  %s  %d %d %d %d %d  \n', FDate, dailyWeekDay,dailyStats(1),dailyStats(2),dailyStats(3),dailyStats(4),dailyStats(5)) ;
+fprintf('\t %d  %s  %d %d %d %d %d  \n', FDate, dailyWeekDay,dailyStats(1),dailyStats(2),dailyStats(3),dailyStats(4),dailyStats(5)) ;
 %end
 %     last_two=str2num(last_two);
 %     last_two=last_two+1;
 %     last_two=num2str(last_two);
-    clear nTrials
-    clear nHits
-    clear nInitiated
-end
+clear nTrials
+clear nHits
+clear nInitiated
+
+%%
+function [number,starting_date,ending_date]=number_of_folders(path,starting_folder,ending_folder)
+starting_date=num2str(starting_folder);
+ending_date=num2str(ending_folder);
+starting_date=starting_date(end-1:end);
+ending_date=ending_date(end-1:end);
+starting_folder=str2double(starting_date);
+ending_folder=str2double(ending_date);
+number=ending_folder-starting_folder+1;

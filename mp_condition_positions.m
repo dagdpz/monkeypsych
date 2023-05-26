@@ -1,6 +1,6 @@
-function new_coordinates = condition_positions(amplitude_x_close_target,distance_between_close_and_far_x,angle_between_targets,task_effector)
+function new_coordinates = mp_condition_positions(amplitude_x_close_target,distance_between_close_and_far_x,angle_between_targets)
 % AUDV
-% new_coordinates = condition_positions(amplitude_x_close_target,distance_between_close_and_far_x,angle_between_targets)
+% new_coordinates = mp_condition_positions(amplitude_x_close_target,distance_between_close_and_far_x,angle_between_targets)
 % If you want an excentricity of 12 degrees for the first set of
 % targets and 24 for the second one with a 20 degree angle you input
 % new_coordinates = condition_positions(12,12,20)
@@ -11,7 +11,7 @@ function new_coordinates = condition_positions(amplitude_x_close_target,distance
 %FIX TARGET POSITIONS WHEN THE ANGLE CAUSES REMANENTS OF THE DIVISION
 
 %audv
-% close all, 
+% close all,
 eye_hnd_offset=3; eye_fixation_y=10;  radius=2.5; x_offset=0; %offset not represented in plot
 
 posible_positions=360/angle_between_targets;
@@ -24,21 +24,7 @@ for k=1:floor(posible_positions)-1;
     x_1_far(k+1,1)=cosd(angle)*(amplitude_x_close_target+distance_between_close_and_far_x);
     y_1(k+1,1)=(sind(angle)*amplitude_x_close_target)+eye_fixation_y;
     y_1_far(k+1,1)=(sind(angle)*(amplitude_x_close_target+distance_between_close_and_far_x))+eye_fixation_y;
-
-end
-
-if nargin<4
-    task_effector = 0;
-end
-
-switch task_effector
     
-    case {0,1}
-        
-    case 2
-    case 3
-    case 4
-        
 end
 
 
@@ -71,10 +57,10 @@ plot([x_1_far_c{1,1};x_1_far_c{1,2};x_1_far_c{1,end}]',[y_1_far_c{1,1};y_1_far_c
 plot([x_2_far_c{1,1};x_2_far_c{1,2};x_2_far_c{1,end}]',[y_2_far_c{1,1};y_2_far_c{1,2};y_2_far_c{1,end}]','r--','LineWidth',5)
 % whitebg(1,[0.9 0.9 0.9])
 fontsize=28;
- set(gca,'LineWidth',3,'fontsize',fontsize-5,'FontName', 'Arial');
-  title('Target offset from fixation center (deg)','interpreter','none','FontSize',25)
+set(gca,'LineWidth',3,'fontsize',fontsize-5,'FontName', 'Arial');
+title('Target offset from fixation center (deg)','interpreter','none','FontSize',25)
 
- 
+
 eye_fixation_x=zeros(12,1);     eye_fixation_y=repmat(eye_fixation_y,12,1);
 hnd_fixation_x=zeros(12,1);     hnd_fixation_y=eye_fixation_y-eye_hnd_offset;
 n_value=(1:12)';
