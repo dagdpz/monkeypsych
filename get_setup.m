@@ -423,10 +423,10 @@ switch SETTINGS.setup,
         %         SETTINGS.touchscreen_calibration.x_gain         = 188;
         %         SETTINGS.touchscreen_calibration.x_offset       = 550;
         
-        SETTINGS.touchscreen_calibration.y_gain         = 123;   %MP 20190205
-        SETTINGS.touchscreen_calibration.y_offset       = -127;  %MP 20190205
-        SETTINGS.touchscreen_calibration.x_gain         = -214;  %MP 20190205
-        SETTINGS.touchscreen_calibration.x_offset       = 2168;  %MP 20190205
+        SETTINGS.touchscreen_calibration.y_gain         = -125; % -122; %MP 20210714  %MP 20190205 123
+        SETTINGS.touchscreen_calibration.y_offset       = 1190; % 1216; %MP 20210714 %MP 20190205 -127
+        SETTINGS.touchscreen_calibration.x_gain         = 210.5; % 209;  %MP 20210714%MP 20190205 -214
+        SETTINGS.touchscreen_calibration.x_offset       = -233; % -230; %MP 20210714%MP 20190205  2168
         
         SETTINGS.touchscreen_calibration.x_threshold    = 1; %-8.2; % lowest Voltage still different from not touched -2.7
         SETTINGS.touchscreen_calibration.y_threshold    = 1; % -8.2 lowest Voltage still different from not touched -3

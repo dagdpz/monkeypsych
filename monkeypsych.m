@@ -1,4 +1,4 @@
-function monkeypsych(monkey)
+function monkeypsych(monkey,setup_code)
 % main function
 % see https://github.com/dagdpz/monkeypsych
 
@@ -27,7 +27,7 @@ SETTINGS.matlab_version=datevec(version('-date'));
 SETTINGS.version = ['monkeypsych_' datestr(version_filename.datenum,'yyyymmdd') '_' datestr(version_filename.datenum,'HHMM')];
 
 %% Setup and monkey specific settings
-get_setup; %Global SETTINGS pertaining to setup-specific DAQ and display params
+get_setup(setup_code); %Global SETTINGS pertaining to setup-specific DAQ and display params
 
 set(0,'DefaultFigurePosition',SETTINGS.DefaultFigurePosition);
 [task, monkey_name, DATA_PATH]  = get_monkey(monkey);
