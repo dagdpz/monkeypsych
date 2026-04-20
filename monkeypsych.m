@@ -159,6 +159,8 @@ if  SETTINGS.use_digital_to_TDT
     elseif strcmp(SETTINGS.TDT_interface,'Parallel') && SETTINGS.useParallel
         io32(SETTINGS.pp.ioObj,SETTINGS.pp.address_out_TDT,0); % make sure digital outputs are reset
     end
+
+    send_to_TDT(IO,0); %initialize digital input of TDT
 end
 
 %% Feedback sound - test            mp_Sounds('Reward')                 mp_Sounds('Failure')
@@ -1832,10 +1834,10 @@ while true
                     time_state_change = time_axis([0; diff(trial(n).state)]~=0)';
                     figure(2); clf;
                     subplot(2,1,1);
+                    set(gca,'Xlim',[0 SETTINGS.ITI_GUI_time_limit],'XLimMode','manual');
                     plot(time_axis,trial(n).x_eye,'g'); hold on;
                     plot(time_axis,trial(n).x_hnd,'Color',[0 0.5 0]);
                     
-                    set(gca,'Xlim',[0 SETTINGS.ITI_GUI_time_limit],'XLimMode','manual');
                     ig_add_multiple_vertical_lines(time_state_change,'Color','r');
                     
                     if trial(n).microstim && ~isempty(time_axis(trial(n).state == trial(n).microstim_state))
@@ -1853,9 +1855,9 @@ while true
                     title(sprintf('trial %d suc. %d choice %d microstim %d',[trial(n).n trial(n).success trial(n).choice trial(n).microstim]));
                     
                     subplot(2,1,2);
+                    set(gca,'Xlim',[0 SETTINGS.ITI_GUI_time_limit],'XLimMode','manual');
                     plot(time_axis,trial(n).y_eye,'m'); hold on;
                     plot(time_axis,trial(n).y_hnd,'Color',[0.3 0 0.3]);
-                    set(gca,'Xlim',[0 SETTINGS.ITI_GUI_time_limit],'XLimMode','manual');
                     ig_add_multiple_vertical_lines(time_state_change,'Color','r');
                     
                     if trial(n).microstim && ~isempty(time_axis(trial(n).state == trial(n).microstim_state))
