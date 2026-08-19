@@ -2,11 +2,11 @@ function mp_Sounds(SoundCase)
 global SETTINGS
 switch SoundCase
     case 'Failure'
-        [wavedata freq] = audioread([SETTINGS.MP_PATH filesep 'failure.wav']);
+        [wavedata freq] = audioread([SETTINGS.MP_PATH filesep 'Sounds' filesep 'failure.wav']);
         % [wavedata freq  ] = wavread('D:\Sources\MATLAB\monkeypsych_3.0\failure.wav'); 
         wavedata = [wavedata,wavedata];
     case 'Reward'
-        [wavedata freq  ] = audioread([SETTINGS.MP_PATH filesep 'reward.wav']); 
+        [wavedata freq  ] = audioread([SETTINGS.MP_PATH filesep 'Sounds' filesep 'reward.wav']); 
         % [wavedata freq  ] = wavread('D:\Sources\MATLAB\monkeypsych_3.0\reward.wav');
 end
 

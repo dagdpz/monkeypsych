@@ -378,15 +378,17 @@ switch monkey
     case 'Curius'
         monkey_name                 = 'Cur';
         pathname                    = 'D:\Data\Curius';
-        SETTINGS.SoundType          = 'XBI_sounds';
-        task.custom_conditions      = '\Sources\MATLAB\monkeypsych_3.0\conditions\Curius\standard_tasks';
-        task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Curius\combined_condition_file_perceptual_Instructed_free_distractor';
-        % task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_2.0\conditions\Curius\combined_condition_file_Curius_setup_sacc';
-        %task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_2.0\conditions\Curius\combined_condition_file_Curius_distractor_task_full';
-        %         task.custom_conditions        = '\Sources\MATLAB\monkeypsych_2.0\conditions\Curius\Detection_microstim_direct.m';
-        %         task.custom_conditions        = '\Sources\MATLAB\monkeypsych_2.0\conditions\Curius\microstim_fixation_20140710.m';
-        task.custom_conditions      = '\Sources\MATLAB\monkeypsych_3.0\conditions\combined_condition_file.m';
-        task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\Curius\combined_condition_file_Curius_MRI';
+        task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_conditions\Curius\reach';
+        
+%         SETTINGS.SoundType          = 'XBI_sounds';
+%         task.custom_conditions      = '\Sources\MATLAB\monkeypsych_3.0\conditions\Curius\standard_tasks';
+%         task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Curius\combined_condition_file_perceptual_Instructed_free_distractor';
+%         task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_2.0\conditions\Curius\combined_condition_file_Curius_setup_sacc';
+%         task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_2.0\conditions\Curius\combined_condition_file_Curius_distractor_task_full';
+%         task.custom_conditions        = '\Sources\MATLAB\monkeypsych_2.0\conditions\Curius\Detection_microstim_direct.m';
+%         task.custom_conditions        = '\Sources\MATLAB\monkeypsych_2.0\conditions\Curius\microstim_fixation_20140710.m';
+%         task.custom_conditions      = '\Sources\MATLAB\monkeypsych_3.0\conditions\combined_condition_file.m';
+%         task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\Curius\combined_condition_file_Curius_MRI';
         
         switch SETTINGS.setup
             case 1
@@ -396,8 +398,8 @@ switch monkey
                 task.vd                     = 28;
                 task.screen_uh_cm           = 9.5;
             case 3
-                task.vd                     = 30;
-                task.screen_uh_cm           = 7;
+                task.vd                     = 35;
+                task.screen_uh_cm           = 10;
         end
         %
         %     case 'Curius_phys'
@@ -444,8 +446,9 @@ switch monkey
     case 'Linus'
         monkey_name                 = 'Lin';
         pathname                    = 'D:\Data\Linus';
+        task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_conditions\Linus\combined_condition_file_Linus';
         % task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Linus\combined_condition_file_Linus';
-        task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Linus\combined_condition_file_Linus_binoriv_fixation';
+        % task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Linus\combined_condition_file_Linus_binoriv_fixation';
         % task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\combined_condition_file_eye_hand';
         % task.custom_conditions      = '\Sources\MATLAB\monkeypsych_2.0\conditions\combined_condition_file_phys';
         task.vd                     = 42;%47
@@ -530,14 +533,29 @@ switch monkey
         %         task.vd                     = 60;
         %         task.screen_uh_cm           = 20;
         
-    case 'Pinocchio'
-        monkey_name                 = 'Pin';
-        pathname                    = 'D:\Data\Pinocchio';
-        %         task.custom_conditions      = '\Sources\MATLAB\monkeypsych_3.0\conditions\Pinocchio\combined_condition_file_pinocchio';
-        task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_3.0\conditions\Pinocchio\fixation_file_pinocchio.m';
-        task.vd                     = 28; %32 chair 2 %30; chair 1 % cm
+    case 'Feno'
+        monkey_name                 = 'Fen';
+        pathname                    = 'D:\Data\Feno';
+        task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_conditions\Feno\Feno.m';
+        task.vd                     = 29; %32 chair 2 %30; chair 1 % cm
         task.screen_uh_cm           = 7; %32 chair 2 %30; chair 1 % cm
-        SETTINGS.SoundType                  = 'XBI_sounds';
+        %  SETTINGS.SoundType                  = 'XBI_sounds';
+        
+    case 'Quentin'
+        monkey_name                 = 'Que';
+        pathname                    = 'D:\Data\Quentin';
+        task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_conditions\Quentin\Quentin.m';
+        task.vd                     = 29; %32 chair 2 %30; chair 1 % cm
+        task.screen_uh_cm           = 7; %32 chair 2 %30; chair 1 % cm
+        %  SETTINGS.SoundType                  = 'XBI_sounds';
+             
+    case 'Toadie'
+        monkey_name                 = 'Tod';
+        pathname                    = 'D:\Data\Toadie';
+        task.custom_conditions      = 'D:\Sources\MATLAB\monkeypsych_conditions\Toadie\Toadie.m';
+        task.vd                     = 29; %32 chair 2 %30; chair 1 % cm
+        task.screen_uh_cm           = 7; %32 chair 2 %30; chair 1 % cm
+        %  SETTINGS.SoundType                  = 'XBI_sounds';   
         
     case 'Debug'
         monkey_name                 = 'Deb';

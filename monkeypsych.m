@@ -57,17 +57,12 @@ end
 outFileMat = [pathname '\' filename '.mat'];
 outFilefolder = [pathname '\' filename];
 
-%% eye calibration
-if exist([DATA_PATH filesep 'last_eyecal.mat'],'file'),
-    disp(['Found previous eye calibation in ' DATA_PATH filesep 'last_eyecal.mat']);
-    load([DATA_PATH filesep 'last_eyecal.mat']);
-else
-    eye_offset_x=0;eye_offset_y=0;eye_gain_x=1;eye_gain_y=1;
+%% eye calibration (condition file may override SETTINGS.eyecal; reload then is once-per-path)
+if ~isfield(SETTINGS,'eyecal') || isempty(SETTINGS.eyecal)
+    SETTINGS.eyecal = [DATA_PATH filesep 'last_eyecal.mat'];
 end
-task.eye.offset_x = eye_offset_x;
-task.eye.offset_y = eye_offset_y;
-task.eye.gain_x   = eye_gain_x;
-task.eye.gain_y   = eye_gain_y;
+eyecal_loaded_from = '';
+[task, eyecal_loaded_from] = apply_eyecal(task, DATA_PATH, eyecal_loaded_from);
 
 SETTINGS.screen_uh_cm       = task.screen_uh_cm;
 SETTINGS.screen_w_deg       = 2*atan((SETTINGS.screen_w_cm/2)/SETTINGS.vd)/(pi/180);
@@ -91,7 +86,7 @@ SETTINGS.FlipSyncMode               = 0;   % 0: wait for screen refresh, 1,2: do
 %% DAQ Analog input (touching and motion detection)
 if SETTINGS.ai,
     if strcmp(SETTINGS.DAQ_card, 'nidaq')
-        IO.ai = analoginput('nidaq','Dev1');    % initialize analog input
+        IO.ai = analoginput('nidaq',SETTINGS.DAQ_device);    % initialize analog input
     else
         IO.ai = analoginput('mcc');    % initialize analogue input
     end
@@ -131,7 +126,7 @@ end
 %% DAQ Analog output (microstim)
 if SETTINGS.ao,
     if strcmp(SETTINGS.DAQ_card, 'nidaq')
-        IO.ao = analogoutput('nidaq','Dev1');    % initialize analog input
+        IO.ao = analogoutput('nidaq',SETTINGS.DAQ_device);    % initialize analog input
     else
         IO.ao = analogoutput('mcc');    % initialize analogue input
     end
@@ -154,7 +149,7 @@ end
 %% DAQ Digital/Parallel output (states to TDT)
 if  SETTINGS.use_digital_to_TDT
     if strcmp(SETTINGS.TDT_interface,'DAQ')
-        IO.do = digitalio(SETTINGS.DAQ_card,'Dev1');
+        IO.do = digitalio(SETTINGS.DAQ_card,SETTINGS.DAQ_device);
         addline(IO.do,0:7,SETTINGS.daq_digital_output_port_to_TDT,'out');
     elseif strcmp(SETTINGS.TDT_interface,'Parallel') && SETTINGS.useParallel
         io32(SETTINGS.pp.ioObj,SETTINGS.pp.address_out_TDT,0); % make sure digital outputs are reset
@@ -307,6 +302,7 @@ if SETTINGS.interface_with_scanner
     
     dyn.trialNumber = 1;
     run(task.custom_conditions);
+    [task, eyecal_loaded_from] = apply_eyecal(task, DATA_PATH, eyecal_loaded_from);
     dyn.trialNumber = 0;
     switch task.effector
         case {0,3}
@@ -462,6 +458,7 @@ while true
             dyn.trial_classifier        = 250;
             if ~isempty(task.custom_conditions)
                 run(task.custom_conditions);
+                [task, eyecal_loaded_from] = apply_eyecal(task, DATA_PATH, eyecal_loaded_from);
                 fprintf('task %.1f ctc %d ',task.type,custom_trial_condition);
             end
             
@@ -1885,8 +1882,13 @@ while true
             eye_offset_y = task.eye.offset_y;
             eye_gain_x = task.eye.gain_x;
             eye_gain_y = task.eye.gain_y;
-            save([DATA_PATH filesep 'last_eyecal.mat'],'eye_offset_x','eye_offset_y','eye_gain_x','eye_gain_y');
-            fprintf('\nSaved eye calibration to %s\n',DATA_PATH);
+            eyecal_file = resolve_eyecal_path(DATA_PATH);
+            eyecal_dir = fileparts(eyecal_file);
+            if ~isempty(eyecal_dir) && ~exist(eyecal_dir,'dir')
+                mkdir(eyecal_dir);
+            end
+            save(eyecal_file,'eye_offset_x','eye_offset_y','eye_gain_x','eye_gain_y');
+            fprintf('\nSaved eye calibration to %s\n',eyecal_file);
             
             if isfield(trial,'state') && ~isempty(trial(1).state)
                 if ~exist(outFilefolder,'dir'),
@@ -3157,8 +3159,9 @@ while true
                 if ~isempty(answer)
                     task.overriding.radius=str2double(answer{1});
                     task.eye.fix.radius=str2double(answer{2});
-                    task.eye.tar(1).radius=str2double(answer{3});
-                    %task.eye.tar(2).radius=str2double(answer{3});
+                    for k = 1:numel(task.eye.tar)
+                        task.eye.tar(k).radius=str2double(answer{3});
+                    end
                 end
             end
         end
@@ -4061,6 +4064,7 @@ end
 rmdir([folder filesep subfolder],'s');
 % saving to the server as well !
 if ~isdir([SETTINGS.dag_drive folder(3:end)])
+    disp(['Creating ' [SETTINGS.dag_drive folder(3:end-8)],folder(end-7:end)]);
     mkdir([SETTINGS.dag_drive folder(3:end-8)],folder(end-7:end))
 end
 if exist('trial','var')
@@ -4085,4 +4089,43 @@ if ~strcmp(SETTINGS.version,mp_version)
     end
     copyfile(fullpath,[path filesep 'all_monkeypsych_versions' filesep SETTINGS.version '.m']);
 end
+
+function p = resolve_eyecal_path(DATA_PATH)
+global SETTINGS
+if ~isfield(SETTINGS,'eyecal') || isempty(SETTINGS.eyecal)
+    SETTINGS.eyecal = [DATA_PATH filesep 'last_eyecal.mat'];
+else
+    p0 = SETTINGS.eyecal;
+    is_abs = numel(p0) >= 2 && (p0(2) == ':' || strncmp(p0,'\\',2) || p0(1) == '/');
+    if ~is_abs
+        p0 = [DATA_PATH filesep p0];
+    end
+    [~,~,ext] = fileparts(p0);
+    if exist(p0,'dir') || isempty(ext)
+        p0 = [p0 filesep 'last_eyecal.mat'];
+    end
+    SETTINGS.eyecal = p0;
+end
+p = SETTINGS.eyecal;
+
+function [task, loaded_from] = apply_eyecal(task, DATA_PATH, loaded_from)
+p = resolve_eyecal_path(DATA_PATH);
+if isequal(loaded_from, p)
+    return
+end
+if exist(p,'file')
+    disp(['Found previous eye calibration in ' p]);
+    S = load(p);
+    task.eye.offset_x = S.eye_offset_x;
+    task.eye.offset_y = S.eye_offset_y;
+    task.eye.gain_x   = S.eye_gain_x;
+    task.eye.gain_y   = S.eye_gain_y;
+else
+    disp(['No eye calibration at ' p ' - using identity']);
+    task.eye.offset_x = 0;
+    task.eye.offset_y = 0;
+    task.eye.gain_x   = 1;
+    task.eye.gain_y   = 1;
+end
+loaded_from = p;
 
